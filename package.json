@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "map-container",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Receives zip code polygon data and transforms it into geoJSON format",
   "main": "dist/MapContainer.js",
   "scripts": {
