@@ -38,35 +38,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * High Order Component - transform data into valid geojson
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] accept incomming geojson
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] compose merged "polygons" into "FeatureCollection"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [x] accept google maps encoded polygons
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] accept google maps polygons (coordinates)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] accept wkbs
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] accept wkts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] auto-extract center (if not exist)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * - [ ] auto-extract zoom (if not exist)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-
-/*export default function Geojsonify(Component) {
-  const klass =
-*/
 var MapContainer = function (_React$Component) {
   _inherits(MapContainer, _React$Component);
 
   function MapContainer(props) {
     _classCallCheck(this, MapContainer);
 
-    // we want to output geojson (if the props translate to it)
-    // sometims this is kindof expensive, so we can cache in state
-    // but we don't HAVE to
     var _this = _possibleConstructorReturn(this, (MapContainer.__proto__ || Object.getPrototypeOf(MapContainer)).call(this, props));
 
-    _this.state = { geojsons: null };
+    _this.state = { polys: [] };
     _this.mapPropsToState = _this.mapPropsToState.bind(_this);
     return _this;
   }
@@ -104,12 +86,6 @@ var MapContainer = function (_React$Component) {
           this.setState({ geojsons: geojsons });
         }
       }
-      //if (Object.keys(geojson).length !== 0) {
-      // this is kinda expensive, only do this if changes found
-      // if (!isEqual(geojsons, this.state.geojsons)) {
-      //   this.setState({ geojson: geojsons });
-      // }
-      // }
     }
   }, {
     key: 'render',
@@ -121,9 +97,6 @@ var MapContainer = function (_React$Component) {
   return MapContainer;
 }(_react2.default.Component);
 
-;
-// klass.displayName = `geojsonify(${Component.name})`;
-// return klass;
 MapContainer.propTypes = {
   geozips: _propTypes2.default.arrayOf(_propTypes2.default.object)
 };
