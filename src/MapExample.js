@@ -19,7 +19,7 @@ const MapExample = (props) => {
     <Map
       style={{ height, width }}
       center={[centerLat, centerLong]}
-       minZoom = {3}
+      minZoom = {3}
       maxZoom = {19}
       zoom={zoom}
     >

@@ -63,3 +63,33 @@ storiesOf('MapExample', module)
       }}
     />
   ));
+
+storiesOf('MapContainer', module)
+  .add('makes a map with no polys', () => (
+    <MapContainer
+      polys={[]}
+      width={ 600 }
+      height={ 400 }
+      centerLat={38.195}
+      centerLong={-85.752}
+      zoom={9}
+      tileLayerProps={{
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      }}
+    />
+  ))
+  .add('makes a map with one (polyline) poly', () => (
+    <MapContainer
+      polys={[poly]}
+      width={ 600 }
+      height={ 400 }
+      centerLat={38.195}
+      centerLong={-85.752}
+      zoom={9}
+      tileLayerProps={{
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      }}
+    />
+  ));

@@ -1,52 +1,46 @@
 import extend from 'lodash/extend';
 import isEqual from 'lodash/isEqual';
+import PropTypes from 'prop-types';
+// import { transformEncodedIntoGeoJSON } from 'transform-to-geojson';
+import polyline from 'polyline';
 import _ from 'lodash';
 import React from 'react';
 // an example to try out
 import MapExample from './MapExample';
-import { transformEncodedIntoGeoJSON } from 'transform-to-geojson';
-import PropTypes from 'prop-types';
 
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = { polys: [] };
-    this.mapPropsToState = this.mapPropsToState.bind(this);
   }
-
-  componentWillMount() {
+  componentDidMount() {
     this.mapPropsToState(this.props);
   }
-
-  componentWillReceiveProps(nextProps) {
-    this.mapPropsToState(nextProps);
-  }
-
   mapPropsToState(props) {
-    if (this.props.polys.every(entry => (entry.path))) {
-      const polys = _.map(this.props.geoZips, (geoZip) => {
-        const result = transformEncodedIntoGeoJSON(geoZip.path);
-        result.properties.zip = geoZip.zip;
-        return result;
-      });
-
-      if (!isEqual(polys, this.state.polys)) {
-        this.setState({ polys });
-      }
-    }
+    this.setState({
+      polys: _.map(props.polys, poly => polyline.toGeoJSON(poly)),
+    });
   }
-
   render() {
+    const { tileLayerProps, width, height, zoom, centerLat, centerLong } = this.props;
     return (
       <MapExample
-      mapHeight={'300px'}
-      polys={this.state.polys} />
+        polys={this.state.polys}
+        tileLayerProps={tileLayerProps}
+        width={width}
+        height={height}
+        zoom={zoom}
+        centerLat={centerLat}
+        centerLong={centerLong}
+      />
     );
   }
 }
 
 MapContainer.propTypes = {
-  geozips: PropTypes.arrayOf(PropTypes.object),
+  polys: PropTypes.arrayOf(PropTypes.object),
+  height: PropTypes.number,
+  width: PropTypes.number,
 };
 
 export default MapContainer;
