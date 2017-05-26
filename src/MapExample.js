@@ -9,10 +9,9 @@ import 'leaflet/dist/leaflet.css';
 import './main.css';
 
 const MapExample = (props) => {
-  console.log(props.polys);
   const height = props.height ? props.height : 400;
   const width = props.width ? props.width : 600;
-  const { centerLat, centerLong, zoom } = props;
+  const { centerLat, centerLong, zoom, tileLayerProps } = props;
   const polys = _.map(props.polys, (result, index) => (
     <GeoJSON style={{ color: 'red', fill: true, fillColor: 'red', fillOpacity: 0.45 }} data={result} key={ index }/>
   ));
@@ -25,8 +24,8 @@ const MapExample = (props) => {
       zoom={zoom}
     >
       <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+        attribution={tileLayerProps.attribution}
+        url={tileLayerProps.url}
       />
       {polys}
     </Map>
@@ -39,6 +38,10 @@ MapExample.propTypes = {
   width: PropTypes.number.isRequired,
   centerLat: PropTypes.number.isRequired,
   centerLong: PropTypes.number.isRequired,
+  tileLayerProps: PropTypes.shape({
+    attribution: PropTypes.string,
+    url: PropTypes.string.isRequired,
+  }),
 };
 
 export default MapExample;

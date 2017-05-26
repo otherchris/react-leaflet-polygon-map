@@ -15,6 +15,10 @@ storiesOf('MapExample', module)
       centerLat={38.195}
       centerLong={-85.752}
       zoom={8}
+      tileLayerProps={{
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      }}
     />
   ))
   .add('makes a map with a GeoJSON poly', () => (
@@ -25,6 +29,10 @@ storiesOf('MapExample', module)
       centerLat={38.195}
       centerLong={-85.752}
       zoom={11}
+      tileLayerProps={{
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      }}
     />
   ))
   .add('tall skinny map', () => (
@@ -35,6 +43,10 @@ storiesOf('MapExample', module)
       centerLat={38.195}
       centerLong={-85.752}
       zoom={11}
+      tileLayerProps={{
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      }}
     />
   ))
   .add('short fat map', () => (
@@ -45,5 +57,9 @@ storiesOf('MapExample', module)
       centerLat={38.195}
       centerLong={-85.752}
       zoom={11}
+      tileLayerProps={{
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      }}
     />
   ));
