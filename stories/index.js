@@ -1,17 +1,16 @@
 import React from 'react';
 import { storiesOf, action, linkTo } from '@kadira/storybook';
-import Button from './Button';
-import Welcome from './Welcome';
+import MapExample from '../src/MapExample';
+import MapContainer from '../src/MapContainer';
 
-storiesOf('Welcome', module)
-  .add('to Storybook', () => (
-    <Welcome showApp={linkTo('Button')}/>
+storiesOf('MapExample', module)
+  .add('makes a map with no props', () => (
+    <MapExample />
   ));
 
-storiesOf('Button', module)
-  .add('with text', () => (
-    <Button onClick={action('clicked')}>Hello Button</Button>
-  ))
-  .add('with some emoji', () => (
-    <Button onClick={action('clicked')}>😀 😎 👍 💯</Button>
+/*
+storiesOf('MapContainer', module)
+  .add('makes a map with no props', () => (
+    <MapContainer polys={[]} />
   ));
+  */

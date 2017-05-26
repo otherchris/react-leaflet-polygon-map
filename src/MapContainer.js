@@ -38,7 +38,9 @@ class MapContainer extends React.Component {
 
   render() {
     return (
-      <MapExample polys={this.state.polys} />
+      <MapExample
+      mapHeight={'300px'}
+      polys={this.state.polys} />
     );
   }
 }
