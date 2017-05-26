@@ -8,29 +8,30 @@ import _ from 'lodash';
 import 'leaflet/dist/leaflet.css';
 import './main.css';
 
-class MapExample extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    console.log(this.props.polys);
-    const height = this.props.height ? this.props.height : 400;
-    const { centerLat, centerLong, zoom } = this.props;
-    const polys = _.map(this.props.polys, (result, index) => (
-      <GeoJSON style={{ color: 'red', fill: true, fillColor: 'red', fillOpacity: 0.45 }} data={result} key={ index }/>
-    ));
-    return (
-        <Map style={{ height }} ref='map' center={[centerLat, centerLong]} minZoom = {3} maxZoom = {19} zoom={zoom}>
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-          />
-          {polys}
-        </Map>
-    );
-  }
-}
+const MapExample = (props) => {
+  console.log(props.polys);
+  const height = props.height ? props.height : 400;
+  const width = props.width ? props.width : 600;
+  const { centerLat, centerLong, zoom } = props;
+  const polys = _.map(props.polys, (result, index) => (
+    <GeoJSON style={{ color: 'red', fill: true, fillColor: 'red', fillOpacity: 0.45 }} data={result} key={ index }/>
+  ));
+  return (
+    <Map
+      style={{ height, width }}
+      center={[centerLat, centerLong]}
+       minZoom = {3}
+      maxZoom = {19}
+      zoom={zoom}
+    >
+      <TileLayer
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+      />
+      {polys}
+    </Map>
+  );
+};
 
 MapExample.propTypes = {
   polys: PropTypes.arrayOf(PropTypes.string),

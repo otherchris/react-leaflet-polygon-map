@@ -26,4 +26,24 @@ storiesOf('MapExample', module)
       centerLong={-85.752}
       zoom={11}
     />
+  ))
+  .add('tall skinny map', () => (
+    <MapExample
+      polys={[geoJSON]}
+      width= { 60 }
+      height= { 600 }
+      centerLat={38.195}
+      centerLong={-85.752}
+      zoom={11}
+    />
+  ))
+  .add('short fat map', () => (
+    <MapExample
+      polys={[geoJSON]}
+      width= { 600 }
+      height= { 60 }
+      centerLat={38.195}
+      centerLong={-85.752}
+      zoom={11}
+    />
   ));
