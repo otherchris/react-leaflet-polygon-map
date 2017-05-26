@@ -1,11 +1,13 @@
-﻿{
+{
   "name": "map-container",
   "version": "1.0.1",
   "description": "Receives zip code polygon data and transforms it into geoJSON format",
   "main": "dist/MapContainer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d dist"
+    "build": "babel src -d dist",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "repository": {
     "type": "git",
@@ -26,13 +28,15 @@
   "homepage": "https://github.com/micahpotts/map-container#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1"
+    "babel-preset-react": "^6.24.1",
+    "@kadira/storybook": "^2.21.0"
   },
   "dependencies": {
     "leaflet": "^1.0.3",
     "leaflet-draw": "^0.4.9",
     "lodash": "^4.17.4",
     "map-example": "^1.0.0",
+    "polyline": "^0.2.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

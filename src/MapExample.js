@@ -10,7 +10,6 @@ import _ from 'lodash';
 class MapExample extends Component {
   constructor(props) {
     super(props);
-    var positionW;
     this.state = {
       lat: 38.195,
       lng: -85.752,
@@ -20,7 +19,7 @@ class MapExample extends Component {
 
   render() {
     const polys = _.map(this.props.zips, (result, index) => (
-      <GeoJSON data={Polyline.toGeoJSON(result.path)} key={ index }/>
+      <GeoJSON data={polys} key={ index }/>
     ));
     return (
       <Map ref='map' center={[this.state.lat, this.state.lng]} minZoom = {3} maxZoom = {19} zoom={this.state.zoom}>
@@ -40,7 +39,7 @@ class MapExample extends Component {
 }
 
 MapExample.propTypes = {
-  zips: PropTypes.arrayOf(PropTypes.string)
-}
+  polys: PropTypes.arrayOf(PropTypes.string),
+};
 
-export default MapExample
+export default MapExample;
