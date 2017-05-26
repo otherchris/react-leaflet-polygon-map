@@ -2,7 +2,8 @@ import extend from 'lodash/extend';
 import isEqual from 'lodash/isEqual';
 import _ from 'lodash';
 import React from 'react';
-import MapExample from 'map-example';
+// an example to try out
+import MapExample from './MapExample';
 import { transformEncodedIntoGeoJSON } from 'transform-to-geojson';
 import PropTypes from 'prop-types';
 
@@ -47,3 +48,4 @@ MapContainer.propTypes = {
 };
 
 export default MapContainer;
+
