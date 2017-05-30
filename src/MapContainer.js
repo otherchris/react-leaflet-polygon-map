@@ -11,14 +11,14 @@ import MapExample from './MapExample';
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { polys: [] };
+    this.state = { polygons: [] };
   }
   componentDidMount() {
     this.mapPropsToState(this.props);
   }
   mapPropsToState(props) {
     this.setState({
-      polys: _.map(props.polys, poly => polyline.toGeoJSON(poly)),
+      polygons: _.map(props.polygons, poly => polyline.toGeoJSON(poly.path)),
     });
   }
   render() {

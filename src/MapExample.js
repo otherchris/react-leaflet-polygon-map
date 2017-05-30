@@ -8,10 +8,9 @@ import _ from 'lodash';
 import 'leaflet/dist/leaflet.css';
 
 const MapExample = (props) => {
-  const height = props.height ? props.height : 400;
-  const center = props.center ? props.center : [35, -83];
-  const { zoom, tileLayerProps } = props;
-  const polys = _.map(props.polys, (result, index) => (
+  let { zoom, tileLayerProps, center, height } = props;
+  if (!center) center = [38.19, -85.76];
+  const polygons = _.map(props.polygons, (result, index) => (
     <GeoJSON style={{ color: 'red', fill: true, fillColor: 'red', fillOpacity: 0.45 }} data={result} key={ index }/>
   ));
   return (
@@ -26,7 +25,7 @@ const MapExample = (props) => {
         attribution={tileLayerProps.attribution}
         url={tileLayerProps.url}
       />
-      {polys}
+      {polygons}
     </Map>
   );
 };
@@ -43,7 +42,7 @@ MapExample.propTypes = {
 
 MapExample.defaultProps = {
   height: 400,
-  center: [35, -83],
+  center: [38.19, -85.76],
   zoom: 8,
   tileLayerProps: {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
