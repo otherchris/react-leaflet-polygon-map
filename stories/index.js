@@ -2,6 +2,7 @@ import React from 'react';
 import polyline from 'polyline';
 import { storiesOf, action, linkTo } from '@kadira/storybook';
 import MapExample from '../src/MapExample';
+import MapEditor from '../src/MapEditor';
 import MapContainer from '../src/MapContainer';
 import poly from './poly';
 
@@ -94,4 +95,7 @@ storiesOf('MapContainer', module)
     />
   ));
 
-
+storiesOf('MapEditor', module)
+  .add('makes a default map', () => (
+    <MapEditor />
+  ));

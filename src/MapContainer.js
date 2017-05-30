@@ -22,26 +22,22 @@ class MapContainer extends React.Component {
     });
   }
   render() {
-    const { tileLayerProps, width, height, zoom, centerLat, centerLong } = this.props;
+    const { tileLayerProps, width, height, zoom, center } = this.props;
     return (
       <MapExample
-        polys={this.state.polys}
+        polygons={this.state.polygons}
         tileLayerProps={tileLayerProps}
-        width={width}
         height={height}
         zoom={zoom}
-        centerLat={centerLat}
-        centerLong={centerLong}
+        center={center}
       />
     );
   }
 }
 
 MapContainer.propTypes = {
-  polys: PropTypes.arrayOf(PropTypes.object),
+  polygons: PropTypes.arrayOf(PropTypes.object),
   height: PropTypes.number,
-  width: PropTypes.number,
 };
-
 export default MapContainer;
 
