@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer, GeoJSON } from 'react-leaflet';
+import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup } from 'react-leaflet';
+import { EditControl } from "react-leaflet-draw";
 
 import L from 'leaflet';
 
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import 'leaflet/dist/leaflet.css';
 import 'leaflet/dist/leaflet.css';
 
 const MapExample = (props) => {
@@ -28,7 +30,15 @@ const MapExample = (props) => {
       <TileLayer
         attribution={tileLayerProps.attribution}
         url={tileLayerProps.url}
-      />
+        />
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            rectangle: false
+          }}
+        />
+      </FeatureGroup>
       {polygons}
       {points}
     </Map>
