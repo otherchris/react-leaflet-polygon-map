@@ -6,6 +6,7 @@ import MapContainer from '../MapContainer';
 import poly from './poly';
 import points from './points';
 import '../main.css';
+import 'leaflet-draw/dist/leaflet.draw.css';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -25,5 +26,5 @@ storiesOf('Points', module)
     <MapContainer polygons={[]} points={[]}/>
   ))
   .add('map with a \'gon', () => (
-    <MapContainer polygons={[poly]} points={ points }/>
+    <MapContainer polygons={[]} points={ points }/>
   ));
