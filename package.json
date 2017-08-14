@@ -29,9 +29,9 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "@kadira/storybook": "^2.21.0",
     "webpack": "^2.5.1",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^2.4.5",
+    "@kadira/storybook": "^2.21.0"
   },
   "dependencies": {
     "leaflet": "^1.0.3",

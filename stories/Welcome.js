@@ -28,6 +28,10 @@ const styles = {
     backgroundColor: '#f3f2f2',
     color: '#3a3a3a',
   },
+
+  note: {
+    opacity: 0.5,
+  }
 };
 
 export default class Welcome extends React.Component {
@@ -65,6 +69,12 @@ export default class Welcome extends React.Component {
           This is just one thing you can do with Storybook.
           <br/>
           Have a look at the <a style={styles.link} href="https://github.com/kadirahq/react-storybook" target="_blank">React Storybook</a> repo for more information.
+        </p>
+        <p style={styles.note}>
+          <b>NOTE:</b>
+          <br/>
+          Have a look at the <code style={styles.code}>.storybook/webpack.config.js</code> to add webpack
+          loaders and plugins you are using in this project.
         </p>
       </div>
     );
