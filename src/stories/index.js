@@ -4,6 +4,7 @@ import Button from './Button';
 import Welcome from './Welcome';
 import MapContainer from '../MapContainer';
 import poly from './poly';
+import points from './points';
 import '../main.css';
 
 storiesOf('Welcome', module)
@@ -17,4 +18,12 @@ storiesOf('Polygons', module)
   ))
   .add('map with a \'gon', () => (
     <MapContainer polygons={[poly]}/>
+  ));
+
+storiesOf('Points', module)
+  .add('map with no points', () => (
+    <MapContainer polygons={[]} points={[]}/>
+  ))
+  .add('map with a \'gon', () => (
+    <MapContainer polygons={[poly]} points={ points }/>
   ));

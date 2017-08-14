@@ -13,6 +13,10 @@ const MapExample = (props) => {
   const polygons = _.map(props.polygons, (result, index) => (
     <GeoJSON style={{ color: 'red', fill: true, fillColor: 'red', fillOpacity: 0.45 }} data={result} key={ index }/>
   ));
+  console.log(props.points)
+  const points = _.map(props.points, (result, index) => (
+    <Marker position={result} key={index} />
+  ));
   return (
     <Map
       style={{ height }}
@@ -26,12 +30,14 @@ const MapExample = (props) => {
         url={tileLayerProps.url}
       />
       {polygons}
+      {points}
     </Map>
   );
 };
 
 MapExample.propTypes = {
   polys: PropTypes.arrayOf(PropTypes.string),
+  points: PropTypes.arrayOf(PropTypes.object),
   height: PropTypes.number,
   center: PropTypes.number,
   tileLayerProps: PropTypes.shape({

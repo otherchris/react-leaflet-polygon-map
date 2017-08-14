@@ -20,6 +20,7 @@ class MapContainer extends React.Component {
     console.log('props', props)
     this.setState({
       polygons: _.map(props.polygons, poly => polyline.toGeoJSON(poly)),
+      points: this.props.points,
     });
   }
   render() {
@@ -28,6 +29,7 @@ class MapContainer extends React.Component {
     return (
       <MapExample
         polygons={this.state.polygons}
+        points={this.state.points}
         tileLayerProps={tileLayerProps}
         height={height}
         zoom={zoom}
