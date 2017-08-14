@@ -1,47 +1,18 @@
 {
-  "name": "map-container",
-  "version": "1.0.1",
-  "description": "Receives zip code polygon data and transforms it into geoJSON format",
-  "main": "dist/MapContainer.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d dist",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/micahpotts/map-container.git"
-  },
-  "keywords": [
-    "React",
-    "geoJSON",
-    "Leaflet",
-    "polygon",
-    "polyline"
-  ],
-  "author": "elToro Interns",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/micahpotts/map-container/issues"
-  },
-  "homepage": "https://github.com/micahpotts/map-container#readme",
-  "devDependencies": {
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "webpack": "^2.5.1",
-    "webpack-dev-server": "^2.4.5",
-    "@kadira/storybook": "^2.21.0"
-  },
+  "name": "leaflet-map",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "leaflet": "^1.0.3",
-    "leaflet-draw": "^0.4.9",
-    "lodash": "^4.17.4",
-    "map-example": "^1.0.0",
-    "polyline": "^0.2.0",
-    "prop-types": "^15.5.10",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-leaflet": "^1.1.6"
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.11"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
