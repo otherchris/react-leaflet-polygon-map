@@ -17,12 +17,14 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
   }
   mapPropsToState(props) {
+    console.log('props', props)
     this.setState({
-      polygons: _.map(props.polygons, poly => polyline.toGeoJSON(poly.path)),
+      polygons: _.map(props.polygons, poly => polyline.toGeoJSON(poly)),
     });
   }
   render() {
     const { tileLayerProps, width, height, zoom, center } = this.props;
+    console.log("polygons: ", this.state.polygons)
     return (
       <MapExample
         polygons={this.state.polygons}
