@@ -28,6 +28,11 @@ class MapContainer extends React.Component {
       points: this.props.points,
     });
   }
+
+  getPolys(e) {
+    console.log(e.layerType);
+    console.log(e.layer);
+  }
   convertPoly(poly) {
     const encoding = this.encoding || 'base64';
     console.log('poly', poly)
@@ -83,7 +88,7 @@ class MapContainer extends React.Component {
 
 MapContainer.propTypes = {
   polygons: PropTypes.arrayOf(PropTypes.object),
-  polygons: PropTypes.arrayOf(PropTypes.array),
+  points: PropTypes.arrayOf(PropTypes.array),
   tiles: PropTypes.string,
   height: PropTypes.number,
   encoding: PropTypes.string,

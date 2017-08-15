@@ -9,6 +9,10 @@ import _ from 'lodash';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet/dist/leaflet.css';
 
+const handle = (e) => {
+  console.log(e);
+  console.log('did a thing')
+}
 const MapExample = (props) => {
   let { zoom, tileLayerProps, center, height } = props;
   if (!center) center = [38.19, -85.76];
@@ -26,6 +30,7 @@ const MapExample = (props) => {
           draw={{
             rectangle: false
           }}
+          onCreated={(e) => console.log(e)}
         />
       </FeatureGroup>
       : null
@@ -36,6 +41,7 @@ const MapExample = (props) => {
       minZoom = {3}
       maxZoom = {19}
       zoom={zoom}
+      onCreated={handle}
     >
       <TileLayer
         attribution={tileLayerProps.attribution}
