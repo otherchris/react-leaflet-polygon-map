@@ -75,6 +75,7 @@ class MapContainer extends React.Component {
         height={height}
         zoom={zoom}
         center={center}
+        edit={this.props.edit}
       />
     );
   }

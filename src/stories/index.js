@@ -53,4 +53,12 @@ storiesOf('Tilesets', module)
   ))
   .add('tiles = default', () => (
     <MapContainer polygons={[poly.polyline]} points={points} />
+  ))
+
+storiesOf('Edit tools', module)
+  .add('without edit tools (default)', () => (
+    <MapContainer />
+  ))
+  .add('with edit tools', () => (
+    <MapContainer edit />
   ));
