@@ -25,6 +25,15 @@ storiesOf('Polygons', module)
   ))
   .add('map with a \'gon (wkt)', () => (
     <MapContainer polygons={[poly.wkt]} tiles="minimal_light"/>
+  ))
+  .add('map with a \'gon (wkb)', () => (
+    <MapContainer polygons={[poly.wkb]} tiles="minimal_light"/>
+  ))
+  .add('map with all the \'gons', () => (
+    <MapContainer polygons={[poly.wkt, poly.polyline, poly.geoJSON, poly.wkb]} tiles="minimal_light"/>
+  ))
+  .add('map with hex wkb', () => (
+    <MapContainer polygons={[poly.wkbHex]} encoding="hex" tiles="minimal_light"/>
   ));
 
 storiesOf('Points', module)
@@ -44,4 +53,4 @@ storiesOf('Tilesets', module)
   ))
   .add('tiles = default', () => (
     <MapContainer polygons={[poly.polyline]} points={points} />
-  ))
+  ));
