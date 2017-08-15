@@ -19,6 +19,16 @@ const MapExample = (props) => {
   const points = _.map(props.points, (result, index) => (
     <Marker position={result} key={index} />
   ));
+  const editTools = props.edit ?
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            rectangle: false
+          }}
+        />
+      </FeatureGroup>
+      : null
   return (
     <Map
       style={{ height }}
@@ -31,14 +41,7 @@ const MapExample = (props) => {
         attribution={tileLayerProps.attribution}
         url={tileLayerProps.url}
         />
-      <FeatureGroup>
-        <EditControl
-          position='topright'
-          draw={{
-            rectangle: false
-          }}
-        />
-      </FeatureGroup>
+      {editTools}
       {polygons}
       {points}
     </Map>
