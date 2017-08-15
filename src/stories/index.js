@@ -37,8 +37,11 @@ storiesOf('Points', module)
 
 storiesOf('Tilesets', module)
   .add('style = minimal_light', () => (
-    <MapContainer polygons={[poly.polyline] points={points} style="minimal_light"}
+    <MapContainer polygons={[poly.polyline]} points={points} style="minimal_light" />
   ))
   .add('style = minimal_dark', () => (
-    <MapContainer polygons={[poly.polyline] points={points} style="minimal_dark"}
+    <MapContainer polygons={[poly.polyline]} points={points} style="minimal_dark" />
+  ))
+  .add('style = default', () => (
+    <MapContainer polygons={[poly.polyline]} points={points} />
   ))
