@@ -15,33 +15,33 @@ storiesOf('Welcome', module)
 
 storiesOf('Polygons', module)
   .add('map with no \'gons', () => (
-    <MapContainer polygons={[]}/>
+    <MapContainer polygons={[]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (polyline)', () => (
-    <MapContainer polygons={[poly.polyline]}/>
+    <MapContainer polygons={[poly.polyline]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (GeoJson)', () => (
-    <MapContainer polygons={[poly.geoJSON]}/>
+    <MapContainer polygons={[poly.geoJSON]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (wkt)', () => (
-    <MapContainer polygons={[poly.wkt]}/>
+    <MapContainer polygons={[poly.wkt]} tiles="minimal_light"/>
   ));
 
 storiesOf('Points', module)
   .add('map with no points', () => (
-    <MapContainer polygons={[]} points={[]}/>
+    <MapContainer polygons={[]} points={[]} tiles="minimal_light"/>
   ))
   .add('map with a point', () => (
-    <MapContainer polygons={[]} points={ points }/>
+    <MapContainer polygons={[]} points={ points } tiles="minimal_light"/>
   ));
 
 storiesOf('Tilesets', module)
-  .add('style = minimal_light', () => (
-    <MapContainer polygons={[poly.polyline]} points={points} style="minimal_light" />
+  .add('tiles = minimal_light', () => (
+    <MapContainer polygons={[poly.polyline]} points={points} tiles="minimal_light" />
   ))
-  .add('style = minimal_dark', () => (
-    <MapContainer polygons={[poly.polyline]} points={points} style="minimal_dark" />
+  .add('tiles = minimal_dark', () => (
+    <MapContainer polygons={[poly.polyline]} points={points} tiles="minimal_dark" />
   ))
-  .add('style = default', () => (
+  .add('tiles = default', () => (
     <MapContainer polygons={[poly.polyline]} points={points} />
   ))
