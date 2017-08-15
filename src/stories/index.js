@@ -17,14 +17,20 @@ storiesOf('Polygons', module)
   .add('map with no \'gons', () => (
     <MapContainer polygons={[]}/>
   ))
-  .add('map with a \'gon', () => (
-    <MapContainer polygons={[poly]}/>
+  .add('map with a \'gon (polyline)', () => (
+    <MapContainer polygons={[poly.polyline]}/>
+  ))
+  .add('map with a \'gon (GeoJson)', () => (
+    <MapContainer polygons={[poly.geoJSON]}/>
+  ))
+  .add('map with a \'gon (wkt)', () => (
+    <MapContainer polygons={[poly.wkt]}/>
   ));
 
 storiesOf('Points', module)
   .add('map with no points', () => (
     <MapContainer polygons={[]} points={[]}/>
   ))
-  .add('map with a \'gon', () => (
+  .add('map with a point', () => (
     <MapContainer polygons={[]} points={ points }/>
   ));
