@@ -10,7 +10,8 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-leaflet": "^1.5.0",
-    "react-leaflet-draw": "^0.16.0"
+    "react-leaflet-draw": "^0.16.0",
+    "wkx": "^0.4.1"
   },
   "devDependencies": {
     "react-scripts": "1.0.11",

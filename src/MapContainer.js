@@ -1,3 +1,7 @@
+import wkx from 'wkx';
+import includes from 'lodash/includes';
+import map from 'lodash/map';
+import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
@@ -17,10 +21,40 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
   }
   mapPropsToState(props) {
+    const polys = map(props.polygons, this.convertPoly.bind(props));
+    console.log(polys)
     this.setState({
-      polygons: _.map(props.polygons, poly => polyline.toGeoJSON(poly)),
+      polygons: polys,
       points: this.props.points,
     });
+  }
+  convertPoly(poly) {
+    const encoding = this.encoding || 'base64';
+    console.log('poly', poly)
+    if (hasIn(poly, 'features')) return poly;
+    if (includes(poly, 'POLYGON')) return {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "properties": {},
+        "geometry": wkx.Geometry.parse(poly).toGeoJSON()
+      }]
+    }
+    try {
+      console.log('enc: ', encoding)
+      const buf = Buffer.from(poly, encoding);
+      return {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "properties": {},
+          "geometry": wkx.Geometry.parse(buf).toGeoJSON()
+        }]
+      }
+    } catch (e) {
+      console.log('ERRED', e)
+      return polyline.toGeoJSON(poly);
+    }
   }
   getTilesUrl(str) {
     const tileUrls = {
@@ -51,6 +85,7 @@ MapContainer.propTypes = {
   polygons: PropTypes.arrayOf(PropTypes.array),
   tiles: PropTypes.string,
   height: PropTypes.number,
+  encoding: PropTypes.string,
 };
 
 MapContainer.defaultProps = {
