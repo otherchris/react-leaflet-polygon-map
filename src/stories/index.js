@@ -34,3 +34,11 @@ storiesOf('Points', module)
   .add('map with a point', () => (
     <MapContainer polygons={[]} points={ points }/>
   ));
+
+storiesOf('Edit tools', module)
+  .add('no edit tools', () => (
+    <MapContainer />
+  ))
+  .add('all edit tools', () => (
+    <MapContainer edit />
+  ));
