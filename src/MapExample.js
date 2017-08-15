@@ -59,10 +59,11 @@ MapExample.propTypes = {
 MapExample.defaultProps = {
   height: 400,
   center: [38.19, -85.76],
-  zoom: 8,
+  zoom: 11,
   tileLayerProps: {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    //url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png',
   },
 };
 export default MapExample;
