@@ -23,13 +23,10 @@ const style = {
 
 const MapComponent = (props) => {
   const  { zoom, tileLayerProps, center, height } = props;
-  console.log(props.style)
   merge(style, props.style)
-  console.log(style)
   const polygons = _.map(props.polygons, (result, index) => (
     <GeoJSON style={style} data={result} key={ index }/>
   ));
-  console.log(props.points)
   const points = _.map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={icon} />
   ));
