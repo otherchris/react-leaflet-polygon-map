@@ -33,7 +33,6 @@ class MapContainer extends React.Component {
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, this.convertPoly.bind(props));
-    console.log(polys)
     this.setState({
       polygons: polys,
       points: this.props.points,
@@ -64,7 +63,6 @@ class MapContainer extends React.Component {
   }
   convertPoly(poly) {
     const encoding = this.encoding || 'base64';
-    console.log('poly', poly)
     if (hasIn(poly, 'features')) return poly;
     if (includes(poly, 'POLYGON')) return {
       "type": "FeatureCollection",
@@ -75,7 +73,6 @@ class MapContainer extends React.Component {
       }]
     }
     try {
-      console.log('enc: ', encoding)
       const buf = Buffer.from(poly, encoding);
       return {
         "type": "FeatureCollection",
@@ -86,7 +83,6 @@ class MapContainer extends React.Component {
         }]
       }
     } catch (e) {
-      console.log('ERRED', e)
       return polyline.toGeoJSON(poly);
     }
   }
