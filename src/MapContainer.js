@@ -11,11 +11,22 @@ import _ from 'lodash';
 import React from 'react';
 // an example to try out
 import MapExample from './MapExample';
+import './main.css';
 
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { polygons: [] };
+    this.state = {
+      polygons: [],
+      points: [],
+      drawn: {
+        polys: [],
+        lines: [],
+        rects: [],
+        circles: [],
+        markers: [],
+      }
+    };
   }
   componentDidMount() {
     this.mapPropsToState(this.props);
@@ -28,10 +39,28 @@ class MapContainer extends React.Component {
       points: this.props.points,
     });
   }
-
-  getPolys(e) {
-    console.log(e.layerType);
-    console.log(e.layer);
+  updateShapes(e) {
+    const drawn = this.state.drawn;
+    switch (e.layerType) {
+      case 'polygon':
+        drawn.polys.push(e);
+        break;
+      case 'polyline':
+        drawn.lines.push(e);
+        break;
+      case 'circle':
+        drawn.circles.push(e);
+        break;
+      case 'rectangle':
+        drawn.rects.push(e);
+        break;
+      case 'marker':
+        drawn.markers.push(e);
+        break;
+    }
+    this.setState({
+      drawn
+    })
   }
   convertPoly(poly) {
     const encoding = this.encoding || 'base64';
@@ -81,6 +110,7 @@ class MapContainer extends React.Component {
         zoom={zoom}
         center={center}
         edit={this.props.edit}
+        onCreated={this.updateShapes.bind(this)}
       />
     );
   }
