@@ -7,12 +7,13 @@ import L from 'leaflet';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet/dist/leaflet.css';
+import './main.css';
 
-const handle = (e) => {
-  console.log(e);
-  console.log('did a thing')
-}
+const icon = new L.divIcon({
+  className: 'my-div-icon',
+  html: "h&nbsp"
+});
+
 const MapExample = (props) => {
   let { zoom, tileLayerProps, center, height } = props;
   if (!center) center = [38.19, -85.76];
@@ -21,16 +22,14 @@ const MapExample = (props) => {
   ));
   console.log(props.points)
   const points = _.map(props.points, (result, index) => (
-    <Marker position={result} key={index} />
+    <Marker position={result} key={index} icon={icon} />
   ));
   const editTools = props.edit ?
       <FeatureGroup>
         <EditControl
           position='topright'
-          draw={{
-            rectangle: false
-          }}
-          onCreated={(e) => console.log(e)}
+          draw={{ }}
+          onCreated={props.onCreated}
         />
       </FeatureGroup>
       : null
@@ -41,7 +40,6 @@ const MapExample = (props) => {
       minZoom = {3}
       maxZoom = {19}
       zoom={zoom}
-      onCreated={handle}
     >
       <TileLayer
         attribution={tileLayerProps.attribution}
@@ -55,6 +53,7 @@ const MapExample = (props) => {
 };
 
 MapExample.propTypes = {
+  onCreated: PropTypes.function,
   polys: PropTypes.arrayOf(PropTypes.string),
   points: PropTypes.arrayOf(PropTypes.object),
   height: PropTypes.number,
