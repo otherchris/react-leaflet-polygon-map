@@ -76,3 +76,15 @@ storiesOf('Styling', module)
       polygons={[poly.polyline]}
     />
   ))
+  .add('zoom', () => (
+    <MapContainer
+      zoom={ 13 }
+      polygons={[poly.polyline]}
+    />
+  ))
+  .add('center', () => (
+    <MapContainer
+      center={ [38.35, -85.74] }
+      polygons={[poly.polyline]}
+    />
+  ))
