@@ -10,7 +10,7 @@ import polyline from 'polyline';
 import _ from 'lodash';
 import React from 'react';
 // an example to try out
-import MapExample from './MapExample';
+import MapComponent from './MapComponent';
 import './main.css';
 
 class MapContainer extends React.Component {
@@ -98,7 +98,7 @@ class MapContainer extends React.Component {
     const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
     const tileUrl= this.getTilesUrl(tiles);
     return (
-      <MapExample
+      <MapComponent
         polygons={this.state.polygons}
         points={this.state.points}
         tileLayerProps={{ url: tileUrl }}
@@ -107,6 +107,7 @@ class MapContainer extends React.Component {
         center={center}
         edit={this.props.edit}
         onCreated={this.updateShapes.bind(this)}
+        style={this.props.style}
       />
     );
   }

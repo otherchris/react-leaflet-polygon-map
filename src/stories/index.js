@@ -62,3 +62,17 @@ storiesOf('Edit tools', module)
   .add('with edit tools', () => (
     <MapContainer edit />
   ));
+
+storiesOf('Styling', module)
+  .add('polygon colors', () => (
+    <MapContainer
+      style={{ color: 'green', fillColor: 'green', fillOpacity: 0.21 }}
+      polygons={[poly.polyline]}
+    />
+  ))
+  .add('height', () => (
+    <MapContainer
+      height={ 600 }
+      polygons={[poly.polyline]}
+    />
+  ))
