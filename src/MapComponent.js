@@ -5,7 +5,7 @@ import { EditControl } from "react-leaflet-draw";
 import L from 'leaflet';
 
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import merge from 'lodash/merge';
 import 'leaflet/dist/leaflet.css';
 import './main.css';
 
@@ -14,11 +14,20 @@ const icon = new L.divIcon({
   html: "h&nbsp"
 });
 
-const MapExample = (props) => {
-  let { zoom, tileLayerProps, center, height } = props;
-  if (!center) center = [38.19, -85.76];
+const style = {
+  color: 'red',
+  fill: true,
+  fillColor: 'red',
+  fillOpacity: 0.45,
+}
+
+const MapComponent = (props) => {
+  const  { zoom, tileLayerProps, center, height } = props;
+  console.log(props.style)
+  merge(style, props.style)
+  console.log(style)
   const polygons = _.map(props.polygons, (result, index) => (
-    <GeoJSON style={{ color: 'red', fill: true, fillColor: 'red', fillOpacity: 0.45 }} data={result} key={ index }/>
+    <GeoJSON style={style} data={result} key={ index }/>
   ));
   console.log(props.points)
   const points = _.map(props.points, (result, index) => (
@@ -52,7 +61,7 @@ const MapExample = (props) => {
   );
 };
 
-MapExample.propTypes = {
+MapComponent.propTypes = {
   onCreated: PropTypes.function,
   polys: PropTypes.arrayOf(PropTypes.string),
   points: PropTypes.arrayOf(PropTypes.object),
@@ -64,9 +73,9 @@ MapExample.propTypes = {
   }),
 };
 
-MapExample.defaultProps = {
+MapComponent.defaultProps = {
   height: 400,
   center: [38.19, -85.76],
   zoom: 11,
 };
-export default MapExample;
+export default MapComponent;
