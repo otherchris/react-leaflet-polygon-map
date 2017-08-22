@@ -20,6 +20,8 @@ class MapContainer extends React.Component {
     this.state = {
       polygons: [],
       points: [],
+      rectangles: [],
+      circles: [],
       drawn: {
         polys: [],
         lines: [],
@@ -27,7 +29,7 @@ class MapContainer extends React.Component {
         circles: [],
         markers: [],
       },
-      markerIcon: this.generateIcon(props.iconHTML)
+      markerIcon: this.generateIcon(props.iconHTML),
     };
   }
   componentDidMount() {
@@ -38,6 +40,8 @@ class MapContainer extends React.Component {
     this.setState({
       polygons: polys,
       points: this.props.points,
+      rectangles: this.props.rectangles,
+      circles: this.props.circles,
     });
   }
   generateIcon(string) {
@@ -109,6 +113,8 @@ class MapContainer extends React.Component {
       <MapComponent
         polygons={this.state.polygons}
         points={this.state.points}
+        rectangles={this.state.rectangles}
+        circles={this.state.circles}
         tileLayerProps={{ url: tileUrl }}
         height={height}
         zoom={zoom}
@@ -125,6 +131,8 @@ class MapContainer extends React.Component {
 MapContainer.propTypes = {
   polygons: PropTypes.arrayOf(PropTypes.object),
   points: PropTypes.arrayOf(PropTypes.array),
+  rectangles: PropTypes.arrayOf(PropTypes.object),
+  circles: PropTypes.arrayOf(PropTypes.object),
   tiles: PropTypes.string,
   height: PropTypes.number,
   encoding: PropTypes.string,
@@ -137,7 +145,6 @@ MapContainer.defaultProps = {
     `<svg width="50" height="50">
       <circle cx="25" cy="25" r="20" stroke="black" stroke-width="1" fill="red" />
     </svg>`,
-
 }
 
 export default MapContainer;
