@@ -128,15 +128,17 @@ MapContainer.propTypes = {
   tiles: PropTypes.string,
   height: PropTypes.number,
   encoding: PropTypes.string,
-  iconHTML: PropTypes.string
+  iconHTML: PropTypes.string,
 };
 
 MapContainer.defaultProps = {
   tiles: 'default',
-  iconHTML: 
-    `<svg width="100" height="100">
-      <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="red" />
-    </svg>`
+  iconHTML:
+    `<svg width="50" height="50">
+      <circle cx="25" cy="25" r="20" stroke="black" stroke-width="1" fill="red" />
+    </svg>`,
+
 }
+
 export default MapContainer;
 
