@@ -9,11 +9,6 @@ import merge from 'lodash/merge';
 import 'leaflet/dist/leaflet.css';
 import './main.css';
 
-const icon = new L.divIcon({
-  className: 'my-div-icon',
-  html: "h&nbsp"
-});
-
 const style = {
   color: 'red',
   fill: true,
@@ -28,7 +23,7 @@ const MapComponent = (props) => {
     <GeoJSON style={style} data={result} key={ index }/>
   ));
   const points = _.map(props.points, (result, index) => (
-    <Marker position={result} key={index} icon={icon} />
+    <Marker position={result} key={index} icon={props.markerIcon} />
   ));
   const editTools = props.edit ?
       <FeatureGroup>
@@ -68,6 +63,7 @@ MapComponent.propTypes = {
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
   }),
+  markerIcon: PropTypes.object,
 };
 
 MapComponent.defaultProps = {

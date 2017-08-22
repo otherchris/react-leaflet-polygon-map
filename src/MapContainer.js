@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 // import { transformEncodedIntoGeoJSON } from 'transform-to-geojson';
 import polyline from 'polyline';
 import _ from 'lodash';
+import L from 'leaflet';
 import React from 'react';
 // an example to try out
 import MapComponent from './MapComponent';
@@ -25,7 +26,8 @@ class MapContainer extends React.Component {
         rects: [],
         circles: [],
         markers: [],
-      }
+      },
+      markerIcon: this.generateIcon(props.iconHTML)
     };
   }
   componentDidMount() {
@@ -36,6 +38,12 @@ class MapContainer extends React.Component {
     this.setState({
       polygons: polys,
       points: this.props.points,
+    });
+  }
+  generateIcon(string) {
+    return new L.divIcon({
+      className: 'my-div-icon',
+      html: this.props.iconHTML,
     });
   }
   updateShapes(e) {
@@ -108,6 +116,7 @@ class MapContainer extends React.Component {
         edit={this.props.edit}
         onCreated={this.updateShapes.bind(this)}
         style={this.props.style}
+        markerIcon={this.state.markerIcon}
       />
     );
   }
@@ -119,10 +128,15 @@ MapContainer.propTypes = {
   tiles: PropTypes.string,
   height: PropTypes.number,
   encoding: PropTypes.string,
+  iconHTML: PropTypes.string
 };
 
 MapContainer.defaultProps = {
   tiles: 'default',
+  iconHTML: 
+    `<svg width="100" height="100">
+      <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="red" />
+    </svg>`
 }
 export default MapContainer;
 
