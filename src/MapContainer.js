@@ -12,6 +12,7 @@ import L from 'leaflet';
 import React from 'react';
 // an example to try out
 import MapComponent from './MapComponent';
+import convertPoly from './ConvertPoly';
 import './main.css';
 
 class MapContainer extends React.Component {
@@ -36,7 +37,8 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
   }
   mapPropsToState(props) {
-    const polys = map(props.polygons, this.convertPoly.bind(props));
+    // const polys = map(props.polygons, (poly) => convertPoly(poly, { encoding: this.props.encoding }))
+    const polys = map(props.polygons, convertPoly);
     this.setState({
       polygons: polys,
       points: this.props.points,
@@ -73,31 +75,31 @@ class MapContainer extends React.Component {
       drawn
     })
   }
-  convertPoly(poly) {
-    const encoding = this.encoding || 'base64';
-    if (hasIn(poly, 'features')) return poly;
-    if (includes(poly, 'POLYGON')) return {
-      "type": "FeatureCollection",
-      "features": [{
-        "type": "Feature",
-        "properties": {},
-        "geometry": wkx.Geometry.parse(poly).toGeoJSON()
-      }]
-    }
-    try {
-      const buf = Buffer.from(poly, encoding);
-      return {
-        "type": "FeatureCollection",
-        "features": [{
-          "type": "Feature",
-          "properties": {},
-          "geometry": wkx.Geometry.parse(buf).toGeoJSON()
-        }]
-      }
-    } catch (e) {
-      return polyline.toGeoJSON(poly);
-    }
-  }
+//  convertPoly(poly) {
+//    const encoding = this.encoding || 'base64';
+//    if (hasIn(poly, 'features')) return poly;
+//    if (includes(poly, 'POLYGON')) return {
+//      "type": "FeatureCollection",
+//      "features": [{
+//        "type": "Feature",
+//        "properties": {},
+//        "geometry": wkx.Geometry.parse(poly).toGeoJSON()
+//      }]
+//    }
+//    try {
+//      const buf = Buffer.from(poly, encoding);
+//      return {
+//        "type": "FeatureCollection",
+//        "features": [{
+//          "type": "Feature",
+//          "properties": {},
+//          "geometry": wkx.Geometry.parse(buf).toGeoJSON()
+//        }]
+//      }
+//    } catch (e) {
+//      return polyline.toGeoJSON(poly);
+//    }
+//  }
   getTilesUrl(str) {
     const tileUrls = {
       default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
