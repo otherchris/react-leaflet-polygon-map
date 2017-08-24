@@ -36,10 +36,10 @@ storiesOf('Polygons', module)
     <MapContainer polygons={[poly.wkbHex]} encoding="hex" tiles="minimal_light"/>
   ))
   .add('map with rectangle', () => ( // Replace poly.whatever with rectangle.geoJSON(or polyline) when you get one
-    <MapContainer rectangles={[poly.geoJSON]} tiles="minimal_light" />
+    <MapContainer rectangles={[poly.rectangle]} tiles="minimal_light" />
   ))
   .add('map with a circle', () => (  // Replce poly.whatever with circle.polyline(or geoJSON) when you get one
-    <MapContainer circles={[poly.polyline]} tiles="minimal_light" />
+    <MapContainer circles={[poly.circle]} tiles="minimal_light" />
   ));
 
 storiesOf('Points', module)
