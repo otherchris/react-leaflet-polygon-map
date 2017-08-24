@@ -35,18 +35,20 @@ const convertPoly = (poly) => {
       };
       break;
     case 'circle':
-      const circleCoords = map(circle.data.path, (x) => [x.lng, x.lat]);
-      return {
-        "type": "FeatureCollection",
-        "features": [{
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": wkx.Geometry.parse(circleCoords).toGeoJSON() // circleCoords.parse(poly.data).toGeoJSON()
-          }
-        }]
-      };
+      return poly.data;
+      break;
+//      const circleCoords = map(circle.data.path, (x) => [x.lng, x.lat]);
+//      return {
+//        "type": "FeatureCollection",
+//        "features": [{
+//          "type": "Feature",
+//          "properties": {},
+//          "geometry": {
+//            "type": "Polygon",
+//            "coordinates": wkx.Geometry.parse(circleCoords).toGeoJSON() // circleCoords.parse(poly.data).toGeoJSON()
+//          }
+//        }]
+//      };
       break;
     case 'rectangle':
       const rectCoords = map(rectangle.path, (x) => [x.lng, x.lat]);
