@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup } from 'react-leaflet';
+import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle } from 'react-leaflet';
 import { EditControl } from "react-leaflet-draw";
 
 import L from 'leaflet';
@@ -17,7 +17,7 @@ const style = {
 }
 
 const MapComponent = (props) => {
-  const  { zoom, tileLayerProps, center, height } = props;
+  const  { zoom, tileLayerProps, center, height, radius } = props;
   merge(style, props.style)
   const polygons = _.map(props.polygons, (result, index) => (
     <GeoJSON style={style} data={result} key={ index }/>
@@ -25,6 +25,10 @@ const MapComponent = (props) => {
   const points = _.map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon} />
   ));
+  const circles = _.map(props.circles, (result, index) => (
+    <Circle style={style} data={result} key={index} center={result.center} radius={result.radius} />
+  )
+  )
   const editTools = props.edit ?
       <FeatureGroup>
         <EditControl
@@ -49,6 +53,7 @@ const MapComponent = (props) => {
       {editTools}
       {polygons}
       {points}
+      {circles}
     </Map>
   );
 };
@@ -57,6 +62,7 @@ MapComponent.propTypes = {
   onCreated: PropTypes.function,
   polys: PropTypes.arrayOf(PropTypes.string),
   points: PropTypes.arrayOf(PropTypes.object),
+  circles: PropTypes.arrayOf(PropTypes.object),
   height: PropTypes.number,
   center: PropTypes.number,
   tileLayerProps: PropTypes.shape({
