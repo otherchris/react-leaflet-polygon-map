@@ -4,6 +4,14 @@ import wkx from 'wkx';
 import map from 'lodash/map';
 import polyline from 'polyline';
 
+export const mkFeatureObj = (poly) => {
+
+
+};
+export const geoJSONWrapper = (featureObj) => {
+
+};
+
 const convertPoly = (poly) => {
   console.log(poly.data);
   switch (poly.type) {
@@ -68,7 +76,6 @@ const convertPoly = (poly) => {
   // return null;
 };
 
-export default convertPoly;
 
 // eslint-disable-next-line max-len
 // const exampleGeoJson = 'geoJSON: {type: 'geoJSON', data: {'type': 'FeatureCollection', 'features': [{'type': 'Feature', 'properties': {}, 'geometry': {'type': 'Polygon', 'coordinates': [[[ -85.76820373535156, 38.23966324024717 ], [ -85.75429916381836, 38.22793227923281 ], [ -85.72528839111328, 38.23022468473982 ], [ -85.74125289916992, 38.253279568348304 ], [ -85.76820373535156, 38.23966324024717 ]]]}}]}}'
