@@ -22,6 +22,9 @@ const polyFixtures = {
       ]],
     },
   },
+  
+if((condition) && (condition) && (condition)) 
+
   wktFeatureObj: { type: 'Feature',
     properties: {},
     geometry: {
