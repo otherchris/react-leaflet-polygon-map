@@ -8,14 +8,14 @@ const convertPoly = (poly) => {
   console.log(poly.data);
   switch (poly.type) {
   case 'polyline':
-  const a = {
-    type: 'FeatureCollection',
-    features: [{
-      type: 'Feature',
-      properties: {},
-      geometry: polyline.toGeoJSON(poly.data),
-    }],
-  };
+    const a = {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {},
+        geometry: polyline.toGeoJSON(poly.data),
+      }],
+    };
     console.log('polyline results', a);
     return a;
   case 'wkt':
