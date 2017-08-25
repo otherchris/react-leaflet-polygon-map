@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle } from 'react-leaflet';
+import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle, Rectangle } from 'react-leaflet';
 import { EditControl } from "react-leaflet-draw";
 
 import L from 'leaflet';
@@ -27,8 +27,10 @@ const MapComponent = (props) => {
   ));
   const circles = _.map(props.circles, (result, index) => (
     <Circle style={style} data={result} key={index} center={result.center} radius={result.radius} />
-  )
-  )
+  ));
+  const rectangles = _.map(props.rectangles, (result, index) => (
+    <Rectangle style={style} data={result} key={index} bounds={result.bounds} />
+  ));
   const editTools = props.edit ?
       <FeatureGroup>
         <EditControl
@@ -54,6 +56,7 @@ const MapComponent = (props) => {
       {polygons}
       {points}
       {circles}
+      {rectangles}
     </Map>
   );
 };

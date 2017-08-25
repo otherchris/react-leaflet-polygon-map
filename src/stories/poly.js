@@ -1,7 +1,8 @@
 const poly = {
   polyline: {type: 'polyline', data: 'eiphFnhojOif@cn@oQgRLOzZ{z@n@gBjCce@CM~f@{SnA{@cBs[~K~G~E{Czc@nEfd@lEjCaKa@tKnGl@qDzJyBzq@fBjP~Jt@{@fPyFk@~@lToJ_AWlIhJ~@_A`S{Ii@sArRmI{@bAsRcGm@b@iIuLmAc@hI_KaA`@tIaFg@gAtSmDpHkTwBc@hI{Go@wKpQiBcB'},
-  geoJSON:  {type: 'geoJSON',
-    data: {
+  geoJSON: {type: 'geoJSON',
+   data: 
+    {
         "type": "FeatureCollection",
         "features": [
         {
@@ -21,7 +22,7 @@ const poly = {
           }
         }
       ]
-    }
+    //}
   },
   wkt: {type: "wkt", data: 'POLYGON ((-85.76837539672852 38.24438205858283, -85.78210830688477 38.22442610753021, -85.75052261352539 38.236157634068825, -85.7567024230957 38.21660403859855, -85.72151184082031 38.23858461019401, -85.73284149169922 38.25368397473024, -85.75824737548828 38.24222492249137, -85.76837539672852 38.24438205858283))'},
   wkbHex: {type: 'wkb', data: '0103000000010000000700000000000000117055c026043c75e7224340ffffff8f167155c0f771b23429204340ffffffef9a6e55c0334dd1e16f204340000000800b6e55c068ddbf228f22434000000070846e55c00b3c634d2e254340000000302d6f55c071c4963b9c21434000000000117055c026043c75e7224340'},
