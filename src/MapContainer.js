@@ -58,28 +58,23 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    const drawn = this.state.drawn;
+    const state = this.state;
+    state.edit = false;
     switch (e.layerType) {
       case 'polygon':
-        drawn.polys.push(e);
-        break;
-      case 'polyline':
-        drawn.lines.push(e);
+        state.polygons.push(e.layer.toGeoJSON());
         break;
       case 'circle':
-        drawn.circles.push(e);
+        state.circles.push(e.layer.toGeoJSON());
         break;
       case 'rectangle':
-        drawn.rects.push(e);
+        state.rectangles.push(e.layer.toGeoJSON());
         break;
       case 'marker':
-        drawn.markers.push(e);
+        state.points.push(e.layer.toGeoJSON());
         break;
     }
-    this.setState({
-      drawn,
-      edit: false,
-    })
+    this.setState(state);
     this.setState({
       edit: true,
     })
