@@ -5,8 +5,10 @@ import map from 'lodash/map';
 import polyline from 'polyline';
 
 export const mkFeatureObj = (poly) => {
+  console.log('turds');
   switch (poly.type) {
   case 'polyline':
+      console.log('this is a polyline');
     const a = {
       type: 'Feature',
       properties: {},
@@ -22,25 +24,46 @@ export const mkFeatureObj = (poly) => {
     return b;
   case 'wkb':
     const buf = new Buffer(poly.data);
-    var Geo = wkx.Geometry.parse(buf);
+    const Geo = wkx.Geometry.parse(buf);
     const c = {
       type: 'Feature',
       properties: {},
       geometry: Geo.toGeoJSON(),
     };
     return c;
+  case 'circle':
+    console.log('i got to here');
+    const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
+    console.log('Circle Coords: ', circleCoords);
+    const e = {
+        type: 'Feature',
+        properties: poly.data,
+        geometry: {
+          type: 'Circle',
+          coordinates: wkx.Geometry.parse(circleCoords).toGeoJSON(),
+        },
+      };
+    return e;
+  case 'rectangle':
+    const rectCoords = map(poly.rectangle.path, (x) => [x.lng, x.lat]);
+    const f = {
+        type: 'Feature',
+        properties: poly.data,
+        geometry: rectCoords.parse(rectCoords).toGeoJSON(),
+    };
+    return f;
 //   case 'geoJSON':
-//     const Props = poly.data.features.properties;
+//     const Props = poly.geoJSON.data.features.properties;
 //     console.log('Props', Props);
-//     const Geom = poly.data.geometry;
+//     const Geom = poly.geoJSON.data.geometry;
 //     console.log('Geom', Geom);
-//     const c = {
+//     const d = {
 //       type: 'Feature',
-//       properties: (poly.data.features.properties),
+//       properties: (poly.geoJSON.data.features.properties),
 //       geometry: Geom,
 //     };
-//     console.log('This is c', c);
-//     return c;
+//     console.log('This is d', d);
+//     return d;
   }
 
 };
