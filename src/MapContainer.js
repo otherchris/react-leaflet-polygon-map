@@ -58,6 +58,7 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
+    console.log(e.layer.toGeoJSON())
     const state = this.state;
     state.edit = false;
     switch (e.layerType) {
