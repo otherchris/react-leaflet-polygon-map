@@ -35,7 +35,10 @@ const MapComponent = (props) => {
       <FeatureGroup>
         <EditControl
           position='topright'
-          draw={{ }}
+          draw={{
+            rectangle: false,
+            circle: false,
+          }}
           onCreated={props.onCreated}
         />
       </FeatureGroup>
