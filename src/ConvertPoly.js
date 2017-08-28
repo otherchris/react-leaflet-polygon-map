@@ -5,7 +5,43 @@ import map from 'lodash/map';
 import polyline from 'polyline';
 
 export const mkFeatureObj = (poly) => {
-
+  switch (poly.type) {
+  case 'polyline':
+    const a = {
+      type: 'Feature',
+      properties: {},
+      geometry: polyline.toGeoJSON(poly.data),
+    };
+    return a;
+  case 'wkt':
+    const b = {
+      type: 'Feature',
+      properties: {},
+      geometry: wkx.Geometry.parse(poly.data).toGeoJSON()
+    };
+    return b;
+  case 'wkb':
+    const buf = new Buffer(poly.data);
+    var Geo = wkx.Geometry.parse(buf);
+    const c = {
+      type: 'Feature',
+      properties: {},
+      geometry: Geo.toGeoJSON(),
+    };
+    return c;
+//   case 'geoJSON':
+//     const Props = poly.data.features.properties;
+//     console.log('Props', Props);
+//     const Geom = poly.data.geometry;
+//     console.log('Geom', Geom);
+//     const c = {
+//       type: 'Feature',
+//       properties: (poly.data.features.properties),
+//       geometry: Geom,
+//     };
+//     console.log('This is c', c);
+//     return c;
+  }
 
 };
 export const geoJSONWrapper = (featureObj) => {
