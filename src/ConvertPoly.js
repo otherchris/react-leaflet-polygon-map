@@ -4,46 +4,76 @@ import wkx from 'wkx';
 import map from 'lodash/map';
 import polyline from 'polyline';
 
+const ensureGeometryIsValid = geometry => {
+  switch (geometry.type) {
+  case 'LineString':
+    geometry.coordinates = ensureShapeIsClosed(geometry.coordinates);
+    return geometry;
+  case 'Polygon':
+    geometry.coordinates = geometry.coordinates.map(ensureShapeIsClosed);
+    return geometry;
+  case 'MultiPolygon':
+    geometry.coordinates = geometry.coordinates.map((polys, i) => {
+      return polys.map(ensureShapeIsClosed);
+    });
+    return geometry;
+  default:
+    throw Error(`Ensure Geometry - invalid geometry type: ${geometry.type}`);
+  }
+  return geometry;
+}
+const ensureShapeIsClosed = shape => {
+  const last = shape.length -1;
+  if (shape[0] !== shape[last]) shape.push(shape[0]);
+  return shape;
+}
+
 export const mkFeatureObj = (poly) => {
   console.log('turds');
+  let FeatObj = {
+    type: 'Feature',
+    properties: {},
+    geometry: {},
+  };
   switch (poly.type) {
   case 'polyline':
-      console.log('this is a polyline');
-    const a = {
+    return {
       type: 'Feature',
       properties: {},
-      geometry: polyline.toGeoJSON(poly.data),
+      geometry: ensureGeometryIsValid(polyline.toGeoJSON(poly.data)),
     };
-    return a;
   case 'wkt':
-    const b = {
+    let wktGeo = wkx.Geometry.parse(poly.data).toGeoJSON();
+    console.log(wktGeo);
+    let FeatObj = {
       type: 'Feature',
       properties: {},
-      geometry: wkx.Geometry.parse(poly.data).toGeoJSON()
+      geometry: wktGeo,
     };
-    return b;
-  case 'wkb':
-    const buf = new Buffer(poly.data);
-    const Geo = wkx.Geometry.parse(buf);
-    const c = {
-      type: 'Feature',
-      properties: {},
-      geometry: Geo.toGeoJSON(),
-    };
-    return c;
+    console.log('this is FeatObj', JSON.stringify(FeatObj));
+    return FeatObj;
   case 'circle':
     console.log('i got to here');
     const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     console.log('Circle Coords: ', circleCoords);
     const e = {
-        type: 'Feature',
-        properties: poly.data,
-        geometry: {
-          type: 'Circle',
-          coordinates: wkx.Geometry.parse(circleCoords).toGeoJSON(),
-        },
-      };
+      type: 'Feature',
+      properties: poly.data,
+      geometry: {
+        type: 'Circle',
+        coordinates: wkx.Geometry.parse(circleCoords).toGeoJSON(),
+      },
+    };
     return e;
+  case 'wkb':
+    const buf = new Buffer(poly.data);
+    const wkxGeo = wkx.Geometry.parse(buf);
+    const c = {
+      type: 'Feature',
+      properties: {},
+      geometry: wkxGeo.toGeoJSON(),
+    };
+    return c;
   case 'rectangle':
     const rectCoords = map(poly.rectangle.path, (x) => [x.lng, x.lat]);
     const f = {
