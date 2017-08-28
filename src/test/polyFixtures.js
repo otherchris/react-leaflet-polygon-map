@@ -82,7 +82,7 @@ const polyFixtures = {
     properties: {},
     geometry: {
       type: 'Point',
-      coordinates: [148218479236.5098, 2261634.5098039466], 
+      coordinates: [148218479236.5098, 2261634.5098039466],
     },
   },
   circleFeatureObj: { type: 'Feature',

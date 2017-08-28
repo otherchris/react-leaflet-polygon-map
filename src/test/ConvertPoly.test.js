@@ -16,9 +16,9 @@ test('expect type wkt to be geoJSONFeatureObj', () => {
 test('expet type wkb to be geoJSONFeatureObj', () => {
   expect(mkFeatureObj(poly.wkb)).toEqual(polyFixtures.wkbFeatureObj);
 });
-// test('expect type circle to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.circle)).toEqual(polyFixtures.circleFeatureObj);
-// });
+test('expect type circle to be geoJSONFeatureObj', () => {
+  expect(mkFeatureObj(poly.circle)).toEqual(polyFixtures.circleFeatureObj);
+});
 // test('expet type rectangle to be geoJSONFeatureObj', () => {
 //   expect(mkFeatureObj(poly.rectangle)).toEqual(polyFixtures.rectangleFeatureObj);
 // });
