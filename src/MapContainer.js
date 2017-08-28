@@ -29,6 +29,7 @@ class MapContainer extends React.Component {
         rects: [],
         circles: [],
         markers: [],
+      edit: false,
       },
       markerIcon: this.generateIcon(props.iconHTML),
     };
@@ -46,7 +47,8 @@ class MapContainer extends React.Component {
       polygons: polys,
       points: this.props.points,
       rectangles: rect,
-      circles: circs
+      circles: circs,
+      edit: this.props.edit,
     });
   }
   generateIcon(string) {
@@ -75,7 +77,11 @@ class MapContainer extends React.Component {
         break;
     }
     this.setState({
-      drawn
+      drawn,
+      edit: false,
+    })
+    this.setState({
+      edit: true,
     })
   }
 //  convertPoly(poly) {
@@ -124,7 +130,7 @@ class MapContainer extends React.Component {
         height={height}
         zoom={zoom}
         center={center}
-        edit={this.props.edit}
+        edit={this.state.edit}
         onCreated={this.updateShapes.bind(this)}
         style={this.props.style}
         markerIcon={this.state.markerIcon}
