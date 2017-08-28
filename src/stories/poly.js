@@ -2,7 +2,7 @@ const poly = {
   polyline: { type: 'polyline',
     // eslint-disable-next-line max-len
     data: 'eiphFnhojOif@cn@oQgRLOzZ{z@n@gBjCce@CM~f@{SnA{@cBs[~K~G~E{Czc@nEfd@lEjCaKa@tKnGl@qDzJyBzq@fBjP~Jt@{@fPyFk@~@lToJ_AWlIhJ~@_A`S{Ii@sArRmI{@bAsRcGm@b@iIuLmAc@hI_KaA`@tIaFg@gAtSmDpHkTwBc@hI{Go@wKpQiBcB' },
-  geoJSON: { 
+  geoJSON: {
     type: 'geoJSON',
     data: {
       type: 'FeatureCollection',
@@ -29,7 +29,7 @@ const poly = {
     data: 'POLYGON ((-85.76837539672852 38.24438205858283, -85.78210830688477 38.22442610753021, -85.75052261352539 38.236157634068825, -85.7567024230957 38.21660403859855, -85.72151184082031 38.23858461019401, -85.73284149169922 38.25368397473024, -85.75824737548828 38.24222492249137, -85.76837539672852 38.24438205858283))' },
   wkb: { type: 'wkb',
     // eslint-disable-next-line max-len
-    data: 'AQMAAAABAAAABwAAAAAAAAARcFXAJgQ8deciQ0D///+PFnFVwPdxsjQpIENA////75puVcAzTdHhbyBDQAAAAIALblXAaN2/Io8iQ0AAAABwhG5VwAs8Y00uJUNAAAAAMC1vVcBxxJY7nCFDQAAAAAARcFXAJgQ8deciQ0A=' },
+    data: 'AQMAAAABAAAACAAAAAAAABAtcVXA1KtK6UcfQ0AAAAAQDnJVwP0apP65HENAAAAAkAhwVcBfg9FpOh5DQAAAANBtcFXALPterrkbQ0AAAABALW5VwFwOxfCJHkNAAAAA4OZuVcAqfmu3eCBDQAAAACCHcFXAMzDsOQEfQ0AAAAAQLXFVwNSrSulHH0NA' },
   circle: { type: 'Circle',
     data: {
       center:

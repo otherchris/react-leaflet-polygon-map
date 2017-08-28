@@ -55,7 +55,7 @@ const polyFixtures = {
       ],
     },
   },
-  geoJSONFeatureObj: { 
+  geoJSONFeatureObj: {
     type: 'Feature',
     properties: {},
     geometry: {
@@ -122,7 +122,7 @@ const polyFixtures = {
       geometry: {
         type: 'Polygon',
         coordinates: [[
-        // tbd  
+        // tbd
         ]],
       },
     },
@@ -155,7 +155,7 @@ const polyFixtures = {
       geometry: {
         type: 'Polygon',
         coordinates: [[
-        // tbd  
+        // tbd
         ]],
       },
     },
@@ -169,7 +169,7 @@ const polyFixtures = {
       geometry: {
         type: 'Polygon',
         coordinates: [[
-        // tbd  
+        // tbd
         ]],
       },
     },

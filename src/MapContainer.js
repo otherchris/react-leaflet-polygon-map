@@ -39,6 +39,7 @@ class MapContainer extends React.Component {
   mapPropsToState(props) {
     // const polys = map(props.polygons, (poly) => convertPoly(poly, { encoding: this.props.encoding }))
     const polys = map(props.polygons, convertPoly);
+    console.log(polys)
     const circs = map(props.circles, convertPoly);
     const rect = map(props.rectangles, convertPoly);
     this.setState({
