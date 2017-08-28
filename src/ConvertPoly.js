@@ -8,7 +8,7 @@ export const mkFeatureObj = (poly) => {
   console.log('turds');
   switch (poly.type) {
   case 'polyline':
-      console.log('this is a polyline');
+    console.log('this is a polyline');
     const a = {
       type: 'Feature',
       properties: {},
@@ -134,6 +134,8 @@ const convertPoly = (poly) => {
   }
   // return null;
 };
+
+export default convertPoly;
 
 
 // eslint-disable-next-line max-len
