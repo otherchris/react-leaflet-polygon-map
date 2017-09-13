@@ -1,12 +1,13 @@
 import React from 'react';
 import { storiesOf, action, linkTo } from '@storybook/react';
+import 'leaflet-draw/dist/leaflet.draw.css';
 import Button from './Button';
 import Welcome from './Welcome';
 import MapContainer from '../MapContainer';
+import dpPoly from './dpPoly';
 import poly from './poly';
 import points from './points';
 import '../main.css';
-import 'leaflet-draw/dist/leaflet.draw.css';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -18,28 +19,30 @@ storiesOf('Polygons', module)
     <MapContainer polygons={[]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (polyline)', () => (
-    <MapContainer polygons={[poly.polyline]} tiles="minimal_light"/>
+    <MapContainer polygons={[dpPoly.polyline]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (GeoJson)', () => (
-    <MapContainer polygons={[poly.geoJSON]} tiles="minimal_light"/>
+    <MapContainer polygons={[dpPoly.geoJSON]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (wkt)', () => (
-    <MapContainer polygons={[poly.wkt]} tiles="minimal_light"/>
+    <MapContainer polygons={[dpPoly.wkt]} tiles="minimal_light"/>
   ))
   .add('map with a \'gon (wkb)', () => (
-    <MapContainer polygons={[poly.wkb]} tiles="minimal_light"/>
+    <MapContainer polygons={[dpPoly.wkb]} tiles="minimal_light"/>
   ))
   .add('map with all the \'gons', () => (
-    <MapContainer polygons={[poly.wkt, poly.polyline, poly.geoJSON, poly.wkb]} tiles="minimal_light"/>
+    // eslint-disable-next-line max-len
+    <MapContainer polygons={[dpPoly.wkt, dpPoly.polyline, dpPoly.geoJSON, dpPoly.wkb]} tiles="minimal_light"/>
   ))
-  .add('map with hex wkb', () => (
-    <MapContainer polygons={[poly.wkbHex]} encoding="hex" tiles="minimal_light"/>
+  .add('map with all the things', () => (
+    // eslint-disable-next-line max-len
+    <MapContainer polygons={[dpPoly.wkt, dpPoly.polyline, dpPoly.geoJSON, dpPoly.wkb]} rectangles={[dpPoly.rectangle]} circles={[dpPoly.circle]} tiles="minimal_light"/>
   ))
-  .add('map with rectangle', () => ( // Replace poly.whatever with rectangle.geoJSON(or polyline) when you get one
-    <MapContainer rectangles={[poly.rectangle]} tiles="minimal_light" />
+  .add('map with rectangle', () => (
+    <MapContainer rectangles={[dpPoly.rectangle]} tiles="minimal_light" />
   ))
-  .add('map with a circle', () => (  // Replce poly.whatever with circle.polyline(or geoJSON) when you get one
-    <MapContainer circles={[poly.circle]} tiles="minimal_light" />
+  .add('map with a circle', () => (
+    <MapContainer circles={[dpPoly.circle]} tiles="minimal_light" />
   ));
 
 storiesOf('Points', module)
@@ -59,7 +62,7 @@ storiesOf('Tilesets', module)
   ))
   .add('tiles = default', () => (
     <MapContainer polygons={[poly.polyline]} points={points} />
-  ))
+  ));
 
 storiesOf('Edit tools', module)
   .add('without edit tools (default)', () => (
@@ -93,4 +96,4 @@ storiesOf('Styling', module)
       center={ [38.35, -85.74] }
       polygons={[poly.polyline]}
     />
-  ))
+  ));
