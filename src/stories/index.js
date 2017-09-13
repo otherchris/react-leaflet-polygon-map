@@ -55,13 +55,13 @@ storiesOf('Points', module)
 
 storiesOf('Tilesets', module)
   .add('tiles = minimal_light', () => (
-    <MapContainer polygons={[poly.polyline]} points={points} tiles="minimal_light" />
+    <MapContainer polygons={[dpPoly.polyline]} points={points} tiles="minimal_light" />
   ))
   .add('tiles = minimal_dark', () => (
-    <MapContainer polygons={[poly.polyline]} points={points} tiles="minimal_dark" />
+    <MapContainer polygons={[dpPoly.polyline]} points={points} tiles="minimal_dark" />
   ))
   .add('tiles = default', () => (
-    <MapContainer polygons={[poly.polyline]} points={points} />
+    <MapContainer polygons={[dpPoly.polyline]} points={points} />
   ));
 
 storiesOf('Edit tools', module)
@@ -76,24 +76,24 @@ storiesOf('Styling', module)
   .add('polygon colors', () => (
     <MapContainer
       style={{ color: 'green', fillColor: 'green', fillOpacity: 0.21 }}
-      polygons={[poly.polyline]}
+      polygons={[dpPoly.polyline]}
     />
   ))
   .add('height', () => (
     <MapContainer
       height={ 600 }
-      polygons={[poly.polyline]}
+      polygons={[dpPoly.polyline]}
     />
   ))
   .add('zoom', () => (
     <MapContainer
       zoom={ 13 }
-      polygons={[poly.polyline]}
+      polygons={[dpPoly.polyline]}
     />
   ))
   .add('center', () => (
     <MapContainer
       center={ [38.35, -85.74] }
-      polygons={[poly.polyline]}
+      polygons={[dpPoly.polyline]}
     />
   ));
