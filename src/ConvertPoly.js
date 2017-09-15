@@ -2,11 +2,13 @@
 // and rectangle paths and returns geoJSON
 import wkx from 'wkx';
 import map from 'lodash/map';
+import isEqual from 'lodash/isEqual';
 import polyline from 'polyline';
 
 export const ensureShapeIsClosed = shape => {
+  // console.log('SHAPE', shape);
   const last = shape.length - 1;
-  if (shape[0] !== shape[last]) shape.push(shape[0]);
+  if (!isEqual(shape[0], shape[last])) shape.push(shape[0]);
   return shape;
 };
 export const ensureGeometryIsValid = geometry => {
@@ -16,8 +18,8 @@ export const ensureGeometryIsValid = geometry => {
     geometry.coordinates = ensureShapeIsClosed(geometry.coordinates);
     return geometry;
   case 'MultiPolygon':
-    geometry.coordinates = geometry.coordinates.map((polys, i) =>
-      polys.map(ensureShapeIsClosed));
+    geometry.coordinates = geometry.coordinates.map((poly) =>
+      ensureShapeIsClosed(poly));
     return geometry;
   default:
     throw Error(`Ensure Geometry - invalid geometry type: ${geometry.type}`);
