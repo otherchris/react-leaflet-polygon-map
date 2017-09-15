@@ -4,30 +4,25 @@ import wkx from 'wkx';
 import map from 'lodash/map';
 import polyline from 'polyline';
 
-const ensureGeometryIsValid = geometry => {
+export const ensureShapeIsClosed = shape => {
+  const last = shape.length - 1;
+  if (shape[0] !== shape[last]) shape.push(shape[0]);
+  return shape;
+};
+export const ensureGeometryIsValid = geometry => {
   switch (geometry.type) {
+  case 'Polygon':
   case 'LineString':
     geometry.coordinates = ensureShapeIsClosed(geometry.coordinates);
     return geometry;
-  case 'Polygon':
-    geometry.coordinates = geometry.coordinates.map(ensureShapeIsClosed);
-    return geometry;
   case 'MultiPolygon':
-    geometry.coordinates = geometry.coordinates.map((polys, i) => {
-      return polys.map(ensureShapeIsClosed);
-    });
+    geometry.coordinates = geometry.coordinates.map((polys, i) =>
+      polys.map(ensureShapeIsClosed));
     return geometry;
   default:
     throw Error(`Ensure Geometry - invalid geometry type: ${geometry.type}`);
   }
-  return geometry;
-}
-const ensureShapeIsClosed = shape => {
-  const last = shape.length -1;
-  if (shape[0] !== shape[last]) shape.push(shape[0]);
-  return shape;
-}
-
+};
 export const mkFeatureObj = (poly) => {
   console.log('turds');
   let FeatObj = {

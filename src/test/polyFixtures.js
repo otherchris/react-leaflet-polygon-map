@@ -1,6 +1,77 @@
 const polyFixtures = {
-// Fixtures for mkFeatureObj
-  polylineFeatureObj: { type: 'Feature',
+  // Fixture for ensureShapeIsClosed
+  lineStringFeatObj: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: [
+        [-85.77176, 38.26339],
+        [-85.76422, 38.26968],
+        [-85.76114, 38.27264],
+      ],
+    },
+  },
+  closedLineStringFeatObj: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: [
+        [-85.77176, 38.26339],
+        [-85.76422, 38.26968],
+        [-85.76114, 38.27264],
+        [-85.77176, 38.26339],
+      ],
+    },
+  },
+  multipolyFeatObj: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [-85.76820373535156, 38.23966324024717],
+          [-85.75429916381836, 38.22793227923281],
+          [-85.72528839111328, 38.23022468473982],
+          [-85.74125289916992, 38.253279568348304],
+          [-85.76820373535156, 38.23966324024717],
+        ],
+        [
+          [-85.77176, 38.26339],
+          [-85.76422, 38.26968],
+          [-85.76114, 38.27264],
+          [-85.77176, 38.26339],
+        ],
+      ],
+    },
+  },
+  openMultipolyFeatObj: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [-85.76820373535156, 38.23966324024717],
+          [-85.75429916381836, 38.22793227923281],
+          [-85.72528839111328, 38.23022468473982],
+          [-85.74125289916992, 38.253279568348304],
+        ],
+        [
+          [-85.77176, 38.26339],
+          [-85.76422, 38.26968],
+          [-85.76114, 38.27264],
+        ],
+      ],
+    },
+  },
+  // ensureGeometryIsValid
+
+  // Fixtures for mkFeatureObj
+  polylineFeatObj: {
+    type: 'Feature',
     properties: {},
     geometry: {
       type: 'LineString',
