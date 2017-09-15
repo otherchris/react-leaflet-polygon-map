@@ -29,6 +29,7 @@ class MapContainer extends React.Component {
         rects: [],
         circles: [],
         markers: [],
+      edit: false,
       },
       markerIcon: this.generateIcon(props.iconHTML),
     };
@@ -46,7 +47,8 @@ class MapContainer extends React.Component {
       polygons: polys,
       points: this.props.points,
       rectangles: rect,
-      circles: circs
+      circles: circs,
+      edit: this.props.edit,
     });
   }
   generateIcon(string) {
@@ -56,26 +58,26 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    const drawn = this.state.drawn;
+    console.log(e.layer.toGeoJSON())
+    const state = this.state;
+    state.edit = false;
     switch (e.layerType) {
       case 'polygon':
-        drawn.polys.push(e);
-        break;
-      case 'polyline':
-        drawn.lines.push(e);
+        state.polygons.push(e.layer.toGeoJSON());
         break;
       case 'circle':
-        drawn.circles.push(e);
+        state.circles.push(e.layer.toGeoJSON());
         break;
       case 'rectangle':
-        drawn.rects.push(e);
+        state.rectangles.push(e.layer.toGeoJSON());
         break;
       case 'marker':
-        drawn.markers.push(e);
+        state.points.push(e.layer.toGeoJSON());
         break;
     }
+    this.setState(state);
     this.setState({
-      drawn
+      edit: true,
     })
   }
 //  convertPoly(poly) {
@@ -124,7 +126,7 @@ class MapContainer extends React.Component {
         height={height}
         zoom={zoom}
         center={center}
-        edit={this.props.edit}
+        edit={this.state.edit}
         onCreated={this.updateShapes.bind(this)}
         style={this.props.style}
         markerIcon={this.state.markerIcon}

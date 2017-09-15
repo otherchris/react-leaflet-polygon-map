@@ -72,7 +72,6 @@ export const geoJSONWrapper = (featureObj) => {
 };
 
 const convertPoly = (poly) => {
-  console.log(poly.data);
   switch (poly.type) {
   case 'polyline':
     const a = {
