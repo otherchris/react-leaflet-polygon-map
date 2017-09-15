@@ -26,11 +26,15 @@ test('expect closed shape to pass through', () => {
 });
 test('given multipoly, shapes will pass', () => {
   const result5 = ensureGeometryIsValid(polyFixtures.multipolyFeatObj.geometry);
-  expect(result5).toEqual(polyFixtures.multipolyFeatObj.geometry);
+  expect(result5).toEqual(polyFixtures.multipolyFeatObj2.geometry);
 });
-test('given open multipoly, shapes will be closed then pass', () => {
-  const result5 = ensureGeometryIsValid(polyFixtures.openMultipolyFeatObj.geometry);
-  expect(result5).toEqual(polyFixtures.multipolyFeatObj.geometry);
+test('given open multipolys, shapes will be closed then pass', () => {
+  const result6 = ensureGeometryIsValid(polyFixtures.openMultipolyFeatObj.geometry);
+  expect(result6).toEqual(polyFixtures.multipolyFeatObj3.geometry);
+});
+test('given multipolys with one open one closed, open will close and closed will pass', () => {
+  const result7 = ensureGeometryIsValid(polyFixtures.mixedMultipolyFeatObj.geometry);
+  expect(result7).toEqual(polyFixtures.multipolyFeatObj4.geometry);
 });
 // make test for multipoly that has at least one open
 // make test for wrong "type"
