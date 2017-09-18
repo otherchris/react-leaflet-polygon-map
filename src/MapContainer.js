@@ -78,42 +78,46 @@ class MapContainer extends React.Component {
     const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
-        polygons={this.state.polygons}
-        points={this.state.points}
-        rectangles={this.state.rectangles}
-        circles={this.state.circles}
-        tileLayerProps={{ url: tileUrl }}
-        height={height}
-        zoom={zoom}
         center={center}
+        circles={this.state.circles}
         edit={this.state.edit}
-        onCreated={this.updateShapes.bind(this)}
-        style={this.props.style}
+        height={height}
         markerIcon={this.state.markerIcon}
+        onCreated={this.updateShapes.bind(this)}
+        points={this.state.points}
+        polygons={this.state.polygons}
+        rectangles={this.state.rectangles}
+        style={this.props.style}
+        tileLayerProps={{ url: tileUrl }}
         zipRadius={this.props.zipRadius}
-        setCenter={this.state.setCenter || this.props.setCenter || this.state.center}
+        zipRadiusCenter={
+          this.state.zipRadiusCenter ||
+          this.props.zipRadiusCenter ||
+          this.state.center
+        }
+        zoom={zoom}
       />
     );
   }
 }
 
 MapContainer.propTypes = {
-  polygons: PropTypes.arrayOf(PropTypes.object),
-  points: PropTypes.arrayOf(PropTypes.array),
-  rectangles: PropTypes.arrayOf(PropTypes.object),
-  circles: PropTypes.arrayOf(PropTypes.object),
-  tiles: PropTypes.string,
-  height: PropTypes.number,
-  encoding: PropTypes.string,
-  iconHTML: PropTypes.string,
-  edit: PropTypes.boolean,
-  tileLayerProps: PropTypes.object,
-  width: PropTypes.number,
-  zoom: PropTypes.number,
   center: PropTypes.arrayOf(PropTypes.number),
-  setCenter: PropTypes.arrayOf(PropTypes.number),
+  circles: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.boolean,
+  encoding: PropTypes.string,
+  height: PropTypes.number,
+  iconHTML: PropTypes.string,
+  points: PropTypes.arrayOf(PropTypes.array),
+  polygons: PropTypes.arrayOf(PropTypes.object),
+  rectangles: PropTypes.arrayOf(PropTypes.object),
   style: PropTypes.object,
+  tileLayerProps: PropTypes.object,
+  tiles: PropTypes.string,
+  width: PropTypes.number,
   zipRadius: PropTypes.boolean,
+  zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
+  zoom: PropTypes.number,
 };
 
 MapContainer.defaultProps = {
