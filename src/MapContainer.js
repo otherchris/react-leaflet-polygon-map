@@ -130,6 +130,7 @@ class MapContainer extends React.Component {
         onCreated={this.updateShapes.bind(this)}
         style={this.props.style}
         markerIcon={this.state.markerIcon}
+        zipRadius={this.props.zipRadius}
       />
     );
   }
