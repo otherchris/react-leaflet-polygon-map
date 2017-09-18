@@ -80,31 +80,6 @@ class MapContainer extends React.Component {
       edit: true,
     })
   }
-//  convertPoly(poly) {
-//    const encoding = this.encoding || 'base64';
-//    if (hasIn(poly, 'features')) return poly;
-//    if (includes(poly, 'POLYGON')) return {
-//      "type": "FeatureCollection",
-//      "features": [{
-//        "type": "Feature",
-//        "properties": {},
-//        "geometry": wkx.Geometry.parse(poly).toGeoJSON()
-//      }]
-//    }
-//    try {
-//      const buf = Buffer.from(poly, encoding);
-//      return {
-//        "type": "FeatureCollection",
-//        "features": [{
-//          "type": "Feature",
-//          "properties": {},
-//          "geometry": wkx.Geometry.parse(buf).toGeoJSON()
-//        }]
-//      }
-//    } catch (e) {
-//      return polyline.toGeoJSON(poly);
-//    }
-//  }
   getTilesUrl(str) {
     const tileUrls = {
       default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
@@ -131,7 +106,7 @@ class MapContainer extends React.Component {
         style={this.props.style}
         markerIcon={this.state.markerIcon}
         zipRadius={this.props.zipRadius}
-        center={this.state.center || this.props.center}
+        center={this.state.setCenter || this.props.center || this.state.center}
       />
     );
   }
