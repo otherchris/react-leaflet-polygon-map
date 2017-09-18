@@ -131,6 +131,7 @@ class MapContainer extends React.Component {
         style={this.props.style}
         markerIcon={this.state.markerIcon}
         zipRadius={this.props.zipRadius}
+        center={this.state.center || this.props.center}
       />
     );
   }
