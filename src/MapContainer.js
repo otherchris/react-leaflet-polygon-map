@@ -94,12 +94,18 @@ class MapContainer extends React.Component {
     console.log('called zipRadiusClick');
     // fetch from api
   }
+  chooseCenter(e) {
+    this.setState({
+      zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
+    });
+  }
   render() {
     const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
     const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
         center={center}
+        chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
         edit={this.state.edit}
         height={height}
