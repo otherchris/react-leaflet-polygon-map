@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle, Rectangle } from 'react-leaflet';
 import { EditControl } from "react-leaflet-draw";
+import ZipRadiusControl from './ZipRadiusControl';
 
 import L from 'leaflet';
 
@@ -44,23 +45,26 @@ const MapComponent = (props) => {
       </FeatureGroup>
       : null
   return (
-    <Map
-      style={{ height }}
-      center={center}
-      minZoom = {3}
-      maxZoom = {19}
-      zoom={zoom}
-    >
-      <TileLayer
-        attribution={tileLayerProps.attribution}
-        url={tileLayerProps.url}
-        />
-      {editTools}
-      {polygons}
-      {points}
-      {circles}
-      {rectangles}
-    </Map>
+    <div>
+      <Map
+        style={{ height }}
+        center={center}
+        minZoom = {3}
+        maxZoom = {19}
+        zoom={zoom}
+      >
+        <TileLayer
+          attribution={tileLayerProps.attribution}
+          url={tileLayerProps.url}
+          />
+        {editTools}
+        {polygons}
+        {points}
+        {circles}
+        {rectangles}
+      </Map>
+      <ZipRadiusControl center={props.center || "Choose a center"}/>
+    </div>
   );
 };
 

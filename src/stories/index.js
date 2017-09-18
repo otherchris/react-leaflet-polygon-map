@@ -94,8 +94,15 @@ storiesOf('Styling', module)
       polygons={[poly.polyline]}
     />
   ))
-storiesOf('Zips in a Radius', () => (
+storiesOf('Zips in a Radius', module)
+  .add('With no center', () => (
   <MapContainer
     zipRadius
+  />
+  ))
+  .add('With center provided', () => (
+  <MapContainer
+    zipRadius
+    center="a given center"
   />
 ))
