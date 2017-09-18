@@ -1,55 +1,15 @@
-import wkx from 'wkx';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
 import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
-// import { transformEncodedIntoGeoJSON } from 'transform-to-geojson';
-import polyline from 'polyline';
-import _ from 'lodash';
 import L from 'leaflet';
 import React from 'react';
-// an example to try out
 import MapComponent from './MapComponent';
-// import convertPoly from './ConvertPoly';
+import { displayPoly, getTilesUrl } from './MapHelpers';
 import './main.css';
 
-const displayPoly = (poly) => {
-  if (hasIn(poly, 'features')) return poly;
-  if (includes(poly, 'POLYGON')) {
-    return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(poly).toGeoJSON(),
-      }],
-    };
-  }
-  try {
-    const buf = Buffer.from(poly, 'base64');
-    return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(buf).toGeoJSON(),
-      }],
-    };
-  } catch (e) {
-    return polyline.toGeoJSON(poly);
-  }
-};
-
-const getTilesUrl = (str) => {
-  const tileUrls = {
-    default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-    minimal_light: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-    minimal_dark: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-  };
-  return tileUrls[str];
-};
 
 class MapContainer extends React.Component {
   constructor(props) {
