@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // eslint-disable-next-line max-len
 import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle, Rectangle } from 'react-leaflet';
-import { EditControl } from "react-leaflet-draw";
 import ZipRadiusControl from './ZipRadiusControl';
 import { EditControl } from 'react-leaflet-draw';
 import L from 'leaflet';
