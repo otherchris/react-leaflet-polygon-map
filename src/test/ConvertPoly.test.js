@@ -1,8 +1,9 @@
 import React from 'react';
 // eslint-disable-next-line max-len
-import { ensureShapeIsClosed, ensureGeometryIsValid, mkFeatureObj, geoJSONWrapper } from '../ConvertPoly';
+import { ensureShapeIsClosed, ensureGeometryIsValid, mkFeatureObj, geoJSONWrapper, convertPoly } from '../ConvertPoly';
 import poly from '../stories/poly.js';
 import polyFixtures from './polyFixtures';
+import dpPoly from '../stories/dpPoly.js';
 
 
 // ensureShapeIsClosed
@@ -36,13 +37,18 @@ test('given multipolys with one open one closed, open will close and closed will
   const result7 = ensureGeometryIsValid(polyFixtures.mixedMultipolyFeatObj.geometry);
   expect(result7).toEqual(polyFixtures.multipolyFeatObj4.geometry);
 });
-// make test for multipoly that has at least one open
 // make test for wrong "type"
 // make test to fail for only 1 or 2 points
 // test('expect Error to be thrown', () => {
-//   expect(ensureGeometryIsValid(polyFixtures.)) 
+// NOTE use .toThrow for this
 // });
      
+// Create Geometry
+test('lets see what convert poly does', () => {
+  const result8 = convertPoly(poly.polyline);
+  console.log('heres what it is', result8);
+  expect(result8).toEqual(polyFixtures.multiPolyFeatObj);
+});
 
 // mkFeatureObj Tests
 // test('expect type geoJSON to be geoJSONFeatureObj', () => {
