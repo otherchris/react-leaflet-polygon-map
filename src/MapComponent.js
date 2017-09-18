@@ -27,7 +27,6 @@ const style = {
 };
 
 const editTools = (p) => {
-  console.log('p', p);
   if (p.includeZipRadius) {
     return (
       <FeatureGroup>
@@ -39,7 +38,7 @@ const editTools = (p) => {
             rectangle: false,
             circle: false,
           }}
-          onCreated={p.onCreated}
+          onCreated={p.chooseCenter}
         />
       </FeatureGroup>
     );
