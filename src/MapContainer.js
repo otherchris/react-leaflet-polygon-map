@@ -7,7 +7,11 @@ import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
-import { displayPoly, getTilesUrl } from './MapHelpers';
+import {
+  displayPoly,
+  getTilesUrl,
+  generateIcon,
+} from './MapHelpers';
 import './main.css';
 
 
@@ -27,7 +31,8 @@ class MapContainer extends React.Component {
         markers: [],
       },
       edit: false,
-      markerIcon: this.generateIcon(props.iconHTML),
+      markerIcon: generateIcon(props.iconHTML),
+      zipRadiusCenter: [],
     };
   }
   componentDidMount() {
@@ -35,23 +40,12 @@ class MapContainer extends React.Component {
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, displayPoly);
-    // const polys = map(props.polygons,
-    //  (poly) => displayPoly(poly, { encoding: this.props.encoding }))
-    // const polys = map(props.polygons, displayPoly);
-    // const circs = map(props.circles, this.bind(props));
-    // const rect = map(props.rectangles, this.displayPoly);
     this.setState({
       polygons: polys,
       points: this.props.points,
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
-    });
-  }
-  generateIcon(string) {
-    return new L.divIcon({
-      className: 'my-div-icon',
-      html: this.props.iconHTML,
     });
   }
   updateShapes(e) {
