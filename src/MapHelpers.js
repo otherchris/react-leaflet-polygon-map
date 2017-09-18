@@ -1,4 +1,5 @@
 import wkx from 'wkx';
+import L from 'leaflet';
 import polyline from 'polyline';
 import hasIn from 'lodash/hasIn';
 import includes from 'lodash/includes';
@@ -38,3 +39,8 @@ export const getTilesUrl = (str) => {
   };
   return tileUrls[str];
 };
+
+export const generateIcon = (string, html) => new L.divIcon({
+  className: 'my-div-icon',
+  html,
+});
