@@ -105,23 +105,24 @@ const MapComponent = (props) => {
 };
 
 MapComponent.propTypes = {
-  onCreated: PropTypes.function,
-  polygons: PropTypes.arrayOf(PropTypes.string),
-  points: PropTypes.arrayOf(PropTypes.object),
-  circles: PropTypes.arrayOf(PropTypes.object),
-  height: PropTypes.number,
   center: PropTypes.number,
+  circles: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.boolean,
+  height: PropTypes.number,
+  includeZipRadius: PropTypes.boolean,
+  markerIcon: PropTypes.object,
+  onCreated: PropTypes.function,
+  points: PropTypes.arrayOf(PropTypes.object),
+  polygons: PropTypes.arrayOf(PropTypes.string),
+  rectangles: PropTypes.arrayOf(PropTypes.object),
   setCenter: PropTypes.arrayOf(PropTypes.number),
+  style: PropTypes.object,
   tileLayerProps: PropTypes.shape({
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
   }),
-  markerIcon: PropTypes.object,
-  edit: PropTypes.boolean,
-  rectangles: PropTypes.arrayOf(PropTypes.object),
-  style: PropTypes.object,
+  zipRadiusChange: PropTypes.function,
   zoom: PropTypes.number,
-  includeZipRadius: PropTypes.boolean,
 };
 
 MapComponent.defaultProps = {
