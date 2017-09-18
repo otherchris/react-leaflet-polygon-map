@@ -40,7 +40,7 @@ class MapContainer extends React.Component {
     if (this.props.includeZipRadius) {
       this.setState({
         edit: false,
-      })
+      });
     }
   }
   mapPropsToState(props) {
