@@ -72,7 +72,10 @@ const MapComponent = (props) => {
         {circles}
         {rectangles}
       </Map>
-      <ZipRadiusControl center={props.setCenter || 'Choose a center'}/>
+      <ZipRadiusControl
+        center={props.setCenter || 'Choose a center'}
+        zipRadiusChange={props.zipRadiusChange}
+      />
     </div>
   );
 };
