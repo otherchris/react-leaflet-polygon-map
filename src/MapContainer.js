@@ -15,6 +15,42 @@ import MapComponent from './MapComponent';
 // import convertPoly from './ConvertPoly';
 import './main.css';
 
+const displayPoly = (poly) => {
+  if (hasIn(poly, 'features')) return poly;
+  if (includes(poly, 'POLYGON')) {
+    return {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {},
+        geometry: wkx.Geometry.parse(poly).toGeoJSON(),
+      }],
+    };
+  }
+  try {
+    const buf = Buffer.from(poly, 'base64');
+    return {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {},
+        geometry: wkx.Geometry.parse(buf).toGeoJSON(),
+      }],
+    };
+  } catch (e) {
+    return polyline.toGeoJSON(poly);
+  }
+};
+
+const getTilesUrl = (str) => {
+  const tileUrls = {
+    default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    minimal_light: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+    minimal_dark: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+  };
+  return tileUrls[str];
+};
+
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -29,8 +65,8 @@ class MapContainer extends React.Component {
         rects: [],
         circles: [],
         markers: [],
-      edit: false,
       },
+      edit: false,
       markerIcon: this.generateIcon(props.iconHTML),
     };
   }
@@ -38,8 +74,9 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
   }
   mapPropsToState(props) {
-    const polys = map(props.polygons, this.displayPoly);
-    // const polys = map(props.polygons, (poly) => displayPoly(poly, { encoding: this.props.encoding }))
+    const polys = map(props.polygons, displayPoly);
+    // const polys = map(props.polygons,
+    //  (poly) => displayPoly(poly, { encoding: this.props.encoding }))
     // const polys = map(props.polygons, displayPoly);
     // const circs = map(props.circles, this.bind(props));
     // const rect = map(props.rectangles, this.displayPoly);
@@ -58,63 +95,33 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    console.log(e.layer.toGeoJSON())
+    console.log(e.layer.toGeoJSON());
     const state = this.state;
     state.edit = false;
     switch (e.layerType) {
-      case 'polygon':
-        state.polygons.push(e.layer.toGeoJSON());
-        break;
-      case 'circle':
-        state.circles.push(e.layer.toGeoJSON());
-        break;
-      case 'rectangle':
-        state.rectangles.push(e.layer.toGeoJSON());
-        break;
-      case 'marker':
-        state.points.push(e.layer.toGeoJSON());
-        break;
+    case 'polygon':
+      state.polygons.push(e.layer.toGeoJSON());
+      break;
+    case 'circle':
+      state.circles.push(e.layer.toGeoJSON());
+      break;
+    case 'rectangle':
+      state.rectangles.push(e.layer.toGeoJSON());
+      break;
+    case 'marker':
+      state.points.push(e.layer.toGeoJSON());
+      break;
+    default:
+      break;
     }
     this.setState(state);
     this.setState({
       edit: true,
-    })
-  }
-  displayPoly(poly) {
-    if (hasIn(poly, 'features')) return poly;
-    if (includes(poly, 'POLYGON')) return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(poly).toGeoJSON(),
-      }],
-    };
-    try {
-      const buf = Buffer.from(poly, 'base64');
-      return {
-        type: 'FeatureCollection',
-        features: [{
-          type: 'Feature',
-          properties: {},
-          geometry: wkx.Geometry.parse(buf).toGeoJSON(),
-        }],
-      };
-    } catch (e) {
-      return polyline.toGeoJSON(poly);
-    }
-  }
-  getTilesUrl(str) {
-    const tileUrls = {
-      default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      minimal_light: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-      minimal_dark: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-    };
-    return tileUrls[str];
+    });
   }
   render() {
     const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
-    const tileUrl= this.getTilesUrl(tiles);
+    const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
         polygons={this.state.polygons}
@@ -130,7 +137,7 @@ class MapContainer extends React.Component {
         style={this.props.style}
         markerIcon={this.state.markerIcon}
         zipRadius={this.props.zipRadius}
-        center={this.state.setCenter || this.props.center || this.state.center}
+        setCenter={this.state.setCenter || this.props.setCenter || this.state.center}
       />
     );
   }
@@ -145,6 +152,14 @@ MapContainer.propTypes = {
   height: PropTypes.number,
   encoding: PropTypes.string,
   iconHTML: PropTypes.string,
+  edit: PropTypes.boolean,
+  tileLayerProps: PropTypes.object,
+  width: PropTypes.number,
+  zoom: PropTypes.number,
+  center: PropTypes.arrayOf(PropTypes.number),
+  setCenter: PropTypes.arrayOf(PropTypes.number),
+  style: PropTypes.object,
+  zipRadius: PropTypes.boolean,
 };
 
 MapContainer.defaultProps = {
