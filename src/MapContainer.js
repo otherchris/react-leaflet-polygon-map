@@ -73,6 +73,21 @@ class MapContainer extends React.Component {
       edit: true,
     });
   }
+  zipRadiusChange(e) {
+    const radius = parseFloat(e.target.value);
+    if (!isNaN(radius)) {
+      this.setState({
+        zipRadius: parseFloat(e.target.value),
+      });
+    } else {
+      this.setState({
+        zipRadius: 'NaN',
+      });
+    }
+  }
+  zipRadiusClick(e) {
+    console.log('called zipRadiusClick');
+  }
   render() {
     const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
     const tileUrl = getTilesUrl(tiles);
@@ -89,12 +104,14 @@ class MapContainer extends React.Component {
         rectangles={this.state.rectangles}
         style={this.props.style}
         tileLayerProps={{ url: tileUrl }}
-        zipRadius={this.props.zipRadius}
+        includeZipRadius={this.props.zipRadius}
         zipRadiusCenter={
           this.state.zipRadiusCenter ||
           this.props.zipRadiusCenter ||
           this.state.center
         }
+        zipRadiusChange={this.zipRadiusChange.bind(this)}
+        zipRadiusClick={this.zipRadiusClick.bind(this)}
         zoom={zoom}
       />
     );
