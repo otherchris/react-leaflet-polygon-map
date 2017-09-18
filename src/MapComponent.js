@@ -26,6 +26,41 @@ const style = {
   fillOpacity: 0.45,
 };
 
+const editTools = (p) => {
+  console.log('p', p);
+  if (p.includeZipRadius) {
+    return (
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            polyline: false,
+            polygon: false,
+            rectangle: false,
+            circle: false,
+          }}
+          onCreated={p.onCreated}
+        />
+      </FeatureGroup>
+    );
+  } else if (p.edit) {
+    return (
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            polyline: false,
+            rectangle: false,
+            circle: false,
+          }}
+          onCreated={p.onCreated}
+        />
+      </FeatureGroup>
+    );
+  }
+  return null;
+};
+
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height } = props;
   merge(style, props.style);
@@ -41,18 +76,8 @@ const MapComponent = (props) => {
   const rectangles = map(props.rectangles, (result, index) => (
     <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
   ));
-  const editTools = props.edit ?
-    <FeatureGroup>
-      <EditControl
-        position='topright'
-        draw={{
-          rectangle: false,
-          circle: false,
-        }}
-        onCreated={props.onCreated}
-      />
-    </FeatureGroup>
-    : null;
+  const editComponent = editTools(props);
+
   return (
     <div>
       <Map
@@ -66,7 +91,7 @@ const MapComponent = (props) => {
           attribution={tileLayerProps.attribution}
           url={tileLayerProps.url}
         />
-        {editTools}
+        {editComponent}
         {polygons}
         {points}
         {circles}
@@ -97,6 +122,7 @@ MapComponent.propTypes = {
   rectangles: PropTypes.arrayOf(PropTypes.object),
   style: PropTypes.object,
   zoom: PropTypes.number,
+  includeZipRadius: PropTypes.boolean,
 };
 
 MapComponent.defaultProps = {
