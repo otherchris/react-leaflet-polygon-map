@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+// eslint-disable-next-line max-len
 import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle, Rectangle } from 'react-leaflet';
 import { EditControl } from "react-leaflet-draw";
 import ZipRadiusControl from './ZipRadiusControl';
-
+import { EditControl } from 'react-leaflet-draw';
 import L from 'leaflet';
-
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
+import map from 'lodash/map';
 import 'leaflet/dist/leaflet.css';
 import './main.css';
 
@@ -15,22 +16,22 @@ const style = {
   fill: true,
   fillColor: 'red',
   fillOpacity: 0.45,
-}
+};
 
 const MapComponent = (props) => {
-  const  { zoom, tileLayerProps, center, height, radius } = props;
-  merge(style, props.style)
-  const polygons = _.map(props.polygons, (result, index) => (
+  const { zoom, tileLayerProps, center, height } = props;
+  merge(style, props.style);
+  const polygons = map(props.polygons, (result, index) => (
     <GeoJSON style={style} data={result} key={ index }/>
   ));
-  const points = _.map(props.points, (result, index) => (
+  const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon} />
   ));
-  const circles = _.map(props.circles, (result, index) => (
-    <Circle style={style} data={result} key={index} center={result.center} radius={result.radius} />
+  const circles = map(props.circles, (result, index) => (
+    <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} />
   ));
-  const rectangles = _.map(props.rectangles, (result, index) => (
-    <Rectangle style={style} data={result} key={index} bounds={result.bounds} />
+  const rectangles = map(props.rectangles, (result, index) => (
+    <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
   ));
   const editTools = props.edit ?
       <FeatureGroup>
@@ -70,7 +71,7 @@ const MapComponent = (props) => {
 
 MapComponent.propTypes = {
   onCreated: PropTypes.function,
-  polys: PropTypes.arrayOf(PropTypes.string),
+  polygons: PropTypes.arrayOf(PropTypes.string),
   points: PropTypes.arrayOf(PropTypes.object),
   circles: PropTypes.arrayOf(PropTypes.object),
   height: PropTypes.number,
@@ -80,6 +81,10 @@ MapComponent.propTypes = {
     url: PropTypes.string.isRequired,
   }),
   markerIcon: PropTypes.object,
+  edit: PropTypes.boolean,
+  rectangles: PropTypes.arrayOf(PropTypes.object),
+  style: PropTypes.object,
+  zoom: PropTypes.number,
 };
 
 MapComponent.defaultProps = {
