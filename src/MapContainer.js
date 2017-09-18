@@ -12,7 +12,7 @@ import L from 'leaflet';
 import React from 'react';
 // an example to try out
 import MapComponent from './MapComponent';
-import convertPoly from './ConvertPoly';
+// import convertPoly from './ConvertPoly';
 import './main.css';
 
 class MapContainer extends React.Component {
@@ -37,16 +37,16 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
   }
   mapPropsToState(props) {
-    // const polys = map(props.polygons, (poly) => convertPoly(poly, { encoding: this.props.encoding }))
-    const polys = map(props.polygons, convertPoly);
-    console.log(polys)
-    const circs = map(props.circles, convertPoly);
-    const rect = map(props.rectangles, convertPoly);
+    const polys = map(props.polygons, this.displayPoly);
+    // const polys = map(props.polygons, (poly) => displayPoly(poly, { encoding: this.props.encoding }))
+    // const polys = map(props.polygons, displayPoly);
+    // const circs = map(props.circles, this.bind(props));
+    // const rect = map(props.rectangles, this.displayPoly);
     this.setState({
       polygons: polys,
       points: this.props.points,
-      rectangles: rect,
-      circles: circs
+      rectangles: this.props.rectangles,
+      circles: this.props.circles,
     });
   }
   generateIcon(string) {
@@ -58,51 +58,50 @@ class MapContainer extends React.Component {
   updateShapes(e) {
     const drawn = this.state.drawn;
     switch (e.layerType) {
-      case 'polygon':
-        drawn.polys.push(e);
-        break;
-      case 'polyline':
-        drawn.lines.push(e);
-        break;
-      case 'circle':
-        drawn.circles.push(e);
-        break;
-      case 'rectangle':
-        drawn.rects.push(e);
-        break;
-      case 'marker':
-        drawn.markers.push(e);
-        break;
+    case 'polygon':
+      drawn.polys.push(e);
+      break;
+    case 'polyline':
+      drawn.lines.push(e);
+      break;
+    case 'circle':
+      drawn.circles.push(e);
+      break;
+    case 'rectangle':
+      drawn.rects.push(e);
+      break;
+    case 'marker':
+      drawn.markers.push(e);
+      break;
     }
     this.setState({
       drawn
-    })
+    });
   }
-//  convertPoly(poly) {
-//    const encoding = this.encoding || 'base64';
-//    if (hasIn(poly, 'features')) return poly;
-//    if (includes(poly, 'POLYGON')) return {
-//      "type": "FeatureCollection",
-//      "features": [{
-//        "type": "Feature",
-//        "properties": {},
-//        "geometry": wkx.Geometry.parse(poly).toGeoJSON()
-//      }]
-//    }
-//    try {
-//      const buf = Buffer.from(poly, encoding);
-//      return {
-//        "type": "FeatureCollection",
-//        "features": [{
-//          "type": "Feature",
-//          "properties": {},
-//          "geometry": wkx.Geometry.parse(buf).toGeoJSON()
-//        }]
-//      }
-//    } catch (e) {
-//      return polyline.toGeoJSON(poly);
-//    }
-//  }
+  displayPoly(poly) {
+    if (hasIn(poly, 'features')) return poly;
+    if (includes(poly, 'POLYGON')) return {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {},
+        geometry: wkx.Geometry.parse(poly).toGeoJSON(),
+      }],
+    };
+    try {
+      const buf = Buffer.from(poly, 'base64');
+      return {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: wkx.Geometry.parse(buf).toGeoJSON(),
+        }],
+      };
+    } catch (e) {
+      return polyline.toGeoJSON(poly);
+    }
+  }
   getTilesUrl(str) {
     const tileUrls = {
       default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
@@ -150,7 +149,7 @@ MapContainer.defaultProps = {
     `<svg width="50" height="50">
       <circle cx="25" cy="25" r="20" stroke="black" stroke-width="1" fill="red" />
     </svg>`,
-}
+};
 
 export default MapContainer;
 
