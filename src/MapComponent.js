@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 // eslint-disable-next-line max-len
-import { Map, Marker, Popup, TileLayer, GeoJSON, FeatureGroup, Circle, Rectangle } from 'react-leaflet';
-import ZipRadiusControl from './ZipRadiusControl';
-import { EditControl } from 'react-leaflet-draw';
 import L from 'leaflet';
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
 import 'leaflet/dist/leaflet.css';
+import {
+  Map,
+  Marker,
+  Popup,
+  TileLayer,
+  GeoJSON,
+  FeatureGroup,
+  Circle,
+  Rectangle,
+} from 'react-leaflet';
+import { EditControl } from 'react-leaflet-draw';
+import ZipRadiusControl from './ZipRadiusControl';
 import './main.css';
 
 const style = {
@@ -33,17 +42,17 @@ const MapComponent = (props) => {
     <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
   ));
   const editTools = props.edit ?
-      <FeatureGroup>
-        <EditControl
-          position='topright'
-          draw={{
-            rectangle: false,
-            circle: false,
-          }}
-          onCreated={props.onCreated}
-        />
-      </FeatureGroup>
-      : null
+    <FeatureGroup>
+      <EditControl
+        position='topright'
+        draw={{
+          rectangle: false,
+          circle: false,
+        }}
+        onCreated={props.onCreated}
+      />
+    </FeatureGroup>
+    : null;
   return (
     <div>
       <Map
@@ -56,14 +65,14 @@ const MapComponent = (props) => {
         <TileLayer
           attribution={tileLayerProps.attribution}
           url={tileLayerProps.url}
-          />
+        />
         {editTools}
         {polygons}
         {points}
         {circles}
         {rectangles}
       </Map>
-      <ZipRadiusControl center={props.center || "Choose a center"}/>
+      <ZipRadiusControl center={props.setCenter || 'Choose a center'}/>
     </div>
   );
 };
@@ -75,6 +84,7 @@ MapComponent.propTypes = {
   circles: PropTypes.arrayOf(PropTypes.object),
   height: PropTypes.number,
   center: PropTypes.number,
+  setCenter: PropTypes.arrayOf(PropTypes.number),
   tileLayerProps: PropTypes.shape({
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
