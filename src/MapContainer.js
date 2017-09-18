@@ -37,6 +37,11 @@ class MapContainer extends React.Component {
   }
   componentDidMount() {
     this.mapPropsToState(this.props);
+    if (this.props.includeZipRadius) {
+      this.setState({
+        edit: false,
+      })
+    }
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, displayPoly);
@@ -87,6 +92,7 @@ class MapContainer extends React.Component {
   }
   zipRadiusClick(e) {
     console.log('called zipRadiusClick');
+    // fetch from api
   }
   render() {
     const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
@@ -104,7 +110,7 @@ class MapContainer extends React.Component {
         rectangles={this.state.rectangles}
         style={this.props.style}
         tileLayerProps={{ url: tileUrl }}
-        includeZipRadius={this.props.zipRadius}
+        includeZipRadius={this.props.includeZipRadius}
         zipRadiusCenter={
           this.state.zipRadiusCenter ||
           this.props.zipRadiusCenter ||
@@ -125,6 +131,7 @@ MapContainer.propTypes = {
   encoding: PropTypes.string,
   height: PropTypes.number,
   iconHTML: PropTypes.string,
+  includeZipRadius: PropTypes.boolean,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
@@ -132,7 +139,6 @@ MapContainer.propTypes = {
   tileLayerProps: PropTypes.object,
   tiles: PropTypes.string,
   width: PropTypes.number,
-  zipRadius: PropTypes.boolean,
   zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
 };

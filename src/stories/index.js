@@ -100,7 +100,7 @@ storiesOf('Styling', module)
 storiesOf('Zips in a Radius', module)
   .add('With no center', () => (
     <MapContainer
-      zipRadius
+      includeZipRadius
     />
   ))
   .add('With center provided', () => (
