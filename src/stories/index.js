@@ -94,3 +94,8 @@ storiesOf('Styling', module)
       polygons={[poly.polyline]}
     />
   ))
+storiesOf('Zips in a Radius', () => (
+  <MapContainer
+    zipRadius
+  />
+))
