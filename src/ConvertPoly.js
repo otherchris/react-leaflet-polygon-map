@@ -27,68 +27,62 @@ export const ensureGeometryIsValid = geometry => {
 };
 
 export const convertPoly = (poly) => {
+  const area = poly.data.area;
   switch (poly.type) {
-  case 'polyline':
+  case 'polyline': {
     return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: polyline.toGeoJSON(poly.data),
-      }],
+      type: 'Feature',
+      properties: {},
+      geometry: polyline.toGeoJSON(poly.data),
     };
-  case 'wkt':
+  }
+  case 'wkt': {
     return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(poly.data).toGeoJSON(),
-      }],
+      type: 'Feature',
+      properties: {},
+      geometry: wkx.Geometry.parse(poly.data).toGeoJSON(),
     };
-  case 'wkb':
+  }
+  case 'wkb': {
     const buf = Buffer.from(poly.data, 'base64');
     return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(buf).toGeoJSON(poly.data),
-      }],
+      type: 'Feature',
+      properties: {},
+      geometry: wkx.Geometry.parse(buf).toGeoJSON(poly.data),
     };
-  case 'Circle':
+  }
+  case 'Circle': {
     const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
+    const center = poly.data.center;
+    const radius = poly.data.radius;
     return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'Polygon',
-          coordinates: [
-            circleCoords,
-          ],
-        },
-      }],
+      type: 'Feature',
+      properties: { center: center || '', radius: radius || '', area: area || '' },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          circleCoords,
+        ],
+      },
     };
-  case 'Rectangle':
+  }
+  case 'Rectangle': {
     const rectCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
-    console.log('rectCoords', rectCoords);
+    const bounds = poly.data.bounds;
     return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'Polygon',
-          coordinates: [
-            rectCoords,
-          ],
-        },
-      }],
+      type: 'Feature',
+      properties: { bounds: bounds || '', area: area || '' },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          rectCoords,
+        ],
+      },
     };
-  case 'geoJSON':
+  }
+  case 'geoJSON': {
     return poly.data;
+  }
   default:
     return poly.data;
   }
