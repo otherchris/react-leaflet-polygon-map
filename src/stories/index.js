@@ -5,6 +5,7 @@ import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import points from './points';
 import dpPoly from './dpPoly';
 import '../main.css';
+import './layout';
 import './polygons';
 import './styling';
 import './tools';

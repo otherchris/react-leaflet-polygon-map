@@ -11,6 +11,13 @@ storiesOf('Edit tools', module)
   ))
   .add('with edit tools', () => (
     <MapContainerStoryWithNotes edit />
+  ))
+  .add('edit an existing polygon', () => (
+    <MapContainerStoryWithNotes
+      edit
+      polygons={[dpPoly.polyline]}
+      additionalNotes={'Should be able to click a polygon and edit if edit tools are enabled'}
+    />
   ));
 
 storiesOf('Zips in a Radius', module)
