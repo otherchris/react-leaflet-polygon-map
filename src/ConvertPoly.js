@@ -18,8 +18,12 @@ export const ensureGeometryIsValid = geometry => {
     geometry.coordinates = ensureShapeIsClosed(geometry.coordinates);
     return geometry;
   case 'MultiPolygon':
-    geometry.coordinates = geometry.coordinates.map((poly) =>
-      ensureShapeIsClosed(poly));
+    const data = geometry.coordinates;
+    map((data), function (poly) {
+      map((poly), function (shape) {
+        ensureShapeIsClosed(shape);
+      });
+    });
     return geometry;
   default:
     throw Error(`Ensure Geometry - invalid geometry type: ${geometry.type}`);
@@ -80,8 +84,9 @@ export const convertPoly = (poly) => {
       },
     };
   }
+  case 'MultiPolygon':
   case 'geoJSON': {
-    return poly.data;
+    return poly.data.features[0];
   }
   default:
     return poly.data;

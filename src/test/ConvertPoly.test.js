@@ -43,7 +43,7 @@ test('given multipolys with one open one closed, open will close and closed will
 // NOTE use .toThrow for this
 // });
      
-// Create Geometry
+// Create Feature Objects
 test('given polyline, return feature', () => {
   const result8 = convertPoly(poly.polyline);
   expect(result8).toEqual(polyFixtures.polylineFeatObj2);
@@ -63,6 +63,14 @@ test('given Circle, return feature', () => {
 test('given rectangle, return feature', () => {
   const result12 = convertPoly(poly.rectangle);
   expect(result12).toEqual(polyFixtures.rectangleFeatObj);
+});
+test('given geoJSON, return Feature Object', () => {
+  const result13 = convertPoly(poly.geoJSON);
+  expect(result13).toEqual(polyFixtures.geoJSONFeatObj);
+});
+test('given multipolugon geoJSON, return Feature Object', () => {
+  const result14 = convertPoly(poly.geoJSONMultiPoly);
+  expect(result14).toEqual(polyFixtures.geoJSONMultiPolyFeatObj);
 });
 
 // mkFeatureObj Tests
