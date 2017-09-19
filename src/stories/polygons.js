@@ -11,29 +11,50 @@ import '../main.css';
 
 
 storiesOf('Polygons', module)
-  .add('map with no \'gons', () => (
-    <MapContainerStoryWithNotes polygons={[]} additionalNotes={'An addtional note'} />
-  ))
   .add('map with a \'gon (polyline)', () => (
-    <MapContainerStoryWithNotes polygons={[dpPoly.polyline]} />
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.polyline]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled polygon
+      `}
+    />
   ))
   .add('map with a \'gon (GeoJson)', () => (
-    <MapContainerStoryWithNotes polygons={[dpPoly.geoJSON]} />
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.geoJSON]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled polygon
+      `}
+    />
   ))
   .add('map with a \'gon (wkt)', () => (
-    <MapContainerStoryWithNotes polygons={[dpPoly.wkt]} />
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.wkt]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled polygon
+      `}
+    />
   ))
   .add('map with a \'gon (wkb)', () => (
-    <MapContainerStoryWithNotes polygons={[dpPoly.wkb]} />
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.wkb]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled polygon
+      `}
+    />
   ))
   .add('map with all the \'gons', () => (
     // eslint-disable-next-line max-len
-    <MapContainerStoryWithNotes polygons={[
-      dpPoly.wkb,
-      dpPoly.polyline,
-      dpPoly.wkt,
-      dpPoly.geoJSON,
-    ]}
+    <MapContainerStoryWithNotes
+      polygons={[
+        dpPoly.wkb,
+        dpPoly.polyline,
+        dpPoly.wkt,
+        dpPoly.geoJSON,
+      ]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Four default styled polygon
+      `}
     />
   ))
   .add('map with all the things', () => (
@@ -47,19 +68,40 @@ storiesOf('Polygons', module)
       rectangles={[dpPoly.rectangle]}
       circles={[dpPoly.circle]}
       tiles="minimal_light"
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Four default styled polygon
+        <input type="checkbox" /> 2. Default styled rectangle
+        <input type="checkbox" /> 3. Default styled circle
+      `}
     />
   ))
   .add('map with rectangle', () => (
-    <MapContainerStoryWithNotes rectangles={[dpPoly.rectangle]} tiles="minimal_light" />
+    <MapContainerStoryWithNotes
+      rectangles={[dpPoly.rectangle]}
+      tiles="minimal_light"
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled rectangle
+      `}
+    />
   ))
   .add('map with a circle', () => (
-    <MapContainerStoryWithNotes circles={[dpPoly.circle]} tiles="minimal_light" />
+    <MapContainerStoryWithNotes
+      circles={[dpPoly.circle]}
+      tiles="minimal_light"
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled circle
+      `}
+    />
   ));
 
 storiesOf('Points', module)
-  .add('map with no points', () => (
-    <MapContainerStoryWithNotes polygons={[]} points={[]} tiles="minimal_light"/>
-  ))
   .add('map with a point', () => (
-    <MapContainerStoryWithNotes polygons={[]} points={ points } tiles="minimal_light"/>
+    <MapContainerStoryWithNotes
+      polygons={[]}
+      points={ points }
+      tiles="minimal_light"
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. 12 default styled points in a circle
+      `}
+    />
   ));
