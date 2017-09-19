@@ -44,10 +44,25 @@ test('given multipolys with one open one closed, open will close and closed will
 // });
      
 // Create Geometry
-test('lets see what convert poly does', () => {
+test('given polyline, return feature', () => {
   const result8 = convertPoly(poly.polyline);
-  console.log('heres what it is', result8);
-  expect(result8).toEqual(polyFixtures.multiPolyFeatObj);
+  expect(result8).toEqual(polyFixtures.polylineFeatObj2);
+});
+test('given wkt, return feature', () => {
+  const result9 = convertPoly(poly.wkt);
+  expect(result9).toEqual(polyFixtures.wktFeatObj);
+});
+test('given wkb, return feature', () => {
+  const result10 = convertPoly(poly.wkb);
+  expect(result10).toEqual(polyFixtures.wkbFeatObj);
+});
+test('given Circle, return feature', () => {
+  const result11 = convertPoly(poly.circle);
+  expect(result11).toEqual(polyFixtures.circleFeatObj);
+});
+test('given rectangle, return feature', () => {
+  const result12 = convertPoly(poly.rectangle);
+  expect(result12).toEqual(polyFixtures.rectangleFeatObj);
 });
 
 // mkFeatureObj Tests
