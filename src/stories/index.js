@@ -19,23 +19,3 @@ storiesOf('Tilesets', module)
     <MapContainer polygons={[dpPoly.polyline]} points={points} />
   ));
 
-storiesOf('Edit tools', module)
-  .add('without edit tools (default)', () => (
-    <MapContainer />
-  ))
-  .add('with edit tools', () => (
-    <MapContainer edit />
-  ));
-
-storiesOf('Zips in a Radius', module)
-  .add('With no center', () => (
-    <MapContainer
-      includeZipRadius
-    />
-  ))
-  .add('With center provided', () => (
-    <MapContainer
-      includeZipRadius
-      center="a given center"
-    />
-  ));
