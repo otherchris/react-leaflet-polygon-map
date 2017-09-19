@@ -6,17 +6,22 @@ import points from './points';
 import dpPoly from './dpPoly';
 
 storiesOf('Edit tools', module)
-  .add('without edit tools (default)', () => (
-    <MapContainerStoryWithNotes />
-  ))
   .add('with edit tools', () => (
-    <MapContainerStoryWithNotes edit />
+    <MapContainerStoryWithNotes
+      edit
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Edit tools in upper right
+        <input type="checkbox" /> 2. Tools include polygon, edit, trash
+      `}
+    />
   ))
   .add('edit an existing polygon', () => (
     <MapContainerStoryWithNotes
       edit
       polygons={[dpPoly.polyline]}
-      additionalNotes={'Should be able to click a polygon and edit if edit tools are enabled'}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Clicking a polygon should make it editable
+      `}
     />
   ));
 
@@ -24,11 +29,24 @@ storiesOf('Zips in a Radius', module)
   .add('With no center', () => (
     <MapContainerStoryWithNotes
       includeZipRadius
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Radius input, lower left
+        <input type="checkbox" /> 2. Point edit tool
+        <input type="checkbox" /> 3. Place a point, enter radius, and zips in
+                                     that radius should be added as polygons
+      `}
     />
-  ))
-  .add('With center provided', () => (
+  ));
+
+storiesOf('Given location and radius', module)
+  .add('location/radius tool', () => (
     <MapContainerStoryWithNotes
-      includeZipRadius
-      center="a given center"
+      includeCenterRadius
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Radius input, lower left
+        <input type="checkbox" /> 2. Point edit tool
+        <input type="checkbox" /> 3. Place a point, enter radius, and circle with
+                                     given radius is added
+      `}
     />
   ));
