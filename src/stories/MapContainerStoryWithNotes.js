@@ -13,13 +13,12 @@ const MapContainerStoryWithNotes = (props) => {
   const notes = `${props.additionalNotes || ''}\n\nMapContainer with \n<pre>${propNotes}</pre>`;
   return (
     <WithNotes notes={notes}>
-      <MapContainer { ...props }/>
+      <MapContainer { ...omit(props, 'additionalNotes') }/>
     </WithNotes>
   );
 };
 
 MapContainerStoryWithNotes.propTypes = {
-  polyArray: PropTypes.array,
   additionalNotes: PropTypes.string,
 };
 
