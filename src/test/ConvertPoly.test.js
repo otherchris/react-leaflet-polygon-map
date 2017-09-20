@@ -76,77 +76,16 @@ test('given multipolugon geoJSON, return Feature Object', () => {
 // makeGeoJSON
 test('given polygon, make geoJSON', () => {
   const result15 = makeGeoJSON(poly.polyline);
+  console.log('poly geojson', JSON.stringify(result15));
   expect(result15).toEqual(polyFixtures.polylineGeoJSON);
 });
 test('given geoJSON, make geoJSON', () => {
   const result16 = makeGeoJSON(poly.geoJSON);
+  console.log('geojson  geojson', result16);
   expect(result16).toEqual(polyFixtures.geoJSONGeoJSON);
 });
 test('given wkt, make geoJSON', () => {
   const result17 = makeGeoJSON(poly.wkt);
+  console.log('wkt geojson', result17);
   expect(result17).toEqual(polyFixtures.wktGeoJSON);
 });
-
-// mkFeatureObj Tests
-// test('expect type geoJSON to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.geoJSON)).toEqual(polyFixtures.geoJSONFeatureObj);
-// });
-// test('expet type polyline to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.polyline)).toEqual(polyFixtures.polylineFeatureObj);
-// });
-// test('expect type wkt to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.wkt)).toEqual(polyFixtures.wktFeatureObj);
-// });
-// test('expet type wkb to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.wkb)).toEqual(polyFixtures.wkbFeatureObj);
-// });
-// test('expect type circle to be geoJSONFeatureObj', () => {
-//   console.log()
-//   expect(mkFeatureObj(poly.circle)).toEqual(polyFixtures.circleFeatureObj);
-// });
-// test('expet type rectangle to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.rectangle)).toEqual(polyFixtures.rectangleFeatureObj);
-// });
-// // geoJSONWrapper Tests
-// test('expect geoJSONFeatureObj to be geoJSONGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.geoJSON)).toEqual(polyFixtures.geoJSONFeatureObj);
-// });
-// test('expet polylineFeatureObj to be polylineGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.polyline)).toEqual(polyFixtures.polylineFeatureObj);
-// });
-// test('expect wktFeatureObj to be wktGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.wkt)).toEqual(polyFixtures.wktFeatureObj);
-// });
-// test('expet wkbFeatureObj to be wkbGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.wkb)).toEqual(polyFixtures.wkbFeatureObj);
-// });
-// test('expect circleFeatureObj to be circleGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.circle)).toEqual(polyFixtures.circleFeatureObj);
-// });
-// test('expet type rectangle to be rectangleGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.rectangle)).toEqual(polyFixtures.rectangleFeatureObj);
-// });
-
-
-// create fixture
-// take fixture
-// look at poly.**(the type)
-// compare the two
-// make sure they are both objects with the same keys
-
-
-// {
-//   "type": "FeatureCollection",
-//   "features": [
-//       {
-//             "type": "Feature",
-//             "geometry": {
-//                     "type": "Point",
-//                     "coordinates": [0, 0]
-//                   },
-//             "properties": {
-//                     "name": "null island"
-//                   }
-//           }
-//     ]
-// }
