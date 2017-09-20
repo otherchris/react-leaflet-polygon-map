@@ -2,6 +2,8 @@
 // and rectangle paths and returns geoJSON
 import wkx from 'wkx';
 import map from 'lodash/map';
+import size from 'lodash/size';
+import flatten from 'lodash/flatten';
 import isEqual from 'lodash/isEqual';
 import polyline from 'polyline';
 
@@ -100,9 +102,28 @@ export const featCollWrap = (featObj) => {
     features: [featObj],
   }
 };
+export const sizeArray = geoJSONObj => {
+  const { properties } = geoJSONObj.features[0];
+  const { type, coordinates } = geoJSONObj.features[0].geometry;
+  let coordSize = size(coordinates[0]);
+  if (coordSize === 1) {
+    const flatterArray = flatten(coordinates);
+    const newFeature = {
+      type: 'Feature',
+      properties,
+      geometry: {
+        type,
+        coordinates: flatterArray,
+      }
+    };
+    return sizeArray(featCollWrap(newFeature));
+  }
+  return geoJSONObj;
+};
 export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
   const convertedGeoJSON = featCollWrap(validatedObj);
-  return convertedGeoJSON;
+  const resizedArray = sizeArray(convertedGeoJSON);
+  return resizedArray;
 };
