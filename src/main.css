@@ -17,3 +17,12 @@
 .map-legend: {
 
 }
+
+.leaflet-editing-icon {
+  width: 6px !important;
+  height: 6px !important;
+  margin-left: -4px !important;
+  margin-top: -4px !important;
+  border-radius: 50%;
+
+}
