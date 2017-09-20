@@ -1,6 +1,6 @@
 import React from 'react';
 // eslint-disable-next-line max-len
-import { ensureShapeIsClosed, ensureGeometryIsValid, mkFeatureObj, geoJSONWrapper, convertPoly } from '../ConvertPoly';
+import { ensureShapeIsClosed, ensureGeometryIsValid, convertPoly, makeGeoJSON } from '../ConvertPoly';
 import poly from '../stories/poly.js';
 import polyFixtures from './polyFixtures';
 import dpPoly from '../stories/dpPoly.js';
@@ -13,29 +13,29 @@ test('expect last coordinate to match first coordinate in shape array', () => {
 });
 test('given open shape, make sure it closes', () => {
   const result2 = ensureShapeIsClosed(polyFixtures.lineStringFeatObj.geometry.coordinates);
-  expect(result2).toEqual(polyFixtures.closedLineStringFeatObj.geometry.coordinates);
+  expect(result2).toEqual(polyFixtures.lineStringFeatObj2.geometry.coordinates);
 });
 
 // ensureGeometryIsValid
 test('expect open linestring to close', () => {
-  const result3 = ensureGeometryIsValid(polyFixtures.lineStringFeatObj.geometry);
-  expect(result3).toEqual(polyFixtures.closedLineStringFeatObj.geometry);
+  const result3 = ensureGeometryIsValid(polyFixtures.lineStringFeatObj);
+  expect(result3).toEqual(polyFixtures.closedLineStringFeatObj);
 });
 test('expect closed shape to pass through', () => {
-  const result4 = ensureGeometryIsValid(polyFixtures.polylineFeatObj.geometry);
-  expect(result4).toEqual(polyFixtures.polylineFeatObj.geometry);
+  const result4 = ensureGeometryIsValid(polyFixtures.polylineFeatObj);
+  expect(result4).toEqual(polyFixtures.polylineFeatObj);
 });
 test('given multipoly, shapes will pass', () => {
-  const result5 = ensureGeometryIsValid(polyFixtures.multipolyFeatObj.geometry);
-  expect(result5).toEqual(polyFixtures.multipolyFeatObj2.geometry);
+  const result5 = ensureGeometryIsValid(polyFixtures.multipolyFeatObj);
+  expect(result5).toEqual(polyFixtures.multipolyFeatObj2);
 });
 test('given open multipolys, shapes will be closed then pass', () => {
-  const result6 = ensureGeometryIsValid(polyFixtures.openMultipolyFeatObj.geometry);
-  expect(result6).toEqual(polyFixtures.multipolyFeatObj3.geometry);
+  const result6 = ensureGeometryIsValid(polyFixtures.openMultipolyFeatObj);
+  expect(result6).toEqual(polyFixtures.multipolyFeatObj3);
 });
 test('given multipolys with one open one closed, open will close and closed will pass', () => {
-  const result7 = ensureGeometryIsValid(polyFixtures.mixedMultipolyFeatObj.geometry);
-  expect(result7).toEqual(polyFixtures.multipolyFeatObj4.geometry);
+  const result7 = ensureGeometryIsValid(polyFixtures.mixedMultipolyFeatObj);
+  expect(result7).toEqual(polyFixtures.multipolyFeatObj4);
 });
 // make test for wrong "type"
 // make test to fail for only 1 or 2 points
@@ -43,7 +43,8 @@ test('given multipolys with one open one closed, open will close and closed will
 // NOTE use .toThrow for this
 // });
      
-// Create Geometry
+// Convert Poly
+// Create Feature Objects
 test('given polyline, return feature', () => {
   const result8 = convertPoly(poly.polyline);
   expect(result8).toEqual(polyFixtures.polylineFeatObj2);
@@ -64,67 +65,32 @@ test('given rectangle, return feature', () => {
   const result12 = convertPoly(poly.rectangle);
   expect(result12).toEqual(polyFixtures.rectangleFeatObj);
 });
-
-// mkFeatureObj Tests
-// test('expect type geoJSON to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.geoJSON)).toEqual(polyFixtures.geoJSONFeatureObj);
-// });
-// test('expet type polyline to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.polyline)).toEqual(polyFixtures.polylineFeatureObj);
-// });
-// test('expect type wkt to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.wkt)).toEqual(polyFixtures.wktFeatureObj);
-// });
-// test('expet type wkb to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.wkb)).toEqual(polyFixtures.wkbFeatureObj);
-// });
-// test('expect type circle to be geoJSONFeatureObj', () => {
-//   console.log()
-//   expect(mkFeatureObj(poly.circle)).toEqual(polyFixtures.circleFeatureObj);
-// });
-// test('expet type rectangle to be geoJSONFeatureObj', () => {
-//   expect(mkFeatureObj(poly.rectangle)).toEqual(polyFixtures.rectangleFeatureObj);
-// });
-// // geoJSONWrapper Tests
-// test('expect geoJSONFeatureObj to be geoJSONGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.geoJSON)).toEqual(polyFixtures.geoJSONFeatureObj);
-// });
-// test('expet polylineFeatureObj to be polylineGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.polyline)).toEqual(polyFixtures.polylineFeatureObj);
-// });
-// test('expect wktFeatureObj to be wktGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.wkt)).toEqual(polyFixtures.wktFeatureObj);
-// });
-// test('expet wkbFeatureObj to be wkbGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.wkb)).toEqual(polyFixtures.wkbFeatureObj);
-// });
-// test('expect circleFeatureObj to be circleGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.circle)).toEqual(polyFixtures.circleFeatureObj);
-// });
-// test('expet type rectangle to be rectangleGeoJSON', () => {
-//   expect(geoJSONWrapper(poly.rectangle)).toEqual(polyFixtures.rectangleFeatureObj);
-// });
-
-
-// create fixture
-// take fixture
-// look at poly.**(the type)
-// compare the two
-// make sure they are both objects with the same keys
-
-
-// {
-//   "type": "FeatureCollection",
-//   "features": [
-//       {
-//             "type": "Feature",
-//             "geometry": {
-//                     "type": "Point",
-//                     "coordinates": [0, 0]
-//                   },
-//             "properties": {
-//                     "name": "null island"
-//                   }
-//           }
-//     ]
-// }
+test('given geoJSON, return Feature Object', () => {
+  const result13 = convertPoly(poly.geoJSON);
+  expect(result13).toEqual(polyFixtures.geoJSONFeatObj);
+});
+test('given multipolugon geoJSON, return Feature Object', () => {
+  const result14 = convertPoly(poly.geoJSONMultiPoly);
+  expect(result14).toEqual(polyFixtures.geoJSONMultiPolyFeatObj);
+});
+// makeGeoJSON
+test('given polygon, make geoJSON', () => {
+  const result15 = makeGeoJSON(poly.polyline);
+  expect(result15).toEqual(polyFixtures.polylineGeoJSON);
+});
+test('given geoJSON, make geoJSON', () => {
+  const result16 = makeGeoJSON(poly.geoJSON);
+  expect(result16).toEqual(polyFixtures.geoJSONGeoJSON);
+});
+test('given wkt, make geoJSON', () => {
+  const result17 = makeGeoJSON(poly.wkt);
+  expect(result17).toEqual(polyFixtures.wktGeoJSON);
+});
+test('given wkb, make geoJSON', () => {
+  const result18 = makeGeoJSON(poly.wkb);
+  expect(result18).toEqual(polyFixtures.wkbGeoJSON);
+});
+test('given multipolygon geoJSON, make geoJSON', () => {
+  const result19 = makeGeoJSON(poly.geoJSONMultiPoly);
+  expect(result19).toEqual(polyFixtures.geoJSONMultiPoly);
+});
