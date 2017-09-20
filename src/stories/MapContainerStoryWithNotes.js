@@ -8,7 +8,11 @@ import MapContainer from '../MapContainer';
 const MapContainerStoryWithNotes = (props) => {
   let propNotes = '';
   map(omit(props, 'additionalNotes'), (val, key) => {
-    propNotes += `${key} = ${JSON.stringify(val, null, '  ')}\n`;
+    if (typeof val === 'object') {
+      propNotes += `${key} = ${JSON.stringify(val, null, '  ')}\n`;
+    } else {
+      propNotes += `${key} = ${val}\n`;
+    }
   });
   const notes = `${props.additionalNotes || ''}\n\nMapContainer with \n<pre>${propNotes}</pre>`;
   return (

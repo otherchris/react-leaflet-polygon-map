@@ -24,7 +24,7 @@ storiesOf('Layout', module)
   ))
   .add('With legend component', () => (
     <MapContainerStoryWithNotes
-      legendComponent={(<DummyComponent/>)}
+      legendComponent={DummyComponent}
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Red rectangle in the lower right
       `}
