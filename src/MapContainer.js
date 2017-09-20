@@ -157,10 +157,6 @@ MapContainer.propTypes = {
 
 MapContainer.defaultProps = {
   tiles: 'default',
-  iconHTML:
-    `<svg width="50" height="50">
-      <circle cx="25" cy="25" r="20" stroke="black" stroke-width="1" fill="red" />
-    </svg>`,
 };
 
 export default MapContainer;
