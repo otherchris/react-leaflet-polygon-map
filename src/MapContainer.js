@@ -2,6 +2,7 @@ import includes from 'lodash/includes';
 import map from 'lodash/map';
 import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
+import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
@@ -90,41 +91,45 @@ class MapContainer extends React.Component {
       });
     }
   }
-  zipRadiusClick(e) {
-    console.log('called zipRadiusClick');
-    // fetch from api
-  }
   chooseCenter(e) {
     this.setState({
       zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
     });
   }
   render() {
-    const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
+    const {
+      tileLayerProps,
+      width,
+      tiles,
+    } = this.props;
+    const passThroughProps = pick(this.props, [
+      'legendComponent',
+      'height',
+      'center',
+      'style',
+      'includeZipRadius',
+      'zoom',
+    ]);
     const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
-        center={center}
         chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
         edit={this.state.edit}
-        height={height}
         markerIcon={this.state.markerIcon}
         onCreated={this.updateShapes.bind(this)}
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}
-        style={this.props.style}
         tileLayerProps={{ url: tileUrl }}
-        includeZipRadius={this.props.includeZipRadius}
         zipRadiusCenter={
           this.state.zipRadiusCenter ||
           this.props.zipRadiusCenter ||
           this.state.center
         }
         zipRadiusChange={this.zipRadiusChange.bind(this)}
-        zipRadiusClick={this.zipRadiusClick.bind(this)}
-        zoom={zoom}
+        zipRadiusClick={''}
+        {...passThroughProps}
       />
     );
   }
@@ -138,6 +143,7 @@ MapContainer.propTypes = {
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,
+  legendComponent: PropTypes.function,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
