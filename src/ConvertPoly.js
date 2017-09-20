@@ -11,26 +11,28 @@ export const ensureShapeIsClosed = shape => {
   if (!isEqual(shape[0], shape[last])) shape.push(shape[0]);
   return shape;
 };
-export const ensureGeometryIsValid = geometry => {
-  switch (geometry.type) {
+export const ensureGeometryIsValid = featObj => {
+  switch (featObj.geometry.type) {
   case 'Polygon':
+    featObj.geometry.coordinates = ensureShapeIsClosed(featObj.geometry.coordinates);
   case 'LineString':
-    geometry.coordinates = ensureShapeIsClosed(geometry.coordinates);
-    return geometry;
+    featObj.geometry.type = 'Polygon';
+    featObj.geometry.coordinates = [ensureShapeIsClosed(featObj.geometry.coordinates)];
+    return featObj;
   case 'MultiPolygon':
-    const data = geometry.coordinates;
+    const data = featObj.geometry.coordinates;
     map((data), function (poly) {
       map((poly), function (shape) {
         ensureShapeIsClosed(shape);
       });
     });
-    return geometry;
+    return featObj;
   default:
-    throw Error(`Ensure Geometry - invalid geometry type: ${geometry.type}`);
+    throw Error(`Ensure Geometry - invalid geometry type: ${featObj.geometry.type}`);
   }
 };
 
-export const convertPoly = (poly) => {
+export const convertPoly = poly => {
   const area = poly.data.area;
   switch (poly.type) {
   case 'polyline': {
@@ -89,6 +91,18 @@ export const convertPoly = (poly) => {
     return poly.data.features[0];
   }
   default:
-    return poly.data;
+    throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
   }
+};
+export const featCollWrap = (featObj) => {
+  return {
+    type: 'FeatureCollection',
+    features: [featObj],
+  }
+};
+export const makeGeoJSON = poly => {
+  const featObj = convertPoly(poly);
+  const validatedObj = ensureGeometryIsValid(featObj);
+  const convertedGeoJSON = featCollWrap(validatedObj);
+  return convertedGeoJSON;
 };
