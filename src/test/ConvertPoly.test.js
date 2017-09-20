@@ -76,16 +76,21 @@ test('given multipolugon geoJSON, return Feature Object', () => {
 // makeGeoJSON
 test('given polygon, make geoJSON', () => {
   const result15 = makeGeoJSON(poly.polyline);
-  console.log('poly geojson', JSON.stringify(result15));
   expect(result15).toEqual(polyFixtures.polylineGeoJSON);
 });
 test('given geoJSON, make geoJSON', () => {
   const result16 = makeGeoJSON(poly.geoJSON);
-  console.log('geojson  geojson', result16);
   expect(result16).toEqual(polyFixtures.geoJSONGeoJSON);
 });
 test('given wkt, make geoJSON', () => {
   const result17 = makeGeoJSON(poly.wkt);
-  console.log('wkt geojson', result17);
   expect(result17).toEqual(polyFixtures.wktGeoJSON);
+});
+test('given wkb, make geoJSON', () => {
+  const result18 = makeGeoJSON(poly.wkb);
+  expect(result18).toEqual(polyFixtures.wkbGeoJSON);
+});
+test('given multipolygon geoJSON, make geoJSON', () => {
+  const result19 = makeGeoJSON(poly.geoJSONMultiPoly);
+  expect(result19).toEqual(polyFixtures.geoJSONMultiPoly);
 });
