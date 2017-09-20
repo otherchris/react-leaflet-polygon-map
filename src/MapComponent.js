@@ -61,7 +61,7 @@ const editTools = (p) => {
 };
 
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height } = props;
+  const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
   const polygons = map(props.polygons, (result, index) => (
     <GeoJSON style={style} data={result} key={ index }/>
@@ -76,6 +76,12 @@ const MapComponent = (props) => {
     <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
   ));
   const editComponent = editTools(props);
+  const zipRadiusControl = includeZipRadius ? (
+    <ZipRadiusControl
+      center={props.setCenter || 'Choose a center'}
+      zipRadiusChange={props.zipRadiusChange}
+    />
+  ) : '';
 
   return (
     <div>
@@ -96,10 +102,7 @@ const MapComponent = (props) => {
         {circles}
         {rectangles}
       </Map>
-      <ZipRadiusControl
-        center={props.setCenter || 'Choose a center'}
-        zipRadiusChange={props.zipRadiusChange}
-      />
+      {zipRadiusControl}
     </div>
   );
 };
