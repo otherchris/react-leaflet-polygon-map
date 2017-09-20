@@ -55,21 +55,22 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    console.log(e.layer.toGeoJSON());
     const state = this.state;
     state.edit = false;
+    const geoJson = e.layer.toGeoJSON();
+    geoJson.properties.editable = false;
     switch (e.layerType) {
     case 'polygon':
-      state.polygons.push(e.layer.toGeoJSON());
+      state.polygons.push(geoJson);
       break;
     case 'circle':
-      state.circles.push(e.layer.toGeoJSON());
+      state.circles.push(geoJson);
       break;
     case 'rectangle':
-      state.rectangles.push(e.layer.toGeoJSON());
+      state.rectangles.push(geoJson);
       break;
     case 'marker':
-      state.points.push(e.layer.toGeoJSON());
+      state.points.push(geoJson);
       break;
     default:
       break;
@@ -77,6 +78,20 @@ class MapContainer extends React.Component {
     this.setState(state);
     this.setState({
       edit: true,
+    });
+  }
+  clickPoly(e) {
+    const key = e.target.options.k_key;
+    console.log(e.layer.toGeoJSON())
+    const index = Math.abs(key);
+    const polygons = this.state.polygons;
+    if (polygons[index] && polygons[index].properties) {
+      polygons[index].properties.editable = !polygons[index].properties.editable;
+      polygons[index].key = -1 * key;
+      polygons[index] = e.layer.toGeoJSON();
+    }
+    this.setState({
+      polygons,
     });
   }
   zipRadiusChange(e) {
@@ -111,10 +126,12 @@ class MapContainer extends React.Component {
       'zoom',
     ]);
     const tileUrl = getTilesUrl(tiles);
+
     return (
       <MapComponent
         chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
+        clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
         markerIcon={this.state.markerIcon}
         onCreated={this.updateShapes.bind(this)}

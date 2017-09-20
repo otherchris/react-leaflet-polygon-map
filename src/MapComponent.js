@@ -76,7 +76,14 @@ const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
   const polygons = map(props.polygons, (result, index) => (
-    <GeoJSON style={style} data={result} key={ index }/>
+    <GeoJSON
+      style={style}
+      data={result}
+      key={result.key || index}
+      k_key={result.key || index}
+      editable={!!(result.properties && result.properties.editable)}
+      onClick={props.clickPoly}
+    />
   ));
   const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon} />

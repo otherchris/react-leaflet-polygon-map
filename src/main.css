@@ -19,10 +19,10 @@
 }
 
 .leaflet-editing-icon {
-  width: 6px !important;
-  height: 6px !important;
-  margin-left: -4px !important;
-  margin-top: -4px !important;
+  width: 10px !important;
+  height: 10px !important;
+  margin-left: -5px !important;
+  margin-top: -5px !important;
   border-radius: 50%;
 
 }
