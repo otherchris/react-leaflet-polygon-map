@@ -37,6 +37,9 @@ const editTools = (p) => {
             polygon: false,
             rectangle: false,
             circle: false,
+            marker: {
+              icon: p.markerIcon,
+            },
           }}
           onCreated={p.chooseCenter}
         />
@@ -51,6 +54,9 @@ const editTools = (p) => {
             polyline: false,
             rectangle: false,
             circle: false,
+            marker: {
+              icon: p.markerIcon,
+            },
           }}
           onCreated={p.onCreated}
         />
