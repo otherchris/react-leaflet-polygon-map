@@ -1,55 +1,19 @@
-import wkx from 'wkx';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
 import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
-// import { transformEncodedIntoGeoJSON } from 'transform-to-geojson';
-import polyline from 'polyline';
-import _ from 'lodash';
 import L from 'leaflet';
 import React from 'react';
-// an example to try out
 import MapComponent from './MapComponent';
-// import convertPoly from './ConvertPoly';
+import {
+  displayPoly,
+  getTilesUrl,
+  generateIcon,
+} from './MapHelpers';
 import './main.css';
 
-const displayPoly = (poly) => {
-  if (hasIn(poly, 'features')) return poly;
-  if (includes(poly, 'POLYGON')) {
-    return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(poly).toGeoJSON(),
-      }],
-    };
-  }
-  try {
-    const buf = Buffer.from(poly, 'base64');
-    return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(buf).toGeoJSON(),
-      }],
-    };
-  } catch (e) {
-    return polyline.toGeoJSON(poly);
-  }
-};
-
-const getTilesUrl = (str) => {
-  const tileUrls = {
-    default: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-    minimal_light: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-    minimal_dark: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-  };
-  return tileUrls[str];
-};
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -67,31 +31,26 @@ class MapContainer extends React.Component {
         markers: [],
       },
       edit: false,
-      markerIcon: this.generateIcon(props.iconHTML),
+      markerIcon: generateIcon(props.iconHTML),
+      zipRadiusCenter: [],
     };
   }
   componentDidMount() {
     this.mapPropsToState(this.props);
+    if (this.props.includeZipRadius) {
+      this.setState({
+        edit: false,
+      });
+    }
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, displayPoly);
-    // const polys = map(props.polygons,
-    //  (poly) => displayPoly(poly, { encoding: this.props.encoding }))
-    // const polys = map(props.polygons, displayPoly);
-    // const circs = map(props.circles, this.bind(props));
-    // const rect = map(props.rectangles, this.displayPoly);
     this.setState({
       polygons: polys,
       points: this.props.points,
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
-    });
-  }
-  generateIcon(string) {
-    return new L.divIcon({
-      className: 'my-div-icon',
-      html: this.props.iconHTML,
     });
   }
   updateShapes(e) {
@@ -119,47 +78,75 @@ class MapContainer extends React.Component {
       edit: true,
     });
   }
+  zipRadiusChange(e) {
+    const radius = parseFloat(e.target.value);
+    if (!isNaN(radius)) {
+      this.setState({
+        zipRadius: parseFloat(e.target.value),
+      });
+    } else {
+      this.setState({
+        zipRadius: 'NaN',
+      });
+    }
+  }
+  zipRadiusClick(e) {
+    console.log('called zipRadiusClick');
+    // fetch from api
+  }
+  chooseCenter(e) {
+    this.setState({
+      zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
+    });
+  }
   render() {
     const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
     const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
-        polygons={this.state.polygons}
-        points={this.state.points}
-        rectangles={this.state.rectangles}
-        circles={this.state.circles}
-        tileLayerProps={{ url: tileUrl }}
-        height={height}
-        zoom={zoom}
         center={center}
+        chooseCenter={this.chooseCenter.bind(this)}
+        circles={this.state.circles}
         edit={this.state.edit}
-        onCreated={this.updateShapes.bind(this)}
-        style={this.props.style}
+        height={height}
         markerIcon={this.state.markerIcon}
-        zipRadius={this.props.zipRadius}
-        setCenter={this.state.setCenter || this.props.setCenter || this.state.center}
+        onCreated={this.updateShapes.bind(this)}
+        points={this.state.points}
+        polygons={this.state.polygons}
+        rectangles={this.state.rectangles}
+        style={this.props.style}
+        tileLayerProps={{ url: tileUrl }}
+        includeZipRadius={this.props.includeZipRadius}
+        zipRadiusCenter={
+          this.state.zipRadiusCenter ||
+          this.props.zipRadiusCenter ||
+          this.state.center
+        }
+        zipRadiusChange={this.zipRadiusChange.bind(this)}
+        zipRadiusClick={this.zipRadiusClick.bind(this)}
+        zoom={zoom}
       />
     );
   }
 }
 
 MapContainer.propTypes = {
-  polygons: PropTypes.arrayOf(PropTypes.object),
-  points: PropTypes.arrayOf(PropTypes.array),
-  rectangles: PropTypes.arrayOf(PropTypes.object),
-  circles: PropTypes.arrayOf(PropTypes.object),
-  tiles: PropTypes.string,
-  height: PropTypes.number,
-  encoding: PropTypes.string,
-  iconHTML: PropTypes.string,
-  edit: PropTypes.boolean,
-  tileLayerProps: PropTypes.object,
-  width: PropTypes.number,
-  zoom: PropTypes.number,
   center: PropTypes.arrayOf(PropTypes.number),
-  setCenter: PropTypes.arrayOf(PropTypes.number),
+  circles: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.boolean,
+  encoding: PropTypes.string,
+  height: PropTypes.number,
+  iconHTML: PropTypes.string,
+  includeZipRadius: PropTypes.boolean,
+  points: PropTypes.arrayOf(PropTypes.array),
+  polygons: PropTypes.arrayOf(PropTypes.object),
+  rectangles: PropTypes.arrayOf(PropTypes.object),
   style: PropTypes.object,
-  zipRadius: PropTypes.boolean,
+  tileLayerProps: PropTypes.object,
+  tiles: PropTypes.string,
+  width: PropTypes.number,
+  zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
+  zoom: PropTypes.number,
 };
 
 MapContainer.defaultProps = {
