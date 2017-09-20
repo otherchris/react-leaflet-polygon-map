@@ -60,6 +60,12 @@ const editTools = (p) => {
   return null;
 };
 
+const Legend = (LegendComponent, props) => (
+  <div className="map-legend">
+    <LegendComponent {...props} />
+  </div>
+);
+
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
@@ -81,8 +87,8 @@ const MapComponent = (props) => {
       center={props.setCenter || 'Choose a center'}
       zipRadiusChange={props.zipRadiusChange}
     />
-  ) : '';
-
+  ) : <div></div>;
+  const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   return (
     <div>
       <Map
@@ -102,7 +108,10 @@ const MapComponent = (props) => {
         {circles}
         {rectangles}
       </Map>
-      {zipRadiusControl}
+      <div className="below-map">
+        {zipRadiusControl}
+        {legend}
+      </div>
     </div>
   );
 };
@@ -114,6 +123,8 @@ MapComponent.propTypes = {
   height: PropTypes.number,
   includeZipRadius: PropTypes.boolean,
   markerIcon: PropTypes.object,
+  legendComponent: PropTypes.function,
+  legendProps: PropTypes.object,
   onCreated: PropTypes.function,
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
