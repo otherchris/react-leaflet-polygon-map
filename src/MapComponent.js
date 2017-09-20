@@ -26,6 +26,40 @@ const style = {
   fillOpacity: 0.45,
 };
 
+const editTools = (p) => {
+  if (p.includeZipRadius) {
+    return (
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            polyline: false,
+            polygon: false,
+            rectangle: false,
+            circle: false,
+          }}
+          onCreated={p.chooseCenter}
+        />
+      </FeatureGroup>
+    );
+  } else if (p.edit) {
+    return (
+      <FeatureGroup>
+        <EditControl
+          position='topright'
+          draw={{
+            polyline: false,
+            rectangle: false,
+            circle: false,
+          }}
+          onCreated={p.onCreated}
+        />
+      </FeatureGroup>
+    );
+  }
+  return null;
+};
+
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height } = props;
   merge(style, props.style);
@@ -41,18 +75,8 @@ const MapComponent = (props) => {
   const rectangles = map(props.rectangles, (result, index) => (
     <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
   ));
-  const editTools = props.edit ?
-    <FeatureGroup>
-      <EditControl
-        position='topright'
-        draw={{
-          rectangle: false,
-          circle: false,
-        }}
-        onCreated={props.onCreated}
-      />
-    </FeatureGroup>
-    : null;
+  const editComponent = editTools(props);
+
   return (
     <div>
       <Map
@@ -66,33 +90,38 @@ const MapComponent = (props) => {
           attribution={tileLayerProps.attribution}
           url={tileLayerProps.url}
         />
-        {editTools}
+        {editComponent}
         {polygons}
         {points}
         {circles}
         {rectangles}
       </Map>
-      <ZipRadiusControl center={props.setCenter || 'Choose a center'}/>
+      <ZipRadiusControl
+        center={props.setCenter || 'Choose a center'}
+        zipRadiusChange={props.zipRadiusChange}
+      />
     </div>
   );
 };
 
 MapComponent.propTypes = {
-  onCreated: PropTypes.function,
-  polygons: PropTypes.arrayOf(PropTypes.string),
-  points: PropTypes.arrayOf(PropTypes.object),
-  circles: PropTypes.arrayOf(PropTypes.object),
-  height: PropTypes.number,
   center: PropTypes.number,
+  circles: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.boolean,
+  height: PropTypes.number,
+  includeZipRadius: PropTypes.boolean,
+  markerIcon: PropTypes.object,
+  onCreated: PropTypes.function,
+  points: PropTypes.arrayOf(PropTypes.object),
+  polygons: PropTypes.arrayOf(PropTypes.string),
+  rectangles: PropTypes.arrayOf(PropTypes.object),
   setCenter: PropTypes.arrayOf(PropTypes.number),
+  style: PropTypes.object,
   tileLayerProps: PropTypes.shape({
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
   }),
-  markerIcon: PropTypes.object,
-  edit: PropTypes.boolean,
-  rectangles: PropTypes.arrayOf(PropTypes.object),
-  style: PropTypes.object,
+  zipRadiusChange: PropTypes.function,
   zoom: PropTypes.number,
 };
 
