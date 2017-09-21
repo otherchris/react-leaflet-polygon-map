@@ -86,7 +86,7 @@ const MapComponent = (props) => {
       onClick={props.clickPoly}
     >
       <Tooltip>
-        <span>{result.area}</span>
+        <span>{Math.ceil(result.properties.area)} Sq m</span>
       </Tooltip>
     </GeoJSON>
   ));
@@ -96,14 +96,14 @@ const MapComponent = (props) => {
   const circles = map(props.circles, (result, index) => (
     <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} >
       <Tooltip>
-        <span>{result.area}</span>
+        <span>{Math.ceil(result.area)} Sq m</span>
       </Tooltip>
     </Circle>
   ));
   const rectangles = map(props.rectangles, (result, index) => (
     <Rectangle {...style} data={result} key={index} bounds={result.bounds} >
       <Tooltip>
-        <span>{result.area}</span>
+        <span>{Math.ceil(result.area)} Sq m</span>
       </Tooltip>
     </Rectangle>
   ));
