@@ -37,6 +37,9 @@ const editTools = (p) => {
             polygon: false,
             rectangle: false,
             circle: false,
+            marker: {
+              icon: p.markerIcon,
+            },
           }}
           onCreated={p.chooseCenter}
         />
@@ -51,6 +54,9 @@ const editTools = (p) => {
             polyline: false,
             rectangle: false,
             circle: false,
+            marker: {
+              icon: p.markerIcon,
+            },
           }}
           onCreated={p.onCreated}
         />
@@ -60,11 +66,24 @@ const editTools = (p) => {
   return null;
 };
 
+const Legend = (LegendComponent, props) => (
+  <div className="map-legend">
+    <LegendComponent {...props} />
+  </div>
+);
+
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height } = props;
+  const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
   const polygons = map(props.polygons, (result, index) => (
-    <GeoJSON style={style} data={result} key={ index }/>
+    <GeoJSON
+      style={style}
+      data={result}
+      key={result.key || index + 1}
+      k_key={result.key || index + 1}
+      editable={!!(result.properties && result.properties.editable)}
+      onClick={props.clickPoly}
+    />
   ));
   const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon} />
@@ -76,7 +95,13 @@ const MapComponent = (props) => {
     <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
   ));
   const editComponent = editTools(props);
-
+  const zipRadiusControl = includeZipRadius ? (
+    <ZipRadiusControl
+      center={props.setCenter || 'Choose a center'}
+      zipRadiusChange={props.zipRadiusChange}
+    />
+  ) : <div></div>;
+  const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   return (
     <div>
       <Map
@@ -96,10 +121,10 @@ const MapComponent = (props) => {
         {circles}
         {rectangles}
       </Map>
-      <ZipRadiusControl
-        center={props.setCenter || 'Choose a center'}
-        zipRadiusChange={props.zipRadiusChange}
-      />
+      <div className="below-map">
+        {zipRadiusControl}
+        {legend}
+      </div>
     </div>
   );
 };
@@ -111,6 +136,8 @@ MapComponent.propTypes = {
   height: PropTypes.number,
   includeZipRadius: PropTypes.boolean,
   markerIcon: PropTypes.object,
+  legendComponent: PropTypes.function,
+  legendProps: PropTypes.object,
   onCreated: PropTypes.function,
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
