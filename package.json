@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "geojson-area": "^0.2.1",
     "leaflet": "^1.2.0",
     "leaflet-draw": "^0.4.10",
     "lodash": "^4.17.4",

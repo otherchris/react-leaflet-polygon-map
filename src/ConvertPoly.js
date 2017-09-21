@@ -45,9 +45,9 @@ export const ensureGeometryIsValid = featObj => {
     throw Error(`Ensure Geometry - invalid geometry type: ${featObj.geometry.type}`);
   }
 };
-//given different poly types: polyline, geoJSON (both poly and multipoly),
-//wkt, wkb, circle (center/radius), rectangle (bounds/path)
-//Returns as geoJSON Feature Objects
+// given different poly types: polyline, geoJSON (both poly and multipoly),
+// wkt, wkb, circle (center/radius), rectangle (bounds/path)
+// Returns as geoJSON Feature Objects
 export const convertPoly = poly => {
   const area = poly.data.area;
   switch (poly.type) {
@@ -110,14 +110,13 @@ export const convertPoly = poly => {
     throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
   }
 };
-//Given geoJSON Feature Obj
-//Returns geoJSON Feature Collection
-export const featCollWrap = (featObj) => {
-  return {
+// Given geoJSON Feature Obj
+// Returns geoJSON Feature Collection
+export const featCollWrap = (featObj) =>
+  ({
     type: 'FeatureCollection',
     features: [featObj],
-  };
-};
+  });
 // Given geoJSON Feature Collection
 // Returns that same object with the coordinates array properly nested
 // (code above is kind of janky so it's wrapped one too many times)
@@ -162,9 +161,9 @@ export const sizeArray = geoJSONObj => {
     throw Error(`Ensure Geometry - invalid geometry type: ${geoJSONObj.features.geometry.type}`);
   }
 };
-//Given one of our specified poly types, runs it through the series of
-//functions above
-//Returns valid geoJSON Feature Collection
+// Given one of our specified poly types, runs it through the series of
+// functions above
+// Returns valid geoJSON Feature Collection
 export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
