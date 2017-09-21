@@ -19,6 +19,7 @@ import {
 import { EditControl } from 'react-leaflet-draw';
 import ZipRadiusControl from './ZipRadiusControl';
 import './main.css';
+import getArea from './getArea';
 
 const style = {
   color: 'red',
@@ -76,7 +77,8 @@ const Legend = (LegendComponent, props) => (
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
-  const polygons = map(props.polygons, (result, index) => (
+  const polyWithArea = map(props.polygons, getArea);
+  const polygons = map(polyWithArea, (result, index) => (
     <GeoJSON
       style={style}
       data={result}
