@@ -79,8 +79,8 @@ const MapComponent = (props) => {
     <GeoJSON
       style={style}
       data={result}
-      key={result.key || index}
-      k_key={result.key || index}
+      key={result.key || index + 1}
+      k_key={result.key || index + 1}
       editable={!!(result.properties && result.properties.editable)}
       onClick={props.clickPoly}
     />
