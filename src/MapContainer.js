@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
+import { makeGeoJSON } from './ConvertPoly';
 import {
-  displayPoly,
   getTilesUrl,
   generateIcon,
 } from './MapHelpers';
@@ -45,7 +45,7 @@ class MapContainer extends React.Component {
     }
   }
   mapPropsToState(props) {
-    const polys = map(props.polygons, displayPoly);
+    const polys = map(props.polygons, makeGeoJSON);
     this.setState({
       polygons: polys,
       points: this.props.points,
@@ -82,8 +82,7 @@ class MapContainer extends React.Component {
   }
   clickPoly(e) {
     const key = e.target.options.k_key;
-    console.log(e.layer.toGeoJSON())
-    const index = Math.abs(key);
+    const index = Math.abs(key) - 1;
     const polygons = this.state.polygons;
     if (polygons[index] && polygons[index].properties) {
       polygons[index].properties.editable = !polygons[index].properties.editable;

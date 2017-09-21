@@ -102,9 +102,8 @@ export const convertPoly = poly => {
       },
     };
   }
-  case 'MultiPolygon':
   case 'geoJSON': {
-    return poly.data.features[0];
+    return poly.data;
   }
   default:
     throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
