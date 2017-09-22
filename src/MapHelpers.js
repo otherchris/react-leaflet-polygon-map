@@ -3,6 +3,7 @@ import L from 'leaflet';
 import polyline from 'polyline';
 import hasIn from 'lodash/hasIn';
 import includes from 'lodash/includes';
+import logoDefault from './logoDefault';
 
 export const displayPoly = (poly) => {
   if (hasIn(poly, 'features')) return poly;
@@ -40,7 +41,7 @@ export const getTilesUrl = (str) => {
   return tileUrls[str];
 };
 
-export const generateIcon = (string, html) => new L.divIcon({
+export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
-  html,
+  html: html || logoDefault,
 });
