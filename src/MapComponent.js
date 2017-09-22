@@ -43,6 +43,10 @@ const editTools = (p) => {
               icon: p.markerIcon,
             },
           }}
+          edit={{
+            edit: false,
+            remove: false,
+          }}
           onCreated={p.chooseCenter}
         />
       </FeatureGroup>
@@ -59,6 +63,10 @@ const editTools = (p) => {
             marker: {
               icon: p.markerIcon,
             },
+          }}
+          edit={{
+            edit: false,
+            remove: false,
           }}
           onCreated={p.onCreated}
         />
@@ -93,7 +101,11 @@ const MapComponent = (props) => {
     </GeoJSON>
   ));
   const points = map(props.points, (result, index) => (
-    <Marker position={result} key={index} icon={props.markerIcon} />
+    <Marker position={result} key={index} icon={props.markerIcon}>
+      <Tooltip>
+        <span>{`(${result[1].toFixed(4)}, ${result[0].toFixed(4)})`}</span>
+      </Tooltip>
+    </Marker>
   ));
   const circles = map(props.circles, (result, index) => (
     <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} >

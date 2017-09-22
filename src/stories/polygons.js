@@ -67,7 +67,6 @@ storiesOf('Polygons', module)
       ]}
       rectangles={[dpPoly.rectangle]}
       circles={[dpPoly.circle]}
-      tiles="minimal_light"
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Four default styled polygon
         <input type="checkbox" /> 2. Default styled rectangle
@@ -78,7 +77,6 @@ storiesOf('Polygons', module)
   .add('map with rectangle', () => (
     <MapContainerStoryWithNotes
       rectangles={[dpPoly.rectangle]}
-      tiles="minimal_light"
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Default styled rectangle
       `}
@@ -87,7 +85,6 @@ storiesOf('Polygons', module)
   .add('map with a circle', () => (
     <MapContainerStoryWithNotes
       circles={[dpPoly.circle]}
-      tiles="minimal_light"
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Default styled circle
       `}
@@ -99,7 +96,6 @@ storiesOf('Points', module)
     <MapContainerStoryWithNotes
       polygons={[]}
       points={ points }
-      tiles="minimal_light"
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. 12 default styled points in a circle
       `}
