@@ -2,13 +2,14 @@ import includes from 'lodash/includes';
 import map from 'lodash/map';
 import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
+import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
+import { makeGeoJSON } from './ConvertPoly';
 import {
-  displayPoly,
   getTilesUrl,
   generateIcon,
 } from './MapHelpers';
@@ -44,7 +45,7 @@ class MapContainer extends React.Component {
     }
   }
   mapPropsToState(props) {
-    const polys = map(props.polygons, displayPoly);
+    const polys = map(props.polygons, makeGeoJSON);
     this.setState({
       polygons: polys,
       points: this.props.points,
@@ -54,21 +55,22 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    console.log(e.layer.toGeoJSON());
     const state = this.state;
     state.edit = false;
+    const geoJson = e.layer.toGeoJSON();
+    geoJson.properties.editable = false;
     switch (e.layerType) {
     case 'polygon':
-      state.polygons.push(e.layer.toGeoJSON());
+      state.polygons.push(geoJson);
       break;
     case 'circle':
-      state.circles.push(e.layer.toGeoJSON());
+      state.circles.push(geoJson);
       break;
     case 'rectangle':
-      state.rectangles.push(e.layer.toGeoJSON());
+      state.rectangles.push(geoJson);
       break;
     case 'marker':
-      state.points.push(e.layer.toGeoJSON());
+      state.points.push(geoJson);
       break;
     default:
       break;
@@ -76,6 +78,19 @@ class MapContainer extends React.Component {
     this.setState(state);
     this.setState({
       edit: true,
+    });
+  }
+  clickPoly(e) {
+    const key = e.target.options.k_key;
+    const index = Math.abs(key) - 1;
+    const polygons = this.state.polygons;
+    if (polygons[index] && polygons[index].properties) {
+      polygons[index].properties.editable = !polygons[index].properties.editable;
+      polygons[index].key = -1 * key;
+      polygons[index] = e.layer.toGeoJSON();
+    }
+    this.setState({
+      polygons,
     });
   }
   zipRadiusChange(e) {
@@ -90,41 +105,47 @@ class MapContainer extends React.Component {
       });
     }
   }
-  zipRadiusClick(e) {
-    console.log('called zipRadiusClick');
-    // fetch from api
-  }
   chooseCenter(e) {
     this.setState({
       zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
     });
   }
   render() {
-    const { tileLayerProps, width, height, zoom, center, tiles } = this.props;
+    const {
+      tileLayerProps,
+      width,
+      tiles,
+    } = this.props;
+    const passThroughProps = pick(this.props, [
+      'legendComponent',
+      'height',
+      'center',
+      'style',
+      'includeZipRadius',
+      'zoom',
+    ]);
     const tileUrl = getTilesUrl(tiles);
+
     return (
       <MapComponent
-        center={center}
         chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
+        clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
-        height={height}
         markerIcon={this.state.markerIcon}
         onCreated={this.updateShapes.bind(this)}
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}
-        style={this.props.style}
         tileLayerProps={{ url: tileUrl }}
-        includeZipRadius={this.props.includeZipRadius}
         zipRadiusCenter={
           this.state.zipRadiusCenter ||
           this.props.zipRadiusCenter ||
           this.state.center
         }
         zipRadiusChange={this.zipRadiusChange.bind(this)}
-        zipRadiusClick={this.zipRadiusClick.bind(this)}
-        zoom={zoom}
+        zipRadiusClick={''}
+        {...passThroughProps}
       />
     );
   }
@@ -138,6 +159,7 @@ MapContainer.propTypes = {
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,
+  legendComponent: PropTypes.function,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
@@ -151,10 +173,6 @@ MapContainer.propTypes = {
 
 MapContainer.defaultProps = {
   tiles: 'default',
-  iconHTML:
-    `<svg width="50" height="50">
-      <circle cx="25" cy="25" r="20" stroke="black" stroke-width="1" fill="red" />
-    </svg>`,
 };
 
 export default MapContainer;
