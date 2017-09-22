@@ -14,6 +14,7 @@ import {
   generateIcon,
 } from './MapHelpers';
 import './main.css';
+import getArea from './getArea';
 
 
 class MapContainer extends React.Component {
@@ -58,10 +59,11 @@ class MapContainer extends React.Component {
     const state = this.state;
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
+    const gJWithArea = getArea(geoJson);
     geoJson.properties.editable = false;
     switch (e.layerType) {
     case 'polygon':
-      state.polygons.push(geoJson);
+      state.polygons.push(gJWithArea);
       break;
     case 'circle':
       state.circles.push(geoJson);
@@ -87,7 +89,7 @@ class MapContainer extends React.Component {
     if (polygons[index] && polygons[index].properties) {
       polygons[index].properties.editable = !polygons[index].properties.editable;
       polygons[index].key = -1 * key;
-      polygons[index] = e.layer.toGeoJSON();
+      polygons[index] = getArea(e.layer.toGeoJSON());
     }
     this.setState({
       polygons,

@@ -14,10 +14,12 @@ import {
   FeatureGroup,
   Circle,
   Rectangle,
+  Tooltip,
 } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import ZipRadiusControl from './ZipRadiusControl';
 import './main.css';
+import getArea from './getArea';
 
 const style = {
   color: 'red',
@@ -75,7 +77,8 @@ const Legend = (LegendComponent, props) => (
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
-  const polygons = map(props.polygons, (result, index) => (
+  const polyWithArea = map(props.polygons, getArea);
+  const polygons = map(polyWithArea, (result, index) => (
     <GeoJSON
       style={style}
       data={result}
@@ -83,16 +86,28 @@ const MapComponent = (props) => {
       k_key={result.key || index + 1}
       editable={!!(result.properties && result.properties.editable)}
       onClick={props.clickPoly}
-    />
+    >
+      <Tooltip>
+        <span>{Math.ceil(result.properties.area)} Sq m</span>
+      </Tooltip>
+    </GeoJSON>
   ));
   const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon} />
   ));
   const circles = map(props.circles, (result, index) => (
-    <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} />
+    <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} >
+      <Tooltip>
+        <span>{Math.ceil(result.area)} Sq m</span>
+      </Tooltip>
+    </Circle>
   ));
   const rectangles = map(props.rectangles, (result, index) => (
-    <Rectangle {...style} data={result} key={index} bounds={result.bounds} />
+    <Rectangle {...style} data={result} key={index} bounds={result.bounds} >
+      <Tooltip>
+        <span>{Math.ceil(result.area)} Sq m</span>
+      </Tooltip>
+    </Rectangle>
   ));
   const editComponent = editTools(props);
   const zipRadiusControl = includeZipRadius ? (
