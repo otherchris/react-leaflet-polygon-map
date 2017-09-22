@@ -5,6 +5,7 @@ import extend from 'lodash/extend';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import noop from 'lodash/noop';
+import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
@@ -37,6 +38,7 @@ class MapContainer extends React.Component {
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
     };
+    this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
   componentDidMount() {
     this.mapPropsToState(this.props);
@@ -47,7 +49,7 @@ class MapContainer extends React.Component {
     }
   }
   componentDidUpdate() {
-    this.props.onChange(this.state);
+    this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, makeGeoJSON);
