@@ -25,3 +25,16 @@ storiesOf('Tilesets', module)
     />
   ));
 
+storiesOf('onChange prop', module)
+  .add('pass an onChange function', () => (
+    <MapContainerStoryWithNotes
+      edit
+      onChange={(state) => {
+        alert(JSON.stringify(state, null, '  '));
+      }}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Alert with state on component update />
+      `}
+    />
+  ));
+
