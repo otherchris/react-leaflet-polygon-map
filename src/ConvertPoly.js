@@ -109,7 +109,13 @@ export const convertPoly = poly => {
     throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
   }
 };
-
+// Given geoJSON Feature Obj
+// Returns geoJSON Feature Collection
+export const featCollWrap = (featObj) =>
+  ({
+    type: 'FeatureCollection',
+    features: [featObj],
+  });
 // Given geoJSON Feature
 // Returns that same object with the coordinates array properly nested
 // (code above is kind of janky so it's wrapped one too many times)
