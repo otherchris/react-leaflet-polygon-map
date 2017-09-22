@@ -83,6 +83,7 @@ class MapContainer extends React.Component {
     });
   }
   clickPoly(e) {
+    if (!this.state.edit) return;
     const key = e.target.options.k_key;
     const index = Math.abs(key) - 1;
     const polygons = this.state.polygons;
