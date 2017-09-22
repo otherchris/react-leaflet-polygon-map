@@ -4,6 +4,7 @@ import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
+import noop from 'lodash/noop';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
@@ -44,6 +45,9 @@ class MapContainer extends React.Component {
         edit: false,
       });
     }
+  }
+  componentDidUpdate() {
+    this.props.onChange(this.state);
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, makeGeoJSON);
@@ -173,6 +177,10 @@ MapContainer.propTypes = {
   width: PropTypes.number,
   zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
+};
+
+MapContainer.defaultProps = {
+  onChange: noop,
 };
 
 export default MapContainer;
