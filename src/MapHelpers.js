@@ -35,7 +35,7 @@ export const displayPoly = (poly) => {
 export const getTilesUrl = (url) => {
   console.log('url', url);
   return url || 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-}
+};
 
 export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
