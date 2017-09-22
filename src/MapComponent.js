@@ -43,6 +43,10 @@ const editTools = (p) => {
               icon: p.markerIcon,
             },
           }}
+          edit={{
+            edit: false,
+            remove: false,
+          }}
           onCreated={p.chooseCenter}
         />
       </FeatureGroup>
@@ -59,6 +63,10 @@ const editTools = (p) => {
             marker: {
               icon: p.markerIcon,
             },
+          }}
+          edit={{
+            edit: false,
+            remove: false,
           }}
           onCreated={p.onCreated}
         />

@@ -173,9 +173,5 @@ MapContainer.propTypes = {
   zoom: PropTypes.number,
 };
 
-MapContainer.defaultProps = {
-  tiles: 'default',
-};
-
 export default MapContainer;
 
