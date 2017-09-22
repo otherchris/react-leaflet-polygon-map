@@ -15,13 +15,7 @@ storiesOf('Tilesets', module)
     <MapContainerStoryWithNotes
       polygons={[dpPoly.polyline]}
       points={points}
-      tiles="minimal_light"
-    />
-  ))
-  .add('tiles = minimal_dark', () => (
-    <MapContainerStoryWithNotes
-      polygons={[dpPoly.polyline]}
-      points={points} tiles="minimal_dark"
+      tiles='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
     />
   ))
   .add('tiles = default', () => (
