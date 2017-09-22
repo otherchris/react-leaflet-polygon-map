@@ -10,6 +10,7 @@ import size from 'lodash/size';
 import flatten from 'lodash/flatten';
 import isEqual from 'lodash/isEqual';
 import polyline from 'polyline';
+import getArea from './getArea';
 
 // given set of coordinates, checks to see if last set is equal to first set
 // (read: makes sure it's closed)
@@ -166,5 +167,6 @@ export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
   const resizedArray = sizeArray(validatedObj);
-  return resizedArray;
+  const resizedWithArea = getArea(resizedArray);
+  return resizedWithArea;
 };
