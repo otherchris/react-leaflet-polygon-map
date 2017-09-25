@@ -19,18 +19,6 @@ import {
 import './main.css';
 import getArea from './getArea';
 
-const SubmitButton = (props) => {
-  const { handleSubmit, text } = props;
-  return (
-    <button onClick={handleSubmit}>{text}</button>
-  );
-};
-
-SubmitButton.propTypes = {
-  handleSubmit: PropTypes.func,
-  text: PropTypes.string,
-};
-
 const areaAccumulator = (sum, val) => sum + val.properties.area;
 const area = (unit, _area) => {
   let result = _area;
