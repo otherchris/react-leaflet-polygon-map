@@ -483,7 +483,9 @@ const polyFixtures = {
   },
   geoJSONGeoJSON: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 5892972.080992023,
+    },
     geometry: {
       type: 'Polygon',
       coordinates: [[
@@ -497,7 +499,9 @@ const polyFixtures = {
   },
   wktGeoJSON: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 8635913.881097274,
+    },
     geometry: {
       type: 'Polygon',
       coordinates: [[
@@ -514,7 +518,9 @@ const polyFixtures = {
   },
   wkbGeoJSON: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 8635913.881097274,
+    },
     geometry: {
       type: 'Polygon',
       coordinates: [[
@@ -561,7 +567,9 @@ const polyFixtures = {
   },
   geoJSONMultiPoly: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 20310537131.032818,
+    },
     geometry: {
       type: 'MultiPolygon',
       coordinates: [
