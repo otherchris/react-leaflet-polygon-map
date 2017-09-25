@@ -424,7 +424,9 @@ const polyFixtures = {
   // Fixtures for geoJSONWrapper
   polylineGeoJSON: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 6363342.485321282,
+    },
     geometry: {
       type: 'Polygon',
       coordinates: [[
@@ -587,6 +589,22 @@ const polyFixtures = {
             [100.8, 0.2],
             [100.2, 0.2],
           ],
+        ],
+      ],
+    },
+  },
+  geoJSONFeatureObject: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-85.76820373535156, 38.23966324024717],
+          [-85.75429916381836, 38.22793227923281],
+          [-85.72528839111328, 38.23022468473982],
+          [-85.74125289916992, 38.253279568348304],
+          [-85.76820373535156, 38.23966324024717],
         ],
       ],
     },

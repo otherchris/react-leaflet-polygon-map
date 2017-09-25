@@ -73,6 +73,13 @@ test('given multipolugon geoJSON, return Feature Object', () => {
   const result14 = convertPoly(poly.geoJSONMultiPoly);
   expect(result14).toEqual(polyFixtures.geoJSONMultiPolyFeatObj);
 });
+test('given FeatureCollection geoJSON, throw error', () => {
+  expect(() => convertPoly(poly.FeatureCollection)).toThrow('Ensure Geometry - invalid poly type: FeatureCollection');
+});
+test('given Feature geoJSON, return Feature Object', () => {
+  const result16 = convertPoly(poly.Feature);
+  expect(result16).toEqual(polyFixtures.geoJSONFeatureObject);
+});
 // makeGeoJSON
 test('given polygon, make geoJSON', () => {
   const result15 = makeGeoJSON(poly.polyline);
