@@ -54,6 +54,7 @@ storiesOf('handleSubmit', module)
       }}
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Submit button
+        <input type="checkbox" /> 2. Submit button raises alert on click
       `}
     />
   ))
