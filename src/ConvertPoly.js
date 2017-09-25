@@ -133,15 +133,15 @@ export const sizeArray = geoJSONObj => {
   const { type, coordinates } = geoJSONObj.geometry;
   switch (type) {
   case 'Polygon': {
-    const coordSize = size(coordinates[0]);
+    const coordSize = coordinates[0].length;
     if (coordSize === 1) {
       const flatterArray = flatten(coordinates);
       const newFeature = {
         type: 'Feature',
         properties,
         geometry: {
-          type,
-          coordinates: flatterArray,
+          type: 'MultiPolygon',
+          coordinates: [[[flatterArray]]],
         },
       };
       return sizeArray(newFeature);

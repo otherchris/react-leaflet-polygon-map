@@ -21,9 +21,9 @@ test('expect open linestring to close', () => {
   const result3 = ensureGeometryIsValid(polyFixtures.lineStringFeatObj);
   expect(result3).toEqual(polyFixtures.closedLineStringFeatObj);
 });
-test('expect closed shape to pass through', () => {
+test('expect closed linestring to becom polygon', () => {
   const result4 = ensureGeometryIsValid(polyFixtures.polylineFeatObj);
-  expect(result4).toEqual(polyFixtures.polylineFeatObj);
+  expect(result4).toEqual(polyFixtures.polylineToGONFeatObj);
 });
 test('given multipoly, shapes will pass', () => {
   const result5 = ensureGeometryIsValid(polyFixtures.multipolyFeatObj);
@@ -80,24 +80,25 @@ test('given Feature geoJSON, return Feature Object', () => {
   const result16 = convertPoly(poly.Feature);
   expect(result16).toEqual(polyFixtures.geoJSONFeatureObject);
 });
-// makeGeoJSON
+// makeGeoJSON MULTIPOLY FEAT OBJs
 test('given polygon, make geoJSON', () => {
-  const result15 = makeGeoJSON(poly.polyline);
-  expect(result15).toEqual(polyFixtures.polylineGeoJSON);
+  const result17 = makeGeoJSON(poly.polyline);
+  expect(result17).toEqual(polyFixtures.polylineGeoJSON);
 });
 test('given geoJSON, make geoJSON', () => {
-  const result16 = makeGeoJSON(poly.geoJSON);
-  expect(result16).toEqual(polyFixtures.geoJSONGeoJSON);
+  const result18 = makeGeoJSON(poly.geoJSON);
+  console.log('geoJSON result', result18);
+  expect(result18).toEqual(polyFixtures.geoJSONGeoJSON);
 });
 test('given wkt, make geoJSON', () => {
-  const result17 = makeGeoJSON(poly.wkt);
-  expect(result17).toEqual(polyFixtures.wktGeoJSON);
+  const result19 = makeGeoJSON(poly.wkt);
+  expect(result19).toEqual(polyFixtures.wktGeoJSON);
 });
 test('given wkb, make geoJSON', () => {
-  const result18 = makeGeoJSON(poly.wkb);
-  expect(result18).toEqual(polyFixtures.wkbGeoJSON);
+  const result20 = makeGeoJSON(poly.wkb);
+  expect(result20).toEqual(polyFixtures.wkbGeoJSON);
 });
 test('given multipolygon geoJSON, make geoJSON', () => {
-  const result19 = makeGeoJSON(poly.geoJSONMultiPoly);
-  expect(result19).toEqual(polyFixtures.geoJSONMultiPoly);
+  const result21 = makeGeoJSON(poly.geoJSONMultiPoly);
+  expect(result21).toEqual(polyFixtures.geoJSONMultiPoly);
 });
