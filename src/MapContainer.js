@@ -18,6 +18,7 @@ import {
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
+import getCenter from './getCenter';
 
 const areaAccumulator = (sum, val) => sum + val.properties.area;
 const area = (unit, _area) => {
@@ -72,8 +73,11 @@ class MapContainer extends React.Component {
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
+    const c = getCenter(polys);
+    const center = L.latLng(c[0], c[1]);
     this.setState({
       unit,
+      center,
       maxArea: max,
       polygons: polys,
       points: this.props.points,
@@ -171,6 +175,7 @@ class MapContainer extends React.Component {
 
     return (
       <MapComponent
+        center={this.state.center || L.latLng(-83, 35)}
         chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
