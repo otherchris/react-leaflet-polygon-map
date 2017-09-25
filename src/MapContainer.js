@@ -131,7 +131,7 @@ class MapContainer extends React.Component {
     });
   }
   handleSubmit(e) {
-    this.props.handleSubmit(e);
+    this.props.handleSubmit(this.state);
   }
   render() {
     const {
@@ -155,7 +155,7 @@ class MapContainer extends React.Component {
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
-        handleSubmit={this.handleSubmit.bind(this)}
+        handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
         markerIcon={this.state.markerIcon}
         onCreated={this.updateShapes.bind(this)}
         points={this.state.points}

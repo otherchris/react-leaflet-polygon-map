@@ -82,9 +82,9 @@ const Legend = (LegendComponent, props) => (
   </div>
 );
 
-const MapSubmitButton = (props) => (
+const MapSubmitButton = (submitFunc, text) => (
   <div className="map-submit-button">
-    <button onClick={props.handleSubmit}>{props.text}</button>
+    <button onClick={submitFunc}>{text}</button>
   </div>
 );
 
@@ -141,7 +141,7 @@ const MapComponent = (props) => {
   ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const submit = props.handleSubmit
-    ? MapSubmitButton({ handleSubmit: props.handleSubmit, text: 'Submit' })
+    ? MapSubmitButton(props.handleSubmit, 'Submit')
     : '';
   return (
     <div>
