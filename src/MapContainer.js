@@ -4,6 +4,8 @@ import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
+import noop from 'lodash/noop';
+import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
@@ -36,6 +38,7 @@ class MapContainer extends React.Component {
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
     };
+    this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
   componentDidMount() {
     this.mapPropsToState(this.props);
@@ -44,6 +47,9 @@ class MapContainer extends React.Component {
         edit: false,
       });
     }
+  }
+  componentDidUpdate() {
+    this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
     const polys = map(props.polygons, makeGeoJSON);
@@ -162,7 +168,8 @@ MapContainer.propTypes = {
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,
-  legendComponent: PropTypes.function,
+  legendComponent: PropTypes.func,
+  onChange: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
@@ -172,6 +179,10 @@ MapContainer.propTypes = {
   width: PropTypes.number,
   zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
+};
+
+MapContainer.defaultProps = {
+  onChange: noop,
 };
 
 export default MapContainer;
