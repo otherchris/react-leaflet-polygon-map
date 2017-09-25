@@ -82,9 +82,14 @@ const Legend = (LegendComponent, props) => (
   </div>
 );
 
-const MapSubmitButton = (submitFunc, text) => (
+const MapSubmitButton = (submitFunc, text, disable) => (
   <div className="map-submit-button">
-    <button onClick={submitFunc}>{text}</button>
+    <button
+      onClick={submitFunc}
+      className={disable ? 'button-disable' : ''}
+    >
+      {text}
+    </button>
   </div>
 );
 
@@ -156,7 +161,7 @@ const MapComponent = (props) => {
   ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const submit = props.handleSubmit
-    ? MapSubmitButton(props.handleSubmit, 'Submit')
+    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ? 'Submit' : 'Area too large')
     : '';
   return (
     <div>
@@ -208,6 +213,7 @@ MapComponent.propTypes = {
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
   }),
+  totalArea: PropTypes.number,
   unit: PropTypes.string,
   zipRadiusChange: PropTypes.function,
   zoom: PropTypes.number,
