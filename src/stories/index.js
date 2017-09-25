@@ -60,6 +60,10 @@ storiesOf('handleSubmit', module)
   .add('Submit should be disabled if any polygon is too big', () => (
     <MapContainerStoryWithNotes
       polygons={[poly.tooBigPoly]}
+      maxArea={{
+        max: 1,
+        units: 'miles',
+      }}
       handleSubmitpol={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
@@ -73,6 +77,10 @@ storiesOf('handleSubmit', module)
   .add('Submit should be disabled if sum of polygons is too big', () => (
     <MapContainerStoryWithNotes
       polygons={poly.tooBigPolyArray}
+      maxArea={{
+        max: 1,
+        units: 'miles',
+      }}
       handleSubmitpol={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
