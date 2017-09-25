@@ -106,6 +106,8 @@ const MapComponent = (props) => {
     const p = result.properties;
     return (
       <GeoJSON
+        uuid={p.uuid}
+        index={index}
         style={style}
         data={result}
         key={result.key || index + 1}

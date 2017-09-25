@@ -4,10 +4,12 @@ import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
+import filter from 'lodash/filter';
 import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
+import uuid from 'uuid';
 import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
@@ -52,6 +54,7 @@ class MapContainer extends React.Component {
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
       totalArea: 0,
+      remove: true,
     };
     this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
@@ -70,6 +73,7 @@ class MapContainer extends React.Component {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
     const polys = map(props.polygons, (poly) => {
       const out = makeGeoJSON(poly);
+      out.properties.uuid = uuid.v4();
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
@@ -98,6 +102,7 @@ class MapContainer extends React.Component {
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     const gJWithArea = getArea(geoJson);
+    gJWithArea.properties.uuid = uuid.v4();
     geoJson.properties.editable = false;
     switch (e.layerType) {
     case 'polygon':
@@ -122,7 +127,14 @@ class MapContainer extends React.Component {
     });
   }
   clickPoly(e) {
+    console.log(e.layer.options);
     if (!this.state.edit) return;
+    if (this.state.remove) {
+      const _uuid = e.layer.options.uuid;
+      const polygons = filter(this.state.polygons, (poly) => _uuid !== poly.properties.uuid);
+      this.setState({ polygons });
+      return;
+    }
     const key = e.target.options.k_key;
     const index = Math.abs(key) - 1;
     const polygons = this.state.polygons;
