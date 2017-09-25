@@ -66,14 +66,6 @@ export const convertPoly = poly => {
       geometry: wkx.Geometry.parse(poly.data).toGeoJSON(),
     };
   }
-  case 'wkb': {
-    const buf = Buffer.from(poly.data, 'base64');
-    return {
-      type: 'Feature',
-      properties: {},
-      geometry: wkx.Geometry.parse(buf).toGeoJSON(poly.data),
-    };
-  }
   case 'Circle': {
     const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const center = poly.data.center;
