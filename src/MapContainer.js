@@ -32,6 +32,17 @@ SubmitButton.propTypes = {
 };
 
 const areaAccumulator = (sum, val) => sum + val.properties.area;
+const area = (unit, _area) => {
+  let result = _area;
+  switch (unit) {
+  case 'miles':
+    result *= 0.000000386102;
+    break;
+  default:
+    break;
+  }
+  return result;
+};
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -67,14 +78,16 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
+    const { unit } = this.props.maxArea || { unit: 'meters' };
     const polys = map(props.polygons, makeGeoJSON);
     this.setState({
+      unit,
       polygons: polys,
       points: this.props.points,
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
-      totalArea: reduce(polys, areaAccumulator, 0),
+      totalArea: area(unit, reduce(polys, areaAccumulator, 0)),
     });
   }
   updateShapes(e) {
@@ -100,7 +113,7 @@ class MapContainer extends React.Component {
     default:
       break;
     }
-    state.totalArea = reduce(state.polygons, areaAccumulator, 0);
+    state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
     this.setState(state);
     this.setState({
       edit: true,
@@ -118,7 +131,7 @@ class MapContainer extends React.Component {
     }
     this.setState({
       polygons,
-      totalArea: reduce(polygons, areaAccumulator, 0),
+      totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
     });
   }
   zipRadiusChange(e) {
@@ -139,6 +152,7 @@ class MapContainer extends React.Component {
     });
   }
   handleSubmit(e) {
+    if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return;
     this.props.handleSubmit(this.state);
   }
   render() {
@@ -193,6 +207,7 @@ MapContainer.propTypes = {
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,
   legendComponent: PropTypes.func,
+  maxArea: PropTypes.object,
   onChange: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
