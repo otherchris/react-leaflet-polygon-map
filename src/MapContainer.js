@@ -18,6 +18,17 @@ import {
 import './main.css';
 import getArea from './getArea';
 
+const SubmitButton = (props) => {
+  const { handleSubmit, text } = props;
+  return (
+    <button onClick={handleSubmit}>{text}</button>
+  );
+};
+
+SubmitButton.propTypes = {
+  handleSubmit: PropTypes.func,
+  text: PropTypes.string,
+};
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -119,6 +130,9 @@ class MapContainer extends React.Component {
       zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
     });
   }
+  handleSubmit(e) {
+    this.props.handleSubmit(e);
+  }
   render() {
     const {
       tileLayerProps,
@@ -141,6 +155,7 @@ class MapContainer extends React.Component {
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
+        handleSubmit={this.handleSubmit.bind(this)}
         markerIcon={this.state.markerIcon}
         onCreated={this.updateShapes.bind(this)}
         points={this.state.points}
@@ -165,6 +180,7 @@ MapContainer.propTypes = {
   circles: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.boolean,
   encoding: PropTypes.string,
+  handleSubmit: PropTypes.func,
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,

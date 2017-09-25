@@ -34,7 +34,7 @@ storiesOf('onChange prop', module)
         alert(JSON.stringify(state, null, '  '));
       }}
       additionalNotes={`Should see \n
-        <input type="checkbox" /> 1. Alert with state on component update />
+        <input type="checkbox" /> 1. Alert with state on component update
       `}
     />
   ));
@@ -43,13 +43,13 @@ storiesOf('handleSubmit', module)
   .add('Do not show Submit button if handleSubmit prop not provided', () => (
     <MapContainerStoryWithNotes
       additionalNotes={`Should see \n
-        <input type="checkbox" /> 1. No submit button/>
+        <input type="checkbox" /> 1. No submit button
       `}
     />
   ))
   .add('Show Submit button if handleSubmit prop is provided', () => (
     <MapContainerStoryWithNotes
-      handleSubmitpol={(state) => {
+      handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
       additionalNotes={`Should see \n
@@ -60,11 +60,7 @@ storiesOf('handleSubmit', module)
   .add('Submit should be disabled if any polygon is too big', () => (
     <MapContainerStoryWithNotes
       polygons={[poly.tooBigPoly]}
-      maxArea={{
-        max: 1,
-        units: 'miles',
-      }}
-      handleSubmitpol={(state) => {
+      handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
       additionalNotes={`Should see \n
@@ -77,11 +73,7 @@ storiesOf('handleSubmit', module)
   .add('Submit should be disabled if sum of polygons is too big', () => (
     <MapContainerStoryWithNotes
       polygons={poly.tooBigPolyArray}
-      maxArea={{
-        max: 1,
-        units: 'miles',
-      }}
-      handleSubmitpol={(state) => {
+      handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
       additionalNotes={`Should see \n
