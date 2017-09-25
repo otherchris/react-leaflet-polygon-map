@@ -82,6 +82,17 @@ const Legend = (LegendComponent, props) => (
   </div>
 );
 
+const MapSubmitButton = (props) => (
+  <div className="map-submit-button">
+    <button onClick={props.handleSubmit}>{props.text}</button>
+  </div>
+);
+
+MapSubmitButton.propTypes = {
+  handleSubmit: PropTypes.func,
+  text: PropTypes.string,
+};
+
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
@@ -129,6 +140,9 @@ const MapComponent = (props) => {
     />
   ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
+  const submit = props.handleSubmit
+    ? MapSubmitButton({ handleSubmit: props.handleSubmit, text: 'Submit' })
+    : '';
   return (
     <div>
       <Map
@@ -151,6 +165,7 @@ const MapComponent = (props) => {
       <div className="below-map">
         {zipRadiusControl}
         {legend}
+        {submit}
       </div>
     </div>
   );
@@ -160,6 +175,7 @@ MapComponent.propTypes = {
   center: PropTypes.number,
   circles: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.boolean,
+  handleSubmit: PropTypes.func,
   height: PropTypes.number,
   includeZipRadius: PropTypes.boolean,
   markerIcon: PropTypes.object,
@@ -171,6 +187,7 @@ MapComponent.propTypes = {
   rectangles: PropTypes.arrayOf(PropTypes.object),
   setCenter: PropTypes.arrayOf(PropTypes.number),
   style: PropTypes.object,
+  submitText: PropTypes.string,
   tileLayerProps: PropTypes.shape({
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
