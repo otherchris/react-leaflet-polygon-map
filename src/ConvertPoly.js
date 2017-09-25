@@ -50,7 +50,6 @@ export const ensureGeometryIsValid = featObj => {
 // wkt, wkb, circle (center/radius), rectangle (bounds/path)
 // Returns as geoJSON Feature Objects
 export const convertPoly = poly => {
-  const area = poly.data ? poly.data.area : null;
   switch (poly.type) {
   case 'polyline': {
     return {
@@ -78,6 +77,7 @@ export const convertPoly = poly => {
     const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const center = poly.data.center;
     const radius = poly.data.radius;
+    const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
       properties: { center: center || '', radius: radius || '', area: area || '' },
@@ -92,6 +92,7 @@ export const convertPoly = poly => {
   case 'Rectangle': {
     const rectCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const bounds = poly.data.bounds;
+    const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
       properties: { bounds: bounds || '', area: area || '' },
@@ -103,8 +104,15 @@ export const convertPoly = poly => {
       },
     };
   }
+  case 'Feature': {
+    return poly;
+  }
   case 'geoJSON': {
-    return poly.data;
+    return {
+      type: poly.data.type,
+      properties: poly.data.properties,
+      geometry: poly.data.geometry,
+    };
   }
   default:
     throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
@@ -162,7 +170,7 @@ export const sizeArray = geoJSONObj => {
 };
 // Given one of our specified poly types, runs it through the series of
 // functions above
-// Returns valid geoJSON Feature Collection
+// Returns valid geoJSON Feature
 export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
