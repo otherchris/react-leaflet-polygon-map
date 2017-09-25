@@ -99,6 +99,7 @@ const poly = {
       ],
     },
   },
+  // We don't want this. Should throw error.
   FeatureCollection: {
     type: 'FeatureCollection',
     features: [{
