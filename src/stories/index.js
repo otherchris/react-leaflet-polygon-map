@@ -60,6 +60,7 @@ storiesOf('handleSubmit', module)
   ))
   .add('Submit should be disabled if any polygon is too big', () => (
     <MapContainerStoryWithNotes
+      edit
       polygons={[poly.tooBigPoly]}
       handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
@@ -77,6 +78,7 @@ storiesOf('handleSubmit', module)
   ))
   .add('Submit should be disabled if sum of polygons is too big', () => (
     <MapContainerStoryWithNotes
+      edit
       polygons={poly.tooBigPolyArray}
       handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));

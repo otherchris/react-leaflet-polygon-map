@@ -97,20 +97,25 @@ const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
   merge(style, props.style);
   const polyWithArea = map(props.polygons, getArea);
-  const polygons = map(polyWithArea, (result, index) => (
-    <GeoJSON
-      style={style}
-      data={result}
-      key={result.key || index + 1}
-      k_key={result.key || index + 1}
-      editable={!!(result.properties && result.properties.editable)}
-      onClick={props.clickPoly}
-    >
-      <Tooltip>
-        <span>{Math.ceil(result.properties.area)} Sq m</span>
-      </Tooltip>
-    </GeoJSON>
-  ));
+  const polygons = map(polyWithArea, (result, index) => {
+    const p = result.properties;
+    return (
+      <GeoJSON
+        style={style}
+        data={result}
+        key={result.key || index + 1}
+        k_key={result.key || index + 1}
+        editable={!!(result.properties && result.properties.editable)}
+        onClick={props.clickPoly}
+      >
+        <Tooltip>
+          <span>
+            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+          </span>
+        </Tooltip>
+      </GeoJSON>
+    );
+  });
   const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon}>
       <Tooltip>
@@ -118,20 +123,30 @@ const MapComponent = (props) => {
       </Tooltip>
     </Marker>
   ));
-  const circles = map(props.circles, (result, index) => (
-    <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} >
-      <Tooltip>
-        <span>{Math.ceil(result.area)} Sq m</span>
-      </Tooltip>
-    </Circle>
-  ));
-  const rectangles = map(props.rectangles, (result, index) => (
-    <Rectangle {...style} data={result} key={index} bounds={result.bounds} >
-      <Tooltip>
-        <span>{Math.ceil(result.area)} Sq m</span>
-      </Tooltip>
-    </Rectangle>
-  ));
+  const circles = map(props.circles, (result, index) => {
+    const p = result.properties;
+    return (
+      <Circle {...style} data={result} key={index} center={result.center} radius={result.radius}>
+        <Tooltip>
+          <span>
+            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+          </span>
+        </Tooltip>
+      </Circle>
+    );
+  });
+  const rectangles = map(props.rectangles, (result, index) => {
+    const p = result.properties;
+    return (
+      <Rectangle {...style} data={result} key={index} center={result.center} radius={result.radius}>
+        <Tooltip>
+          <span>
+            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+          </span>
+        </Tooltip>
+      </Rectangle>
+    );
+  });
   const editComponent = editTools(props);
   const zipRadiusControl = includeZipRadius ? (
     <ZipRadiusControl
@@ -181,6 +196,7 @@ MapComponent.propTypes = {
   markerIcon: PropTypes.object,
   legendComponent: PropTypes.function,
   legendProps: PropTypes.object,
+  maxArea: PropTypes.number,
   onCreated: PropTypes.function,
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
@@ -192,6 +208,7 @@ MapComponent.propTypes = {
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
   }),
+  unit: PropTypes.string,
   zipRadiusChange: PropTypes.function,
   zoom: PropTypes.number,
 };

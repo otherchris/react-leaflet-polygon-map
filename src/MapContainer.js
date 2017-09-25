@@ -78,10 +78,15 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
-    const { unit } = this.props.maxArea || { unit: 'meters' };
-    const polys = map(props.polygons, makeGeoJSON);
+    const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
+    const polys = map(props.polygons, (poly) => {
+      const out = makeGeoJSON(poly);
+      if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
+      return out;
+    });
     this.setState({
       unit,
+      maxArea: max,
       polygons: polys,
       points: this.props.points,
       rectangles: this.props.rectangles,
@@ -92,7 +97,12 @@ class MapContainer extends React.Component {
   }
   updateShapes(e) {
     const state = this.state;
-    state.polygons = map(this.state.polygons, getArea);
+    const { unit, maxArea } = state;
+    state.polygons = map(this.state.polygons, (poly) => {
+      const out = getArea(poly);
+      if (area(unit, poly.properties.area) > maxArea) out.properties.tooLarge = true;
+      return out;
+    });
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     const gJWithArea = getArea(geoJson);
@@ -179,11 +189,13 @@ class MapContainer extends React.Component {
         edit={this.state.edit}
         handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
         markerIcon={this.state.markerIcon}
+        maxArea={this.state.maxArea}
         onCreated={this.updateShapes.bind(this)}
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}
         tileLayerProps={{ url: tileUrl }}
+        unit={this.state.unit}
         zipRadiusCenter={
           this.state.zipRadiusCenter ||
           this.props.zipRadiusCenter ||
