@@ -6,6 +6,7 @@ import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
+import reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
@@ -30,6 +31,8 @@ SubmitButton.propTypes = {
   text: PropTypes.string,
 };
 
+const areaAccumulator = (sum, val) => sum + val.properties.area;
+
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -48,6 +51,7 @@ class MapContainer extends React.Component {
       edit: false,
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
+      totalArea: 0,
     };
     this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
@@ -70,10 +74,12 @@ class MapContainer extends React.Component {
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
+      totalArea: reduce(polys, areaAccumulator, 0),
     });
   }
   updateShapes(e) {
     const state = this.state;
+    state.polygons = map(this.state.polygons, getArea);
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     const gJWithArea = getArea(geoJson);
@@ -94,6 +100,7 @@ class MapContainer extends React.Component {
     default:
       break;
     }
+    state.totalArea = reduce(state.polygons, areaAccumulator, 0);
     this.setState(state);
     this.setState({
       edit: true,
@@ -111,6 +118,7 @@ class MapContainer extends React.Component {
     }
     this.setState({
       polygons,
+      totalArea: reduce(polygons, areaAccumulator, 0),
     });
   }
   zipRadiusChange(e) {
