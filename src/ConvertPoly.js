@@ -24,13 +24,16 @@ export const ensureShapeIsClosed = shape => {
 // validity
 export const ensureGeometryIsValid = featObj => {
   switch (featObj.geometry.type) {
-  case 'Polygon': {
-    featObj.geometry.coordinates = ensureShapeIsClosed(featObj.geometry.coordinates);
-    return featObj;
-  }
   case 'LineString': {
     featObj.geometry.type = 'Polygon';
     featObj.geometry.coordinates = [ensureShapeIsClosed(featObj.geometry.coordinates)];
+    return featObj;
+  }
+  case 'Polygon': {
+    const poly = featObj.geometry.coordinates;
+    map((poly), (shape) => {
+      ensureShapeIsClosed(shape);
+    });
     return featObj;
   }
   case 'MultiPolygon': {
@@ -126,22 +129,50 @@ export const featCollWrap = (featObj) =>
     features: [featObj],
   });
 // Given geoJSON Feature
+// Returns Polygons as MultiPolys,
+// Multipolys pass through
+// Everything else is error
+export const polyToMulti = geoJSONObj => {
+  const { properties } = geoJSONObj;
+  const { type, coordinates } = geoJSONObj.geometry;
+  switch (type) {
+  case 'Polygon': {
+    const newFeature = {
+      type: 'Feature',
+      properties,
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [coordinates],
+      },
+    };
+    return newFeature;
+  }
+  case 'MultiPolygon': {
+    return geoJSONObj;
+  }
+  default:
+    throw Error(`Ensure Geometry - invalid poly type: ${type}`);
+  }
+};
+
+
+// Given geoJSON feature
 // Returns that same object with the coordinates array properly nested
-// (code above is kind of janky so it's wrapped one too many times)
 export const sizeArray = geoJSONObj => {
   const { properties } = geoJSONObj;
   const { type, coordinates } = geoJSONObj.geometry;
   switch (type) {
   case 'Polygon': {
-    const coordSize = coordinates[0].length;
+    const coordSize = coordinates.length;
+    console.log('coord size', coordSize);
     if (coordSize === 1) {
       const flatterArray = flatten(coordinates);
       const newFeature = {
         type: 'Feature',
         properties,
         geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[[flatterArray]]],
+          type: 'Polygon',
+          coordinates: flatterArray,
         },
       };
       return sizeArray(newFeature);
@@ -156,7 +187,7 @@ export const sizeArray = geoJSONObj => {
         type: 'Feature',
         properties,
         geometry: {
-          type,
+          type: 'MultiPolygon',
           coordinates: flatterArray,
         },
       };
