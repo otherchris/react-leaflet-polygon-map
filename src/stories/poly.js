@@ -119,6 +119,7 @@ const poly = {
       },
     }],
   },
+  // This is the type we want, ideally
   Feature: {
     type: 'Feature',
     properties: {},
