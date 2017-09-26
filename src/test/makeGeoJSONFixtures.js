@@ -1,11 +1,13 @@
-const polyFixtures = {
-  // Fixtures for mkFeatureObj
-  polylineToFeatObj: {
+const makeGeoJSONFixtures = {
+  // Fixtures for makeGeoJSON
+  polylineGeoJSON: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 6363342.485321282,
+    },
     geometry: {
-      type: 'LineString',
-      coordinates: [
+      type: 'MultiPolygon',
+      coordinates: [[[
         [-85.77176, 38.26339],
         [-85.76422, 38.26968],
         [-85.76114, 38.27264],
@@ -53,15 +55,36 @@ const polyFixtures = {
         [-85.76927, 38.26081],
         [-85.77224, 38.26285],
         [-85.77174, 38.26338],
+        [-85.77176, 38.26339],
+      ]]],
+    },
+  },
+  geoJSONGeoJSON: {
+    type: 'Feature',
+    properties: {
+      area: 5892972.080992023,
+    },
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [[
+          [-85.76820373535156, 38.23966324024717],
+          [-85.75429916381836, 38.22793227923281],
+          [-85.72528839111328, 38.23022468473982],
+          [-85.74125289916992, 38.253279568348304],
+          [-85.76820373535156, 38.23966324024717],
+        ]],
       ],
     },
   },
-  wktToFeatObj: {
+  wktGeoJSON: {
     type: 'Feature',
-    properties: {},
+    properties: {
+      area: 8635913.881097274,
+    },
     geometry: {
-      type: 'Polygon',
-      coordinates: [[
+      type: 'MultiPolygon',
+      coordinates: [[[
         [-85.76837539672852, 38.24438205858283],
         [-85.78210830688477, 38.22442610753021],
         [-85.75052261352539, 38.236157634068825],
@@ -70,19 +93,19 @@ const polyFixtures = {
         [-85.73284149169922, 38.25368397473024],
         [-85.75824737548828, 38.24222492249137],
         [-85.76837539672852, 38.24438205858283],
-      ]],
+      ]]],
     },
   },
-  circleFeatObj: {
+  circleGeoJSON: {
     type: 'Feature',
-    properties: {
-      center: { lat: 38.25850297757688, lng: -85.7552433013916 },
-      radius: 266.9827372809027,
-      area: 213839.345998646,
+    properties: { center:
+      { lat: 38.25850297757688, lng: -85.7552433013916 },
+    radius: 266.9827372809027,
+    area: 213839.345986165,
     },
     geometry: {
-      type: 'Polygon',
-      coordinates: [[
+      type: 'MultiPolygon',
+      coordinates: [[[
         [-85.7552433013916, 38.26090132431184],
         [-85.75371608616081, 38.2605799968801],
         [-85.75259811897945, 38.2597021212559],
@@ -95,45 +118,35 @@ const polyFixtures = {
         [-85.75829764453493, 38.25850293799326],
         [-85.75788848380375, 38.2597021212559],
         [-85.7567705166224, 38.2605799968801],
-      ]],
+        [-85.7552433013916, 38.26090132431184],
+      ]]],
     },
   },
-  rectangleFeatObj: {
+  rectangleGeoJSON: {
     type: 'Feature',
     properties: {
       bounds: { south: 38.25728983213629,
         west: -85.76575756072998,
         north: 38.257812161128484,
         east: -85.7618522644043 },
-      area: 0.07134461594274134,
+      area: 0,
     },
     geometry: {
-      type: 'Polygon',
-      coordinates: [[
+      type: 'MultiPolygon',
+      coordinates: [[[
         [-85.76575756072998, 38.257812161128484],
         [-85.7618522644043, 38.257812161128484],
         [-85.76575756072998, 38.25728983213629],
         [-85.7618522644043, 38.25728983213629],
-      ]],
+        [-85.76575756072998, 38.257812161128484],
+      ]]],
     },
   },
-  geoJSONFeatObjCONTROL: {
+  geoJSONMultiPoly: {
     type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [-85.76820373535156, 38.23966324024717],
-        [-85.75429916381836, 38.22793227923281],
-        [-85.72528839111328, 38.23022468473982],
-        [-85.74125289916992, 38.253279568348304],
-        [-85.76820373535156, 38.23966324024717],
-      ]],
+    properties: {
+      area: 20310537131.032818,
     },
-  },
-  geoJSONMultiPolyFeatObj: {
-    type: 'Feature',
-    properties: {},
     geometry: {
       type: 'MultiPolygon',
       coordinates: [
@@ -165,6 +178,6 @@ const polyFixtures = {
       ],
     },
   },
-};
 
-export default polyFixtures;
+};
+export default makeGeoJSONFixtures;

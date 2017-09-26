@@ -123,11 +123,11 @@ export const convertPoly = poly => {
 };
 // Given geoJSON Feature Obj
 // Returns geoJSON Feature Collection
-export const featCollWrap = (featObj) =>
-  ({
-    type: 'FeatureCollection',
-    features: [featObj],
-  });
+/* export const featCollWrap = (featObj) =>
+ *   ({
+ *     type: 'FeatureCollection',
+ *     features: [featObj],
+ *   }); */
 // Given geoJSON Feature
 // Returns Polygons as MultiPolys,
 // Multipolys pass through
@@ -158,54 +158,54 @@ export const polyToMulti = geoJSONObj => {
 
 // Given geoJSON feature
 // Returns that same object with the coordinates array properly nested
-export const sizeArray = geoJSONObj => {
-  const { properties } = geoJSONObj;
-  const { type, coordinates } = geoJSONObj.geometry;
-  switch (type) {
-  case 'Polygon': {
-    const coordSize = coordinates.length;
-    console.log('coord size', coordSize);
-    if (coordSize === 1) {
-      const flatterArray = flatten(coordinates);
-      const newFeature = {
-        type: 'Feature',
-        properties,
-        geometry: {
-          type: 'Polygon',
-          coordinates: flatterArray,
-        },
-      };
-      return sizeArray(newFeature);
-    }
-    return geoJSONObj;
-  }
-  case 'MultiPolygon': {
-    const coordSize = size(coordinates[0][0]);
-    if (coordSize === 1) {
-      const flatterArray = flatten(coordinates);
-      const newFeature = {
-        type: 'Feature',
-        properties,
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: flatterArray,
-        },
-      };
-      return sizeArray(newFeature);
-    }
-    return geoJSONObj;
-  }
-  default:
-    throw Error(`Ensure Geometry - invalid geometry type: ${geoJSONObj.geometry.type}`);
-  }
-};
+/* export const sizeArray = geoJSONObj => {
+ *   const { properties } = geoJSONObj;
+ *   const { type, coordinates } = geoJSONObj.geometry;
+ *   switch (type) {
+ *   case 'Polygon': {
+ *     const coordSize = coordinates.length;
+ *     console.log('coord size', coordSize);
+ *     if (coordSize === 1) {
+ *       const flatterArray = flatten(coordinates);
+ *       const newFeature = {
+ *         type: 'Feature',
+ *         properties,
+ *         geometry: {
+ *           type: 'Polygon',
+ *           coordinates: flatterArray,
+ *         },
+ *       };
+ *       return sizeArray(newFeature);
+ *     }
+ *     return geoJSONObj;
+ *   }
+ *   case 'MultiPolygon': {
+ *     const coordSize = size(coordinates[0][0]);
+ *     if (coordSize === 1) {
+ *       const flatterArray = flatten(coordinates);
+ *       const newFeature = {
+ *         type: 'Feature',
+ *         properties,
+ *         geometry: {
+ *           type: 'MultiPolygon',
+ *           coordinates: flatterArray,
+ *         },
+ *       };
+ *       return sizeArray(newFeature);
+ *     }
+ *     return geoJSONObj;
+ *   }
+ *   default:
+ *     throw Error(`Ensure Geometry - invalid geometry type: ${geoJSONObj.geometry.type}`);
+ *   }
+ * }; */
 // Given one of our specified poly types, runs it through the series of
 // functions above
 // Returns valid geoJSON Feature
 export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
-  const resizedArray = sizeArray(validatedObj);
+  const resizedArray = polyToMulti(validatedObj);
   const resizedWithArea = getArea(resizedArray);
   return resizedWithArea;
 };
