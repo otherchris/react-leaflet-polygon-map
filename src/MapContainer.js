@@ -61,7 +61,7 @@ class MapContainer extends React.Component {
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
       totalArea: 0,
-      remove: true,
+      remove: false,
     };
     this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
@@ -181,6 +181,7 @@ class MapContainer extends React.Component {
       'legendComponent',
       'height',
       'center',
+      'remove',
       'style',
       'includeZipRadius',
       'zoom',
