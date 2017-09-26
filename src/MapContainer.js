@@ -6,6 +6,7 @@ import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
+import reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import React from 'react';
@@ -17,7 +18,20 @@ import {
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
+import getCenter from './getCenter';
 
+const areaAccumulator = (sum, val) => sum + val.properties.area;
+const area = (unit, _area) => {
+  let result = _area;
+  switch (unit) {
+  case 'miles':
+    result *= 0.000000386102;
+    break;
+  default:
+    break;
+  }
+  return result;
+};
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -37,6 +51,7 @@ class MapContainer extends React.Component {
       edit: false,
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
+      totalArea: 0,
     };
     this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
@@ -52,17 +67,34 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
-    const polys = map(props.polygons, makeGeoJSON);
+    const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
+    const polys = map(props.polygons, (poly) => {
+      const out = makeGeoJSON(poly);
+      if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
+      return out;
+    });
+    const c = getCenter(polys);
+    const center = L.latLng(c[0], c[1]);
     this.setState({
+      unit,
+      center,
+      maxArea: max,
       polygons: polys,
       points: this.props.points,
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
+      totalArea: area(unit, reduce(polys, areaAccumulator, 0)),
     });
   }
   updateShapes(e) {
     const state = this.state;
+    const { unit, maxArea } = state;
+    state.polygons = map(this.state.polygons, (poly) => {
+      const out = getArea(poly);
+      if (area(unit, poly.properties.area) > maxArea) out.properties.tooLarge = true;
+      return out;
+    });
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     const gJWithArea = getArea(geoJson);
@@ -83,6 +115,7 @@ class MapContainer extends React.Component {
     default:
       break;
     }
+    state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
     this.setState(state);
     this.setState({
       edit: true,
@@ -100,6 +133,7 @@ class MapContainer extends React.Component {
     }
     this.setState({
       polygons,
+      totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
     });
   }
   zipRadiusChange(e) {
@@ -119,6 +153,10 @@ class MapContainer extends React.Component {
       zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
     });
   }
+  handleSubmit(e) {
+    if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return;
+    this.props.handleSubmit(this.state);
+  }
   render() {
     const {
       tileLayerProps,
@@ -137,16 +175,20 @@ class MapContainer extends React.Component {
 
     return (
       <MapComponent
+        center={this.state.center || L.latLng(-83, 35)}
         chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
+        handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
         markerIcon={this.state.markerIcon}
+        maxArea={this.state.maxArea}
         onCreated={this.updateShapes.bind(this)}
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}
         tileLayerProps={{ url: tileUrl }}
+        unit={this.state.unit}
         zipRadiusCenter={
           this.state.zipRadiusCenter ||
           this.props.zipRadiusCenter ||
@@ -165,10 +207,12 @@ MapContainer.propTypes = {
   circles: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.boolean,
   encoding: PropTypes.string,
+  handleSubmit: PropTypes.func,
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,
   legendComponent: PropTypes.func,
+  maxArea: PropTypes.object,
   onChange: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
