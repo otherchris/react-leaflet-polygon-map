@@ -29,6 +29,12 @@ const style = {
   fillOpacity: 0.45,
 };
 
+const RemovePolyBanner = (
+  <div className="remove-poly-banner">
+    Click a shape to remove.
+  </div>
+);
+
 const editTools = (p) => {
   if (p.includeZipRadius) {
     return (
@@ -165,8 +171,12 @@ const MapComponent = (props) => {
   const submit = props.handleSubmit
     ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ? 'Submit' : 'Area too large')
     : '';
+  const removePolyBanner = props.edit && props.remove
+    ? RemovePolyBanner
+    : '';
   return (
     <div>
+      {removePolyBanner}
       <Map
         style={{ height }}
         center={center}
@@ -208,6 +218,7 @@ MapComponent.propTypes = {
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
   rectangles: PropTypes.arrayOf(PropTypes.object),
+  remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   style: PropTypes.object,
   submitText: PropTypes.string,
