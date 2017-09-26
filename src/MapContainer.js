@@ -101,14 +101,10 @@ class MapContainer extends React.Component {
   updateShapes(e) {
     const state = this.state;
     const { unit, maxArea } = state;
-    state.polygons = map(this.state.polygons, (poly) => {
-      const out = getArea(poly);
-      if (area(unit, poly.properties.area) > maxArea) out.properties.tooLarge = true;
-      return out;
-    });
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     const gJWithArea = getArea(geoJson);
+    if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
     gJWithArea.properties.uuid = uuid.v4();
     geoJson.properties.editable = false;
     switch (e.layerType) {
