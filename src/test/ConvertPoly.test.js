@@ -124,6 +124,8 @@ test('given Circle, make geoJSON', () => {
 test('given Rectangle, make geoJSON', () => {
   const result21 = makeGeoJSON(poly.rectangle);
   expect(result21).toEqual(makeGeoJSONFixtures.rectangleGeoJSON);
+test('given wkb, make geoJSON', () => {
+  expect(() => makeGeoJSON(poly.wkb)).toThrowError('Ensure Geometry - invalid poly type: wkb');
 });
 test('given multipolygon geoJSON, make geoJSON', () => {
   const result22 = makeGeoJSON(poly.geoJSONMultiPoly);
