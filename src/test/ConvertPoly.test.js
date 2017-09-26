@@ -7,6 +7,7 @@ import ensureClosedFixtures from './ensureShapeIsClosedFixtures';
 import ensureValidGeoFixtures from './ensureGeometryIsValidFixtures';
 import sizeArrayFixtures from './sizeArrayFixtures';
 import polyToMultiFixtures from './PolyToMultiFixtures';
+import makeGeoJSONFixtures from './makeGeoJSONFixtures';
 import dpPoly from '../stories/dpPoly.js';
 
 
@@ -103,6 +104,31 @@ test('given MultiPoly Feature geoJSON, return as is', () => {
 test('given wrong type of geoJSON, throw error', () => {
   expect(() => polyToMulti(polyToMultiFixtures.LinestringFeatObj)).toThrow('Ensure Geometry - invalid poly type: LineString');
 });
+// makeGeoJSON MULTIPOLY FEAT OBJs
+test('given polygon, make geoJSON', () => {
+  const result17 = makeGeoJSON(poly.polyline);
+  expect(result17).toEqual(makeGeoJSONFixtures.polylineGeoJSON);
+});
+test('given geoJSON, make geoJSON', () => {
+  const result18 = makeGeoJSON(poly.geoJSON);
+  expect(result18).toEqual(makeGeoJSONFixtures.geoJSONGeoJSON);
+});
+test('given wkt, make geoJSON', () => {
+  const result19 = makeGeoJSON(poly.wkt);
+  expect(result19).toEqual(makeGeoJSONFixtures.wktGeoJSON);
+});
+test('given Circle, make geoJSON', () => {
+  const result20 = makeGeoJSON(poly.circle);
+  expect(result20).toEqual(makeGeoJSONFixtures.circleGeoJSON);
+});
+test('given Rectangle, make geoJSON', () => {
+  const result21 = makeGeoJSON(poly.rectangle);
+  expect(result21).toEqual(makeGeoJSONFixtures.rectangleGeoJSON);
+});
+test('given multipolygon geoJSON, make geoJSON', () => {
+  const result22 = makeGeoJSON(poly.geoJSONMultiPoly);
+  expect(result22).toEqual(makeGeoJSONFixtures.geoJSONMultiPoly);
+});
 
 // sizeArray
 /* test('given Polygon gJ Feat Obj, return MultiPolygon gJ Feat Obj', () => {
@@ -119,25 +145,4 @@ test('given wrong type of geoJSON, throw error', () => {
  *   const sizeArray2 = sizeArray(sizeArrayFixtures.geoJSONMultiPolyFeatObj);
  *   console.log('sizeArray1', JSON.stringify(sizeArray2));
  *   expect(sizeArray2).toEqual(sizeArrayFixtures.geoJSONMultiPolyFeatObjCONTROL);
- * }); */
-// makeGeoJSON MULTIPOLY FEAT OBJs
-/* test('given polygon, make geoJSON', () => {
- *   const result17 = makeGeoJSON(poly.polyline);
- *   expect(result17).toEqual(polyFixtures.polylineGeoJSON);
- * });
- * test('given geoJSON, make geoJSON', () => {
- *   const result18 = makeGeoJSON(poly.geoJSON);
- *   expect(result18).toEqual(polyFixtures.geoJSONGeoJSON);
- * });
- * test('given wkt, make geoJSON', () => {
- *   const result19 = makeGeoJSON(poly.wkt);
- *   expect(result19).toEqual(polyFixtures.wktGeoJSON);
- * });
- * test('given wkb, make geoJSON', () => {
- *   const result20 = makeGeoJSON(poly.wkb);
- *   expect(result20).toEqual(polyFixtures.wkbGeoJSON);
- * });
- * test('given multipolygon geoJSON, make geoJSON', () => {
- *   const result21 = makeGeoJSON(poly.geoJSONMultiPoly);
- *   expect(result21).toEqual(polyFixtures.geoJSONMultiPoly);
  * }); */
