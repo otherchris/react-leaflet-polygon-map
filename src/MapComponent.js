@@ -111,6 +111,7 @@ const MapComponent = (props) => {
         style={style}
         data={result}
         key={result.properties.uuid || uuid.v4()}
+        uuid={result.properties.uuid || 'none'}
         editable={!!(result.properties && result.properties.editable)}
         onClick={props.clickPoly}
       >
