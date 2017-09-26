@@ -61,7 +61,7 @@ class MapContainer extends React.Component {
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
       totalArea: 0,
-      remove: false,
+      remove: this.props.remove,
     };
     this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
@@ -74,6 +74,15 @@ class MapContainer extends React.Component {
     }
   }
   componentDidUpdate() {
+    if (this.state.edit) {
+      const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
+      removeButton.onclick = () => {
+        const curr = this.state.remove;
+        console.log(curr, !curr)
+        this.setState({ remove: !curr });
+      };
+      removeButton.className = ('leaflet-draw-edit-remove');
+    }
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
@@ -232,6 +241,7 @@ MapContainer.propTypes = {
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
+  remove: PropTypes.bool,
   style: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tiles: PropTypes.string,
