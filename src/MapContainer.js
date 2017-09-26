@@ -130,7 +130,6 @@ class MapContainer extends React.Component {
     });
   }
   clickPoly(e) {
-    console.log(e.layer.options);
     if (!this.state.edit) return;
     if (this.state.remove) {
       const _uuid = e.layer.options.uuid;
@@ -140,11 +139,11 @@ class MapContainer extends React.Component {
     }
     const _uuid = e.target.options.key;
     const polygons = this.state.polygons;
-
+    const index = indexByUuid(polygons, _uuid);
     if (polygons[index] && polygons[index].properties) {
-      polygons[index].properties.editable = !polygons[index].properties.editable;
-      polygons[index].key = -1 * key;
+      const editable = polygons[index].properties.editable;
       polygons[index] = getArea(e.layer.toGeoJSON());
+      polygons[index].properties.editable = !editable;
     }
     this.setState({
       polygons,
