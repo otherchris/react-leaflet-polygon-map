@@ -53,9 +53,8 @@ test('given wkt, return feature', () => {
   const result9 = convertPoly(poly.wkt);
   expect(result9).toEqual(polyFixtures.wktFeatObj);
 });
-test('given wkb, return feature', () => {
-  const result10 = convertPoly(poly.wkb);
-  expect(result10).toEqual(polyFixtures.wkbFeatObj);
+test('given wkb, throw error', () => {
+  expect(() => convertPoly(poly.wkb)).toThrowError('Ensure Geometry - invalid poly type: wkb');
 });
 test('given Circle, return feature', () => {
   const result11 = convertPoly(poly.circle);
@@ -87,8 +86,7 @@ test('given wkt, make geoJSON', () => {
   expect(result17).toEqual(polyFixtures.wktGeoJSON);
 });
 test('given wkb, make geoJSON', () => {
-  const result18 = makeGeoJSON(poly.wkb);
-  expect(result18).toEqual(polyFixtures.wkbGeoJSON);
+  expect(() => makeGeoJSON(poly.wkb)).toThrowError('Ensure Geometry - invalid poly type: wkb');
 });
 test('given multipolygon geoJSON, make geoJSON', () => {
   const result19 = makeGeoJSON(poly.geoJSONMultiPoly);
