@@ -59,9 +59,6 @@ const editTools = (p) => {
       </FeatureGroup>
     );
   } else if (p.edit) {
-    const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove');
-    removeButton.onClick = p.toggleRemove;
-    removeButton.className = ('leaflet-draw-edit-remove');
     return (
       <FeatureGroup>
         <EditControl
@@ -113,12 +110,12 @@ const MapComponent = (props) => {
   const polyWithArea = map(props.polygons, getArea);
   const polygons = map(polyWithArea, (result, index) => {
     const p = result.properties;
+    console.log(p);
     return (
       <GeoJSON
-        index={index}
         style={style}
         data={result}
-        key={result.properties.uuid || uuid.v4()}
+        key={result.key || uuid.v4()}
         uuid={result.properties.uuid || 'none'}
         editable={!!(result.properties && result.properties.editable)}
         onClick={props.clickPoly}

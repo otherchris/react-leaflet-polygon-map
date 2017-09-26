@@ -23,10 +23,11 @@ import getArea from './getArea';
 import getCenter from './getCenter';
 
 const indexByUuid = (arr, _uuid) => {
-  map(arr, (val, index) => {
-    if (val.properties && val.properties.uuid === _uuid) return index;
-    return -1;
+  let index = -1;
+  map(arr, (val, ind) => {
+    if (val.properties && (val.properties.uuid === _uuid)) index = ind;
   });
+  return index;
 };
 
 const areaAccumulator = (sum, val) => sum + val.properties.area;
@@ -78,7 +79,7 @@ class MapContainer extends React.Component {
       const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
       removeButton.onclick = () => {
         const curr = this.state.remove;
-        console.log(curr, !curr)
+        console.log(curr, !curr);
         this.setState({ remove: !curr });
       };
       removeButton.className = ('leaflet-draw-edit-remove');
@@ -87,9 +88,10 @@ class MapContainer extends React.Component {
   }
   mapPropsToState(props) {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
-    const polys = map(props.polygons, (poly) => {
+    const polys = map(props.polygons, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.uuid = uuid.v4();
+      out.properties.key = index + 1;
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
@@ -115,7 +117,8 @@ class MapContainer extends React.Component {
     const gJWithArea = getArea(geoJson);
     if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
     gJWithArea.properties.uuid = uuid.v4();
-    geoJson.properties.editable = false;
+    gJWithArea.properties.editable = false;
+    gJWithArea.properties.key = this.state.polygons.length + 1;
     switch (e.layerType) {
     case 'polygon':
       state.polygons.push(gJWithArea);
@@ -146,13 +149,14 @@ class MapContainer extends React.Component {
       this.setState({ polygons });
       return;
     }
-    const _uuid = e.target.options.key;
+    const _uuid = e.target.options.uuid;
     const polygons = this.state.polygons;
     const index = indexByUuid(polygons, _uuid);
     if (polygons[index] && polygons[index].properties) {
       const editable = polygons[index].properties.editable;
       polygons[index] = getArea(e.layer.toGeoJSON());
       polygons[index].properties.editable = !editable;
+      polygons[index].properties.key = -1 * (index + 1)
     }
     this.setState({
       polygons,
