@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
 import 'leaflet/dist/leaflet.css';
+import uuid from 'uuid';
 import {
   Map,
   Marker,
@@ -106,12 +107,10 @@ const MapComponent = (props) => {
     const p = result.properties;
     return (
       <GeoJSON
-        uuid={p.uuid}
         index={index}
         style={style}
         data={result}
-        key={result.key || index + 1}
-        k_key={result.key || index + 1}
+        key={result.properties.uuid || uuid.v4()}
         editable={!!(result.properties && result.properties.editable)}
         onClick={props.clickPoly}
       >
