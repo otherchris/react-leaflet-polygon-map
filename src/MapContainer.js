@@ -132,7 +132,7 @@ class MapContainer extends React.Component {
   clickPoly(e) {
     if (!this.state.edit) return;
     if (this.state.remove) {
-      const _uuid = e.layer.options.uuid;
+      const _uuid = e.layer.options.key;
       const polygons = filter(this.state.polygons, (poly) => _uuid !== poly.properties.uuid);
       this.setState({ polygons });
       return;
