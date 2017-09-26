@@ -1,7 +1,7 @@
 import React from 'react';
 // eslint-disable-next-line max-len
 import { ensureShapeIsClosed, ensureGeometryIsValid, convertPoly, sizeArray, polyToMulti, makeGeoJSON } from '../ConvertPoly';
-import poly from '../stories/poly.js';
+import poly from './poly.js';
 import polyFixtures from './polyFixtures';
 import ensureClosedFixtures from './ensureShapeIsClosedFixtures';
 import ensureValidGeoFixtures from './ensureGeometryIsValidFixtures';
@@ -124,6 +124,7 @@ test('given Circle, make geoJSON', () => {
 test('given Rectangle, make geoJSON', () => {
   const result21 = makeGeoJSON(poly.rectangle);
   expect(result21).toEqual(makeGeoJSONFixtures.rectangleGeoJSON);
+});
 test('given wkb, make geoJSON', () => {
   expect(() => makeGeoJSON(poly.wkb)).toThrowError('Ensure Geometry - invalid poly type: wkb');
 });
