@@ -22,6 +22,13 @@ import './main.css';
 import getArea from './getArea';
 import getCenter from './getCenter';
 
+const indexByUuid = (arr, _uuid) => {
+  map(arr, (val, index) => {
+    if (val.properties && val.properties.uuid === _uuid) return index;
+    return -1;
+  });
+};
+
 const areaAccumulator = (sum, val) => sum + val.properties.area;
 const area = (unit, _area) => {
   let result = _area;
@@ -135,9 +142,9 @@ class MapContainer extends React.Component {
       this.setState({ polygons });
       return;
     }
-    const key = e.target.options.k_key;
-    const index = Math.abs(key) - 1;
+    const _uuid = e.target.options.key;
     const polygons = this.state.polygons;
+
     if (polygons[index] && polygons[index].properties) {
       polygons[index].properties.editable = !polygons[index].properties.editable;
       polygons[index].key = -1 * key;
