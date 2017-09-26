@@ -59,6 +59,9 @@ const editTools = (p) => {
       </FeatureGroup>
     );
   } else if (p.edit) {
+    const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove');
+    removeButton.onClick = p.toggleRemove;
+    removeButton.className = ('leaflet-draw-edit-remove');
     return (
       <FeatureGroup>
         <EditControl
@@ -73,7 +76,6 @@ const editTools = (p) => {
           }}
           edit={{
             edit: false,
-            remove: false,
           }}
           onCreated={p.onCreated}
         />
