@@ -35,19 +35,10 @@ storiesOf('Polygons', module)
       `}
     />
   ))
-  .add('map with a \'gon (wkb)', () => (
-    <MapContainerStoryWithNotes
-      polygons={[dpPoly.wkb]}
-      additionalNotes={`Should see \n
-        <input type="checkbox" /> 1. Default styled polygon
-      `}
-    />
-  ))
   .add('map with all the \'gons', () => (
     // eslint-disable-next-line max-len
     <MapContainerStoryWithNotes
       polygons={[
-        dpPoly.wkb,
         dpPoly.polyline,
         dpPoly.wkt,
         dpPoly.geoJSON,
@@ -63,7 +54,6 @@ storiesOf('Polygons', module)
         dpPoly.wkt,
         dpPoly.polyline,
         dpPoly.geoJSON,
-        dpPoly.wkb,
       ]}
       rectangles={[dpPoly.rectangle]}
       circles={[dpPoly.circle]}
