@@ -110,7 +110,6 @@ const MapComponent = (props) => {
   const polyWithArea = map(props.polygons, getArea);
   const polygons = map(polyWithArea, (result, index) => {
     const p = result.properties;
-    console.log(p);
     return (
       <GeoJSON
         style={style}
