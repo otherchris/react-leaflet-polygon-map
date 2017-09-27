@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
 import 'leaflet/dist/leaflet.css';
+import uuid from 'uuid';
 import {
   Map,
   Marker,
@@ -27,6 +28,12 @@ const style = {
   fillColor: 'red',
   fillOpacity: 0.45,
 };
+
+const RemovePolyBanner = (
+  <div className="remove-poly-banner">
+    Click a shape to remove.
+  </div>
+);
 
 const editTools = (p) => {
   if (p.includeZipRadius) {
@@ -66,7 +73,6 @@ const editTools = (p) => {
           }}
           edit={{
             edit: false,
-            remove: false,
           }}
           onCreated={p.onCreated}
         />
@@ -108,8 +114,8 @@ const MapComponent = (props) => {
       <GeoJSON
         style={style}
         data={result}
-        key={result.key || index + 1}
-        k_key={result.key || index + 1}
+        key={result.key || uuid.v4()}
+        uuid={result.properties.uuid || 'none'}
         editable={!!(result.properties && result.properties.editable)}
         onClick={props.clickPoly}
       >
@@ -163,8 +169,12 @@ const MapComponent = (props) => {
   const submit = props.handleSubmit
     ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ? 'Submit' : 'Area too large')
     : '';
+  const removePolyBanner = props.edit && props.remove
+    ? RemovePolyBanner
+    : '';
   return (
     <div>
+      {removePolyBanner}
       <Map
         style={{ height }}
         center={center}
@@ -206,6 +216,7 @@ MapComponent.propTypes = {
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
   rectangles: PropTypes.arrayOf(PropTypes.object),
+  remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   style: PropTypes.object,
   submitText: PropTypes.string,
