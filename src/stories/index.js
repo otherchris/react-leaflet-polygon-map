@@ -95,3 +95,60 @@ storiesOf('handleSubmit', module)
     />
   ));
 
+storiesOf('Click to remove', module)
+  .add('click to remove', () => (
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.polyline]}
+      edit
+      remove
+    />
+  ));
+
+storiesOf('Style tooltip', module)
+  .add('with area/location', () => (
+    <MapContainerStoryWithNotes
+      tooltip={{
+        polygon: {
+          units: {
+            name: 'fathoms',
+            conversion: 0.298998, // conversion factor from meters to whatever
+          },
+          includeArea: true,
+          text: 'A word before the area',
+          className: 'class-for-styles-poly and-another',
+        },
+        marker: {
+          includeLocation: true,
+          text: 'a point is here',
+          className: 'class-for-styles-marker and-another',
+        },
+      }}
+      polygons={[poly.tooBigPoly]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Poly tooltips have area in 'sq fathoms'
+        <input type="checkbox" /> 2. Markers and polys have a text message with the area
+        <input type="checkbox" /> 3. tooltip elements have given class names
+      `}
+    />
+  ))
+  .add('without area/location', () => (
+    <MapContainerStoryWithNotes
+      tooltip={{
+        polygon: {
+          includeArea: false,
+          text: 'A word ',
+          className: 'class-for-styles-poly and-another',
+        },
+        marker: {
+          includeLocation: false,
+          text: 'a point is here',
+          className: 'class-for-styles-marker and-another',
+        },
+      }}
+      polygons={[poly.tooBigPoly]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Markers and polys have a text message and no area
+        <input type="checkbox" /> 3. tooltip elements have given class names
+      `}
+    />
+  ));
