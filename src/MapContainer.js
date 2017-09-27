@@ -4,10 +4,12 @@ import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
+import filter from 'lodash/filter';
 import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
+import uuid from 'uuid';
 import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
@@ -19,6 +21,14 @@ import {
 import './main.css';
 import getArea from './getArea';
 import getCenter from './getCenter';
+
+const indexByUuid = (arr, _uuid) => {
+  let index = -1;
+  map(arr, (val, ind) => {
+    if (val.properties && (val.properties.uuid === _uuid)) index = ind;
+  });
+  return index;
+};
 
 const areaAccumulator = (sum, val) => sum + val.properties.area;
 const area = (unit, _area) => {
@@ -64,12 +74,22 @@ class MapContainer extends React.Component {
     }
   }
   componentDidUpdate() {
+    if (this.state.edit) {
+      const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
+      removeButton.onclick = () => {
+        const curr = this.state.remove;
+        this.setState({ remove: !curr });
+      };
+      removeButton.className = ('leaflet-draw-edit-remove');
+    }
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
-    const polys = map(props.polygons, (poly) => {
+    const polys = map(props.polygons, (poly, index) => {
       const out = makeGeoJSON(poly);
+      out.properties.uuid = uuid.v4();
+      out.properties.key = index + 1;
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
@@ -90,15 +110,13 @@ class MapContainer extends React.Component {
   updateShapes(e) {
     const state = this.state;
     const { unit, maxArea } = state;
-    state.polygons = map(this.state.polygons, (poly) => {
-      const out = getArea(poly);
-      if (area(unit, poly.properties.area) > maxArea) out.properties.tooLarge = true;
-      return out;
-    });
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     const gJWithArea = getArea(geoJson);
-    geoJson.properties.editable = false;
+    if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+    gJWithArea.properties.uuid = uuid.v4();
+    gJWithArea.properties.editable = false;
+    gJWithArea.properties.key = this.state.polygons.length + 1;
     switch (e.layerType) {
     case 'polygon':
       state.polygons.push(gJWithArea);
@@ -123,13 +141,20 @@ class MapContainer extends React.Component {
   }
   clickPoly(e) {
     if (!this.state.edit) return;
-    const key = e.target.options.k_key;
-    const index = Math.abs(key) - 1;
+    if (this.state.remove) {
+      const _uuid = e.layer.options.uuid;
+      const polygons = filter(this.state.polygons, (poly) => _uuid !== poly.properties.uuid);
+      this.setState({ polygons });
+      return;
+    }
+    const _uuid = e.target.options.uuid;
     const polygons = this.state.polygons;
+    const index = indexByUuid(polygons, _uuid);
     if (polygons[index] && polygons[index].properties) {
-      polygons[index].properties.editable = !polygons[index].properties.editable;
-      polygons[index].key = -1 * key;
+      const editable = polygons[index].properties.editable;
       polygons[index] = getArea(e.layer.toGeoJSON());
+      polygons[index].properties.editable = !editable;
+      polygons[index].properties.key = -1 * (index + 1);
     }
     this.setState({
       polygons,
@@ -187,6 +212,7 @@ class MapContainer extends React.Component {
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}
+        remove={this.state.remove}
         tileLayerProps={{ url: tileUrl }}
         unit={this.state.unit}
         zipRadiusCenter={
@@ -217,6 +243,7 @@ MapContainer.propTypes = {
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
+  remove: PropTypes.bool,
   style: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tiles: PropTypes.string,
