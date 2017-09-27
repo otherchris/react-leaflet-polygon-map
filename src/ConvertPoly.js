@@ -24,13 +24,16 @@ export const ensureShapeIsClosed = shape => {
 // validity
 export const ensureGeometryIsValid = featObj => {
   switch (featObj.geometry.type) {
-  case 'Polygon': {
-    featObj.geometry.coordinates = ensureShapeIsClosed(featObj.geometry.coordinates);
-    return featObj;
-  }
   case 'LineString': {
     featObj.geometry.type = 'Polygon';
     featObj.geometry.coordinates = [ensureShapeIsClosed(featObj.geometry.coordinates)];
+    return featObj;
+  }
+  case 'Polygon': {
+    const poly = featObj.geometry.coordinates;
+    map((poly), (shape) => {
+      ensureShapeIsClosed(shape);
+    });
     return featObj;
   }
   case 'MultiPolygon': {
@@ -50,7 +53,6 @@ export const ensureGeometryIsValid = featObj => {
 // wkt, wkb, circle (center/radius), rectangle (bounds/path)
 // Returns as geoJSON Feature Objects
 export const convertPoly = poly => {
-  const area = poly.data ? poly.data.area : null;
   switch (poly.type) {
   case 'polyline': {
     return {
@@ -70,6 +72,7 @@ export const convertPoly = poly => {
     const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const center = poly.data.center;
     const radius = poly.data.radius;
+    const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
       properties: { center: center || '', radius: radius || '', area: area || '' },
@@ -84,6 +87,7 @@ export const convertPoly = poly => {
   case 'Rectangle': {
     const rectCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const bounds = poly.data.bounds;
+    const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
       properties: { bounds: bounds || '', area: area || '' },
@@ -95,8 +99,15 @@ export const convertPoly = poly => {
       },
     };
   }
+  case 'Feature': {
+    return poly;
+  }
   case 'geoJSON': {
-    return poly.data;
+    return {
+      type: poly.data.type,
+      properties: poly.data.properties,
+      geometry: poly.data.geometry,
+    };
   }
   default:
     throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
@@ -104,61 +115,89 @@ export const convertPoly = poly => {
 };
 // Given geoJSON Feature Obj
 // Returns geoJSON Feature Collection
-export const featCollWrap = (featObj) =>
-  ({
-    type: 'FeatureCollection',
-    features: [featObj],
-  });
+/* export const featCollWrap = (featObj) =>
+ *   ({
+ *     type: 'FeatureCollection',
+ *     features: [featObj],
+ *   }); */
 // Given geoJSON Feature
-// Returns that same object with the coordinates array properly nested
-// (code above is kind of janky so it's wrapped one too many times)
-export const sizeArray = geoJSONObj => {
+// Returns Polygons as MultiPolys,
+// Multipolys pass through
+// Everything else is error
+export const polyToMulti = geoJSONObj => {
   const { properties } = geoJSONObj;
   const { type, coordinates } = geoJSONObj.geometry;
   switch (type) {
   case 'Polygon': {
-    const coordSize = size(coordinates[0]);
-    if (coordSize === 1) {
-      const flatterArray = flatten(coordinates);
-      const newFeature = {
-        type: 'Feature',
-        properties,
-        geometry: {
-          type,
-          coordinates: flatterArray,
-        },
-      };
-      return sizeArray(newFeature);
-    }
-    return geoJSONObj;
+    const newFeature = {
+      type: 'Feature',
+      properties,
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [coordinates],
+      },
+    };
+    return newFeature;
   }
   case 'MultiPolygon': {
-    const coordSize = size(coordinates[0][0]);
-    if (coordSize === 1) {
-      const flatterArray = flatten(coordinates);
-      const newFeature = {
-        type: 'Feature',
-        properties,
-        geometry: {
-          type,
-          coordinates: flatterArray,
-        },
-      };
-      return sizeArray(newFeature);
-    }
     return geoJSONObj;
   }
   default:
-    throw Error(`Ensure Geometry - invalid geometry type: ${geoJSONObj.geometry.type}`);
+    throw Error(`Ensure Geometry - invalid poly type: ${type}`);
   }
 };
+
+
+// Given geoJSON feature
+// Returns that same object with the coordinates array properly nested
+/* export const sizeArray = geoJSONObj => {
+ *   const { properties } = geoJSONObj;
+ *   const { type, coordinates } = geoJSONObj.geometry;
+ *   switch (type) {
+ *   case 'Polygon': {
+ *     const coordSize = coordinates.length;
+ *     console.log('coord size', coordSize);
+ *     if (coordSize === 1) {
+ *       const flatterArray = flatten(coordinates);
+ *       const newFeature = {
+ *         type: 'Feature',
+ *         properties,
+ *         geometry: {
+ *           type: 'Polygon',
+ *           coordinates: flatterArray,
+ *         },
+ *       };
+ *       return sizeArray(newFeature);
+ *     }
+ *     return geoJSONObj;
+ *   }
+ *   case 'MultiPolygon': {
+ *     const coordSize = size(coordinates[0][0]);
+ *     if (coordSize === 1) {
+ *       const flatterArray = flatten(coordinates);
+ *       const newFeature = {
+ *         type: 'Feature',
+ *         properties,
+ *         geometry: {
+ *           type: 'MultiPolygon',
+ *           coordinates: flatterArray,
+ *         },
+ *       };
+ *       return sizeArray(newFeature);
+ *     }
+ *     return geoJSONObj;
+ *   }
+ *   default:
+ *     throw Error(`Ensure Geometry - invalid geometry type: ${geoJSONObj.geometry.type}`);
+ *   }
+ * }; */
 // Given one of our specified poly types, runs it through the series of
 // functions above
-// Returns valid geoJSON Feature Collection
+// Returns valid geoJSON Feature
 export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
-  const resizedArray = sizeArray(validatedObj);
+  const resizedArray = polyToMulti(validatedObj);
   const resizedWithArea = getArea(resizedArray);
   return resizedWithArea;
 };
