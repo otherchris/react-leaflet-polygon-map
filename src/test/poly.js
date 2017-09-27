@@ -30,6 +30,35 @@ const poly = {
       area: 213839.345998646,
     },
   },
+  /* rectangle: { type: 'Rectangle',
+   *   data: {
+   *     bounds: {
+   *       south: 38.255398464291,
+   *       west: -85.8063125610352,
+   *       north: 38.2665858843939,
+   *       east: -85.7615089416504,
+   *     },
+   *     path: [
+   *       { lat: 38.2665858843939, lng: -85.8063125610352 },
+   *       { lat: 38.2665858843939, lng: -85.7615089416504 },
+   *       { lat: 38.255398464291, lng: -85.7615089416504 },
+   *       { lat: 38.255398464291, lng: -85.8063125610352 },
+   *     ],
+   *   },
+   * }, */
+  /* rectangle: { type: 'Rectangle',
+   *   data: {
+   *     bounds: { south: 38,
+   *       west: -86,
+   *       north: 39,
+   *       east: -85 },
+   *     path: [{ lat: 39, lng: -86 },
+   *       { lat: 39, lng: -85 },
+   *       { lat: 38, lng: -86 },
+   *       { lat: 38, lng: -85 }],
+   *     // area: 0.07134461594274134,
+   *   },
+   * }, */
   rectangle: { type: 'Rectangle',
     data: {
       bounds: { south: 38.25728983213629,
