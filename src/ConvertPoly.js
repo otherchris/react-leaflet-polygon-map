@@ -10,6 +10,7 @@ import size from 'lodash/size';
 import flatten from 'lodash/flatten';
 import isEqual from 'lodash/isEqual';
 import polyline from 'polyline';
+import rewind from 'geojson-rewind';
 import getArea from './getArea';
 
 // given set of coordinates, checks to see if last set is equal to first set
@@ -85,17 +86,20 @@ export const convertPoly = poly => {
     };
   }
   case 'Rectangle': {
-    const rectCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const bounds = poly.data.bounds;
+    const rectCoords = [
+      [bounds.north, bounds.west],
+      [bounds.south, bounds.west],
+      [bounds.south, bounds.east],
+      [bounds.north, bounds.east],
+    ];
     const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
       properties: { bounds: bounds || '', area: area || '' },
       geometry: {
         type: 'Polygon',
-        coordinates: [
-          rectCoords,
-        ],
+        coordinates: [rectCoords],
       },
     };
   }
@@ -198,6 +202,7 @@ export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
   const resizedArray = polyToMulti(validatedObj);
-  const resizedWithArea = getArea(resizedArray);
+  const woundCoords = rewind(resizedArray, false);
+  const resizedWithArea = getArea(woundCoords);
   return resizedWithArea;
 };
