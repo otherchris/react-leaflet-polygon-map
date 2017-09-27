@@ -19,7 +19,7 @@ const getAreaFixtures = {
   featObjArea: {
     type: 'Feature',
     properties: {
-      area: 8635913.881097274,
+      area: 8635914,
     },
     geometry: {
       type: 'Polygon',
@@ -58,7 +58,7 @@ const getAreaFixtures = {
     type: 'Feature',
     properties: {
       name: 'example property',
-      area: 8635913.881097274,
+      area: 8635914,
     },
     geometry: {
       type: 'Polygon',
@@ -104,7 +104,7 @@ const getAreaFixtures = {
     properties: {
       center: { lat: 38.25850297757688, lng: -85.7552433013916 },
       radius: 266.9827372809027,
-      area: 213839.34598623388,
+      area: 213840,
     },
     geometry: {
       type: 'Polygon',
@@ -161,7 +161,7 @@ const getAreaFixtures = {
   multiPFeatObjArea: {
     type: 'Feature',
     properties: {
-      area: 20310537131.032818,
+      area: 20310537132,
     },
     geometry: {
       type: 'MultiPolygon',
