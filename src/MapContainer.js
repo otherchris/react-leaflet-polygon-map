@@ -215,6 +215,7 @@ class MapContainer extends React.Component {
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}
+        remove={this.state.remove}
         tileLayerProps={{ url: tileUrl }}
         unit={this.state.unit}
         zipRadiusCenter={
