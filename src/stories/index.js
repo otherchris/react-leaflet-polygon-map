@@ -95,3 +95,18 @@ storiesOf('handleSubmit', module)
     />
   ));
 
+storiesOf('Click to remove', module)
+  .add('click to remove', () => (
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.polyline]}
+      edit
+      remove
+    />
+  ))
+  .add('tiles = default', () => (
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.polyline]}
+      points={points}
+    />
+  ));
+
