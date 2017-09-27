@@ -86,17 +86,20 @@ export const convertPoly = poly => {
     };
   }
   case 'Rectangle': {
-    const rectCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
     const bounds = poly.data.bounds;
+    const rectCoords = [
+      [bounds.north, bounds.west],
+      [bounds.south, bounds.west],
+      [bounds.south, bounds.east],
+      [bounds.north, bounds.east],
+    ];
     const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
       properties: { bounds: bounds || '', area: area || '' },
       geometry: {
         type: 'Polygon',
-        coordinates: [
-          rectCoords,
-        ],
+        coordinates: [rectCoords],
       },
     };
   }
@@ -199,7 +202,7 @@ export const makeGeoJSON = poly => {
   const featObj = convertPoly(poly);
   const validatedObj = ensureGeometryIsValid(featObj);
   const resizedArray = polyToMulti(validatedObj);
-  const woundCoords = rewind(resizedArray);
+  const woundCoords = rewind(resizedArray, false);
   const resizedWithArea = getArea(woundCoords);
   return resizedWithArea;
 };
