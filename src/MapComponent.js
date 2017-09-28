@@ -103,9 +103,36 @@ MapSubmitButton.propTypes = {
   handleSubmit: PropTypes.func,
   text: PropTypes.string,
 };
+const tooltipMessage = (polyProps, tooltipOptions) => {
+    console.log('polyProps', polyProps);
+    console.log('tooltipOptions', tooltipOptions);
+  if (tooltipOptions && tooltipOptions.includeArea) {
+    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
+    const convertedArea = tooltipOptions.units.conversion ? polyProps.area * tooltipOptions.units.conversion : polyProps.area;
+    const areaWithUnit = `${convertedArea} ${unitName}`;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${areaWithUnit}`;
+    return tipMessage;
+  }
+  if (tooltipOptions && !(tooltipOptions.includeArea)) {
+    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = text; 
+    return tipMessage;
+  }
+  if (!(tooltipOptions)) {
+    const tipMessage = `${polyProps.area} Sq Meters`;
+    return tipMessage;
+  }
+};
+const tooltipClass = (tooltipOptions) => {
+  if (tooltipOptions && tooltipOptions.className) {
+    const tipClass = tooltipOptions.className ? `${tooltipOptions.className}` : '';
+    return tipClass;
+  }
+};
 
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
+  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
   const polyWithArea = map(props.polygons, getArea);
   const polygons = map(polyWithArea, (result, index) => {
@@ -119,9 +146,9 @@ const MapComponent = (props) => {
         editable={!!(result.properties && result.properties.editable)}
         onClick={props.clickPoly}
       >
-        <Tooltip>
+        <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+            {tooltipMessage(p, props.tooltipOptions)}
           </span>
         </Tooltip>
       </GeoJSON>
@@ -130,7 +157,7 @@ const MapComponent = (props) => {
   const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon}>
       <Tooltip>
-        <span>{`(${result[1].toFixed(4)}, ${result[0].toFixed(4)})`}</span>
+        <span>{ `(${result[1].toFixed(4)}, ${result[0].toFixed(4)})` }</span>
       </Tooltip>
     </Marker>
   ));
@@ -138,9 +165,9 @@ const MapComponent = (props) => {
     const p = result.properties;
     return (
       <Circle {...style} data={result} key={index} center={result.center} radius={result.radius}>
-        <Tooltip>
+        <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+            {tooltipMessage(p, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Circle>
@@ -150,9 +177,9 @@ const MapComponent = (props) => {
     const p = result.properties;
     return (
       <Rectangle {...style} data={result} key={index} center={result.center} radius={result.radius}>
-        <Tooltip>
+        <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+            {tooltipMessage(p, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Rectangle>
@@ -224,6 +251,7 @@ MapComponent.propTypes = {
     attribution: PropTypes.string,
     url: PropTypes.string.isRequired,
   }),
+  tooltipOptions: PropTypes.object,
   totalArea: PropTypes.number,
   unit: PropTypes.string,
   zipRadiusChange: PropTypes.function,
@@ -232,7 +260,6 @@ MapComponent.propTypes = {
 
 MapComponent.defaultProps = {
   height: 400,
-  center: [38.19, -85.76],
   zoom: 11,
 };
 export default MapComponent;
