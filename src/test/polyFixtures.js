@@ -1,4 +1,29 @@
 const polyFixtures = {
+  googlePoly: {
+    id: 0,
+    editable: false,
+    path: [
+      { lat: 38.25707078982852, lng: -85.74808716773987 },
+      { lat: 38.25577337185174, lng: -85.74888110160828 },
+      { lat: 38.257374079001885, lng: -85.75072646141052 },
+      { lat: 38.257492024449654, lng: -85.74858069419861 },
+    ],
+    area: 22512.66109365669,
+    options: { fillColor: '#caebba' },
+  },
+  googleResult: {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [[[
+        [-85.74808716773987, 38.25707078982852],
+        [-85.74888110160828, 38.25577337185174],
+        [-85.75072646141052, 38.257374079001885],
+        [-85.74858069419861, 38.257492024449654]
+      ]]],
+    },
+  },
   // Fixtures for mkFeatureObj
   polylineToFeatObj: {
     type: 'Feature',
