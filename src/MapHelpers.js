@@ -50,5 +50,5 @@ export const expandPolys = (obj) => {
   if (obj.type === 'FeatureCollection') {
     return obj.features;
   }
-  return obj;
+  return [obj];
 };

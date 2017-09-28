@@ -17,6 +17,7 @@ import { makeGeoJSON } from './ConvertPoly';
 import {
   getTilesUrl,
   generateIcon,
+  expandPolys,
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
@@ -86,7 +87,10 @@ class MapContainer extends React.Component {
   }
   mapPropsToState(props) {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
-    const polys = map(props.polygons, (poly, index) => {
+    let expandedPolys = [];
+    map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
+    console.log(expandedPolys);
+    const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.uuid = uuid.v4();
       out.properties.key = index + 1;
