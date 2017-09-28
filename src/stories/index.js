@@ -107,7 +107,7 @@ storiesOf('Click to remove', module)
 storiesOf('Style tooltip', module)
   .add('with area/location', () => (
     <MapContainerStoryWithNotes
-      tooltip={{
+      tooltipOptions={{
         units: {
           name: 'fathoms',
           conversion: 0.298998, // conversion factor from meters to whatever
@@ -126,12 +126,10 @@ storiesOf('Style tooltip', module)
   ))
   .add('without area/location', () => (
     <MapContainerStoryWithNotes
-      tooltip={{
-        polygon: {
-          includeArea: false,
-          text: 'A word ',
-          className: 'class-for-styles-poly and-another',
-        },
+      tooltipOptions={{
+        includeArea: false,
+        text: 'A word ',
+        className: 'class-for-styles-poly and-another',
         marker: {
           includeLocation: false,
           text: 'a point is here',
