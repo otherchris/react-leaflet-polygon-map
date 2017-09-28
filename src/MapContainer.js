@@ -188,6 +188,7 @@ class MapContainer extends React.Component {
   }
   render() {
     const {
+      tooltipOptions,
       tileLayerProps,
       width,
       tiles,
@@ -199,6 +200,7 @@ class MapContainer extends React.Component {
       'style',
       'includeZipRadius',
       'zoom',
+      'tooltipOptions',
     ]);
     const tileUrl = getTilesUrl(tiles);
 
