@@ -103,9 +103,19 @@ MapSubmitButton.propTypes = {
   handleSubmit: PropTypes.func,
   text: PropTypes.string,
 };
+const tooltipMessage = (tooltip, area, unit, tooLarge) => {
+  const tipPoly = tooltip.polygon;
+  const tipPolyUnits = tipPoly && tipPoly.units;
+  const text = tipPoly && tipPoly.text ? tipPoly.text : '';
+  const tipArea = tipPolyUnits && tipPolyUnits.conversion ? area * tipPolyUnits.conversion : area;
+  const tipAreaUnit = tipPolyUnits && tipPolyUnits.name ? tipPolyUnits.name : unit;
+  const tipTooLarge = tooLarge ? 'TOO LARGE!' : '';
+  const message = tipPoly && tipPoly.includeArea ? `${text} ${tipArea} ${tipAreaUnit} ${tipTooLarge}` : text; 
+  return message;
+};
 
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height, includeZipRadius } = props;
+  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltip } = props;
   merge(style, props.style);
   const polyWithArea = map(props.polygons, getArea);
   const polygons = map(polyWithArea, (result, index) => {
@@ -121,7 +131,7 @@ const MapComponent = (props) => {
       >
         <Tooltip>
           <span>
-            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+            tooltip ? {tooltipMessage(tooltip, p.area, p.unit, p.tooLarge)} : {Math.ceil(p.area)} Sq. {p.unit}
           </span>
         </Tooltip>
       </GeoJSON>
@@ -140,7 +150,7 @@ const MapComponent = (props) => {
       <Circle {...style} data={result} key={index} center={result.center} radius={result.radius}>
         <Tooltip>
           <span>
-            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+            {tooltipMessage(tooltip, p.area, p.unit, p.tooLarge)}
           </span>
         </Tooltip>
       </Circle>
@@ -152,7 +162,7 @@ const MapComponent = (props) => {
       <Rectangle {...style} data={result} key={index} center={result.center} radius={result.radius}>
         <Tooltip>
           <span>
-            {Math.ceil(p.area)} sq. {props.unit} {p.tooLarge ? 'TOO LARGE!' : ''}
+            {tooltipMessage(tooltip, p.area, p.unit, p.tooLarge)}
           </span>
         </Tooltip>
       </Rectangle>
@@ -232,7 +242,6 @@ MapComponent.propTypes = {
 
 MapComponent.defaultProps = {
   height: 400,
-  center: [38.19, -85.76],
   zoom: 11,
 };
 export default MapComponent;
