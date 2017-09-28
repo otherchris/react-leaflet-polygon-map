@@ -132,6 +132,9 @@ test('given multipolygon geoJSON, make geoJSON', () => {
   const result22 = makeGeoJSON(poly.geoJSONMultiPoly);
   expect(result22).toEqual(makeGeoJSONFixtures.geoJSONMultiPoly);
 });
+test('convert google polygon to feature', () => {
+  expect(convertPoly(polyFixtures.googlePoly)).toEqual(polyFixtures.googleResult);
+});
 
 // sizeArray
 /* test('given Polygon gJ Feat Obj, return MultiPolygon gJ Feat Obj', () => {
