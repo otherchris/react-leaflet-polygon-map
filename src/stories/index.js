@@ -107,21 +107,14 @@ storiesOf('Click to remove', module)
 storiesOf('Style tooltip', module)
   .add('with area/location', () => (
     <MapContainerStoryWithNotes
-      tooltip={{
-        polygon: {
-          units: {
-            name: 'fathoms',
-            conversion: 0.298998, // conversion factor from meters to whatever
-          },
-          includeArea: true,
-          text: 'A word before the area',
-          className: 'class-for-styles-poly and-another',
+      tooltipOptions={{
+        units: {
+          name: 'fathoms',
+          conversion: 0.298998, // conversion factor from meters to whatever
         },
-        marker: {
-          includeLocation: true,
-          text: 'a point is here',
-          className: 'class-for-styles-marker and-another',
-        },
+        includeArea: true,
+        text: 'A word before the area',
+        className: 'class-for-styles-poly and-another',
       }}
       polygons={[poly.tooBigPoly]}
       additionalNotes={`Should see \n
@@ -133,12 +126,10 @@ storiesOf('Style tooltip', module)
   ))
   .add('without area/location', () => (
     <MapContainerStoryWithNotes
-      tooltip={{
-        polygon: {
-          includeArea: false,
-          text: 'A word ',
-          className: 'class-for-styles-poly and-another',
-        },
+      tooltipOptions={{
+        includeArea: false,
+        text: 'A word ',
+        className: 'class-for-styles-poly and-another',
         marker: {
           includeLocation: false,
           text: 'a point is here',
