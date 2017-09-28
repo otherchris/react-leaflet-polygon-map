@@ -104,6 +104,16 @@ storiesOf('Click to remove', module)
     />
   ));
 
+storiesOf('Geolocation search', module)
+  .add('do the thing', () => (
+    <MapContainerStoryWithNotes
+      apikey={''}
+      polygons={[dpPoly.polyline]}
+      edit
+      remove
+    />
+  ));
+
 storiesOf('expand google maps and feature collections', module)
   .add('Google map', () => (
     <MapContainerStoryWithNotes
