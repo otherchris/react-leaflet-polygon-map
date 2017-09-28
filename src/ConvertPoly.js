@@ -13,6 +13,19 @@ import polyline from 'polyline';
 import rewind from 'geojson-rewind';
 import getArea from './getArea';
 
+
+export const translateGooglePoly = (gPoly) => {
+  const coords = map(gPoly.path, (coord) => [coord.lng, coord.lat]);
+  return {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [[coords]],
+    },
+  };
+};
+
 // given set of coordinates, checks to see if last set is equal to first set
 // (read: makes sure it's closed)
 // if not, closes shape by adding first set to end of coordinate array
@@ -54,6 +67,9 @@ export const ensureGeometryIsValid = featObj => {
 // wkt, wkb, circle (center/radius), rectangle (bounds/path)
 // Returns as geoJSON Feature Objects
 export const convertPoly = poly => {
+  if (typeof poly.id === 'number') {
+    return translateGooglePoly(poly);
+  }
   switch (poly.type) {
   case 'polyline': {
     return {
