@@ -149,8 +149,8 @@ storiesOf('Style tooltip', module)
         marker: {
           includeLocation: true,
           text: 'a point is here',
-          className: 'class-for-styles-marker and-another points',
         },
+        className: 'class-for-styles-marker and-another points',
       }}
       points={points}
       additionalNotes={`Should see \n
@@ -165,8 +165,8 @@ storiesOf('Style tooltip', module)
         marker: {
           includeLocation: false,
           text: 'a point is here',
-          className: 'class-for-styles-marker and-another points',
         },
+        className: 'class-for-styles-marker and-another points',
       }}
       points={points}
       additionalNotes={`Should see \n
