@@ -12,11 +12,13 @@ import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import L from 'leaflet';
 import React from 'react';
+import { ReactScriptLoader, ReactScriptLoaderMixin } from 'react-script-loader';
 import MapComponent from './MapComponent';
 import { makeGeoJSON } from './ConvertPoly';
 import {
   getTilesUrl,
   generateIcon,
+  expandPolys,
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
@@ -58,6 +60,7 @@ class MapContainer extends React.Component {
         circles: [],
         markers: [],
       },
+      googleAPILoaded: false,
       edit: false,
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
@@ -72,6 +75,20 @@ class MapContainer extends React.Component {
         edit: false,
       });
     }
+    ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
+  }
+  getScriptLoaderID() {
+    return ReactScriptLoaderMixin.__getScriptLoaderID();
+  }
+  getScriptUrl() {
+    const keyparam = this.props.apikey ? `key=${this.props.apikey}` : '';
+    return `https://maps.googleapis.com/maps/api/js?${keyparam}&libraries=places`;
+  }
+  onScriptLoaded() {
+    this.setState({ googleAPILoaded: true });
+  }
+  onScriptError() {
+    this.setState({ googleAPIError: true });
   }
   componentDidUpdate() {
     if (this.state.edit) {
@@ -86,7 +103,10 @@ class MapContainer extends React.Component {
   }
   mapPropsToState(props) {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
-    const polys = map(props.polygons, (poly, index) => {
+    let expandedPolys = [];
+    map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
+    console.log(expandedPolys);
+    const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.uuid = uuid.v4();
       out.properties.key = index + 1;
@@ -182,6 +202,10 @@ class MapContainer extends React.Component {
     if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return;
     this.props.handleSubmit(this.state);
   }
+  onLocationSelect(loc) {
+    console.log('onLocationSelect', loc);
+    this.setState({ center: L.latLng(loc.location.lat, loc.location.lng) });
+  }
   render() {
     const {
       tooltipOptions,
@@ -202,15 +226,17 @@ class MapContainer extends React.Component {
 
     return (
       <MapComponent
-        center={this.state.center || L.latLng(-83, 35)}
+        center={this.state.center || L.latLng(35, -83)}
         chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
+        googleAPILoaded={this.state.googleAPILoaded}
         handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
         markerIcon={this.state.markerIcon}
         maxArea={this.state.maxArea}
         onCreated={this.updateShapes.bind(this)}
+        onLocationSelect={this.onLocationSelect.bind(this)}
         points={this.state.points}
         polygons={this.state.polygons}
         rectangles={this.state.rectangles}

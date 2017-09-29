@@ -41,3 +41,14 @@ export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
   html: html || logoDefault,
 });
+
+export const expandPolys = (obj) => {
+  if (obj.length) return obj;
+  if (obj.map && obj.map.polygons) {
+    return obj.map.polygons;
+  }
+  if (obj.type === 'FeatureCollection') {
+    return obj.features;
+  }
+  return [obj];
+};
