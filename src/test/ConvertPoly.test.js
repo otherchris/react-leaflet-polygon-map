@@ -55,7 +55,7 @@ test('given multipolys with one open one closed, open will close and closed will
 // test('expect Error to be thrown', () => {
 // NOTE use .toThrow for this
 // });
-     
+
 // Convert Poly
 // Create Feature Objects
 test('given polyline, return feature', () => {
@@ -131,6 +131,9 @@ test('given wkb, make geoJSON', () => {
 test('given multipolygon geoJSON, make geoJSON', () => {
   const result22 = makeGeoJSON(poly.geoJSONMultiPoly);
   expect(result22).toEqual(makeGeoJSONFixtures.geoJSONMultiPoly);
+});
+test('convert google polygon to feature', () => {
+  expect(convertPoly(polyFixtures.googlePoly)).toEqual(polyFixtures.googleResult);
 });
 
 // sizeArray

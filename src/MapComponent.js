@@ -6,6 +6,7 @@ import merge from 'lodash/merge';
 import map from 'lodash/map';
 import 'leaflet/dist/leaflet.css';
 import uuid from 'uuid';
+import Geosuggest from 'react-geosuggest';
 import {
   Map,
   Marker,
@@ -116,7 +117,7 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
   }
   if (tooltipOptions && !(tooltipOptions.includeArea)) {
     const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text; 
+    const tipMessage = text;
     return tipMessage;
   }
   if (!(tooltipOptions)) {
@@ -214,6 +215,7 @@ const MapComponent = (props) => {
     : '';
   return (
     <div>
+      <Geosuggest onSuggestSelect={props.onLocationSelect} />
       {removePolyBanner}
       <Map
         style={{ height }}

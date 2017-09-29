@@ -104,6 +104,32 @@ storiesOf('Click to remove', module)
     />
   ));
 
+storiesOf('Geolocation search', module)
+  .add('do the thing', () => (
+    <MapContainerStoryWithNotes
+      apikey={''}
+      polygons={[dpPoly.polyline]}
+      edit
+      remove
+    />
+  ));
+
+storiesOf('expand google maps and feature collections', module)
+  .add('Google map', () => (
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.googleMap]}
+      edit
+      remove
+    />
+  ))
+  .add('Feature collection', () => (
+    <MapContainerStoryWithNotes
+      polygons={[dpPoly.featureCollection]}
+      edit
+      remove
+    />
+  ));
+
 storiesOf('Style tooltip', module)
   .add('with area/location', () => (
     <MapContainerStoryWithNotes
