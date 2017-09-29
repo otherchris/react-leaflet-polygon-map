@@ -168,4 +168,36 @@ storiesOf('Style tooltip', module)
         <input type="checkbox" /> 3. tooltip elements have given class names
       `}
     />
+  ))
+  .add('for points with Location', () => (
+    <MapContainerStoryWithNotes
+      tooltipOptions={{
+        marker: {
+          includeLocation: true,
+          text: 'a point is here',
+        },
+        className: 'class-for-styles-marker and-another points',
+      }}
+      points={points}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Markers have a text message and location
+        <input type="checkbox" /> 3. tooltip elements have given class names
+      `}
+    />
+  ))
+  .add('for points without Location', () => (
+    <MapContainerStoryWithNotes
+      tooltipOptions={{
+        marker: {
+          includeLocation: false,
+          text: 'a point is here',
+        },
+        className: 'class-for-styles-marker and-another points',
+      }}
+      points={points}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Markers have a text message and no location
+        <input type="checkbox" /> 3. tooltip elements have given class names
+      `}
+    />
   ));

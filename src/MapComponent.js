@@ -125,6 +125,19 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
     return tipMessage;
   }
 };
+const pointsTooltip = (pointProps, tooltipOptions) => {
+  if (tooltipOptions && tooltipOptions.marker && tooltipOptions.marker.includeLocation) {
+    const latLng = `${pointProps[1].toFixed(4)}, ${pointProps[0].toFixed(4)}`;
+    const text = tooltipOptions.marker.text ? tooltipOptions.marker.text : '';
+    const tipOpts = `${latLng} ${text}`;
+    return tipOpts;
+  }
+  if (tooltipOptions && tooltipOptions.marker && !(tooltipOptions.marker.includeLocation)) {
+    const text = tooltipOptions.marker.text ? tooltipOptions.marker.text : '';
+    const tipOpts = `${text}`;
+    return tipOpts;
+  }
+};
 const tooltipClass = (tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.className) {
     const tipClass = tooltipOptions.className ? `${tooltipOptions.className}` : '';
@@ -157,8 +170,8 @@ const MapComponent = (props) => {
   });
   const points = map(props.points, (result, index) => (
     <Marker position={result} key={index} icon={props.markerIcon}>
-      <Tooltip>
-        <span>{ `(${result[1].toFixed(4)}, ${result[0].toFixed(4)})` }</span>
+      <Tooltip className={tooltipClass(tooltipOptions)}>
+        <span>{pointsTooltip(result, tooltipOptions)}</span>
       </Tooltip>
     </Marker>
   ));
