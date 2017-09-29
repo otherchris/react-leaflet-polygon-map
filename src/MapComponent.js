@@ -6,7 +6,6 @@ import merge from 'lodash/merge';
 import map from 'lodash/map';
 import 'leaflet/dist/leaflet.css';
 import uuid from 'uuid';
-import Geosuggest from 'react-geosuggest';
 import {
   Map,
   Marker,
@@ -105,8 +104,6 @@ MapSubmitButton.propTypes = {
   text: PropTypes.string,
 };
 const tooltipMessage = (polyProps, tooltipOptions) => {
-    console.log('polyProps', polyProps);
-    console.log('tooltipOptions', tooltipOptions);
   if (tooltipOptions && tooltipOptions.includeArea) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
     const convertedArea = tooltipOptions.units.conversion ? polyProps.area * tooltipOptions.units.conversion : polyProps.area;
@@ -117,11 +114,30 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
   }
   if (tooltipOptions && !(tooltipOptions.includeArea)) {
     const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text;
+    const tipMessage = text; 
     return tipMessage;
   }
   if (!(tooltipOptions)) {
     const tipMessage = `${polyProps.area} Sq Meters`;
+    return tipMessage;
+  }
+};
+const circleTooltip = (circleProps, tooltipOptions) => {
+  if (tooltipOptions && tooltipOptions.includeArea) {
+    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
+    const convertedArea = tooltipOptions.units.conversion ? circleProps.area * tooltipOptions.units.conversion : circleProps.area;
+    const areaWithUnit = `${convertedArea} ${unitName}`;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${areaWithUnit}`;
+    return tipMessage;
+  }
+  if (tooltipOptions && !(tooltipOptions.includeArea)) {
+    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = text; 
+    return tipMessage;
+  }
+  if (!(tooltipOptions)) {
+    const tipMessage = `${circleProps.area} Sq Meters`;
     return tipMessage;
   }
 };
@@ -178,10 +194,10 @@ const MapComponent = (props) => {
   const circles = map(props.circles, (result, index) => {
     const p = result.properties;
     return (
-      <Circle {...style} data={result} key={index} center={result.center} radius={result.radius}>
+      <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {tooltipMessage(p, props.tooltipOptions)}
+            {tooltipMessage(result, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Circle>
@@ -190,10 +206,10 @@ const MapComponent = (props) => {
   const rectangles = map(props.rectangles, (result, index) => {
     const p = result.properties;
     return (
-      <Rectangle {...style} data={result} key={index} center={result.center} radius={result.radius}>
+      <Rectangle {...style} data={result} key={index} bounds={result.bounds} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {tooltipMessage(p, props.tooltipOptions)}
+            Rectangle
           </span>
         </Tooltip>
       </Rectangle>
@@ -215,7 +231,6 @@ const MapComponent = (props) => {
     : '';
   return (
     <div>
-      <Geosuggest onSuggestSelect={props.onLocationSelect} />
       {removePolyBanner}
       <Map
         style={{ height }}
