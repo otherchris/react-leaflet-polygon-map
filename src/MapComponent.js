@@ -106,38 +106,69 @@ MapSubmitButton.propTypes = {
 const tooltipMessage = (polyProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.includeArea) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
-    const convertedArea = tooltipOptions.units.conversion ? polyProps.area * tooltipOptions.units.conversion : polyProps.area;
-    const areaWithUnit = `${convertedArea} ${unitName}`;
+    const convertedArea = tooltipOptions.units.conversion ?
+      polyProps.area * tooltipOptions.units.conversion : polyProps.area;
+    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${areaWithUnit}`;
     return tipMessage;
   }
+  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
+    const area = polyProps.area;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
+    return tipMessage;
+  }
   if (tooltipOptions && !(tooltipOptions.includeArea)) {
     const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text; 
+    const tipMessage = text;
     return tipMessage;
   }
   if (!(tooltipOptions)) {
-    const tipMessage = `${polyProps.area} Sq Meters`;
+    const tipMessage = `${polyProps.area.toFixed(4)} Sq Meters`;
     return tipMessage;
   }
 };
 const circleTooltip = (circleProps, tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.includeArea) {
+  if (tooltipOptions && tooltipOptions.includeArea && tooltipOptions.units) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
-    const convertedArea = tooltipOptions.units.conversion ? circleProps.area * tooltipOptions.units.conversion : circleProps.area;
-    const areaWithUnit = `${convertedArea} ${unitName}`;
+    const convertedArea = tooltipOptions.units.conversion ?
+      circleProps.area * tooltipOptions.units.conversion : circleProps.area;
+    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${areaWithUnit}`;
     return tipMessage;
   }
+  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
+    const area = circleProps.area;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
+    return tipMessage;
+  }
   if (tooltipOptions && !(tooltipOptions.includeArea)) {
     const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text; 
+    const tipMessage = text;
     return tipMessage;
   }
   if (!(tooltipOptions)) {
-    const tipMessage = `${circleProps.area} Sq Meters`;
+    const tipMessage = `${circleProps.area.toFixed(4)} Sq Meters`;
+    return tipMessage;
+  }
+};
+const rectTooltip = (rectProps, tooltipOptions) => {
+  if (tooltipOptions && tooltipOptions.includeArea) {
+    const noArea = 'Area cannot be calculated on rectangle';
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${noArea}`;
+    return tipMessage;
+  }
+  if (tooltipOptions && !(tooltipOptions.includeArea)) {
+    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = text;
+    return tipMessage;
+  }
+  if (!(tooltipOptions)) {
+    const tipMessage = 'Area cannot be calculated on rectangle';
     return tipMessage;
   }
 };
@@ -160,7 +191,6 @@ const tooltipClass = (tooltipOptions) => {
     return tipClass;
   }
 };
-
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
@@ -194,10 +224,11 @@ const MapComponent = (props) => {
   const circles = map(props.circles, (result, index) => {
     const p = result.properties;
     return (
-      <Circle {...style} data={result} key={index} center={result.center} radius={result.radius} area={result.area}>
+      <Circle {...style} data={result} key={index} center={result.center}
+      radius={result.radius} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {tooltipMessage(result, props.tooltipOptions)}
+            {circleTooltip(result, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Circle>
@@ -209,7 +240,7 @@ const MapComponent = (props) => {
       <Rectangle {...style} data={result} key={index} bounds={result.bounds} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            Rectangle
+            {rectTooltip(result, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Rectangle>
@@ -224,7 +255,8 @@ const MapComponent = (props) => {
   ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const submit = props.handleSubmit
-    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ? 'Submit' : 'Area too large')
+    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ?
+      'Submit' : 'Area too large')
     : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
