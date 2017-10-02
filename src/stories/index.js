@@ -8,6 +8,7 @@ import poly from './poly';
 import '../main.css';
 import './layout';
 import './polygons';
+import './convertedPolys';
 import './styling';
 import './tools';
 

@@ -104,10 +104,10 @@ export const convertPoly = poly => {
   case 'Rectangle': {
     const bounds = poly.data.bounds;
     const rectCoords = [
-      [bounds.north, bounds.west],
-      [bounds.south, bounds.west],
-      [bounds.south, bounds.east],
-      [bounds.north, bounds.east],
+      [bounds.west, bounds.north],
+      [bounds.west, bounds.south],
+      [bounds.east, bounds.south],
+      [bounds.east, bounds.north],
     ];
     const area = poly.data ? poly.data.area : null;
     return {
