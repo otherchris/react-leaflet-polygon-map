@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// eslint-disable-next-line max-len
 import L from 'leaflet';
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
@@ -107,7 +106,8 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.includeArea) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
     const convertedArea = tooltipOptions.units.conversion ?
-      polyProps.area * tooltipOptions.units.conversion : polyProps.area;
+      polyProps.area * tooltipOptions.units.conversion :
+      polyProps.area;
     const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${areaWithUnit}`;
@@ -124,10 +124,8 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
     const tipMessage = text;
     return tipMessage;
   }
-  if (!(tooltipOptions)) {
-    const tipMessage = `${polyProps.area.toFixed(4)} Sq Meters`;
-    return tipMessage;
-  }
+  const tipMessage = `${polyProps.area.toFixed(4)} Sq Meters`;
+  return tipMessage;
 };
 const circleTooltip = (circleProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.includeArea && tooltipOptions.units) {
@@ -150,10 +148,8 @@ const circleTooltip = (circleProps, tooltipOptions) => {
     const tipMessage = text;
     return tipMessage;
   }
-  if (!(tooltipOptions)) {
-    const tipMessage = `${circleProps.area.toFixed(4)} Sq Meters`;
-    return tipMessage;
-  }
+  const tipMessage = `${circleProps.area.toFixed(4)} Sq Meters`;
+  return tipMessage;
 };
 const rectTooltip = (rectProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.includeArea) {
@@ -167,10 +163,8 @@ const rectTooltip = (rectProps, tooltipOptions) => {
     const tipMessage = text;
     return tipMessage;
   }
-  if (!(tooltipOptions)) {
-    const tipMessage = 'Area cannot be calculated on rectangle';
-    return tipMessage;
-  }
+  const tipMessage = 'Area cannot be calculated on rectangle';
+  return tipMessage;
 };
 const pointsTooltip = (pointProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.marker && tooltipOptions.marker.includeLocation) {
@@ -184,12 +178,15 @@ const pointsTooltip = (pointProps, tooltipOptions) => {
     const tipOpts = `${text}`;
     return tipOpts;
   }
+  const latLng = `${pointProps[1].toFixed(4)}, ${pointProps[0].toFixed(4)}`;
+  return latLng;
 };
 const tooltipClass = (tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.className) {
     const tipClass = tooltipOptions.className ? `${tooltipOptions.className}` : '';
     return tipClass;
   }
+  return 'tooltipClass';
 };
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
@@ -225,7 +222,7 @@ const MapComponent = (props) => {
     const p = result.properties;
     return (
       <Circle {...style} data={result} key={index} center={result.center}
-      radius={result.radius} area={result.area}>
+        radius={result.radius} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
             {circleTooltip(result, props.tooltipOptions)}
@@ -293,6 +290,7 @@ const MapComponent = (props) => {
 MapComponent.propTypes = {
   center: PropTypes.number,
   circles: PropTypes.arrayOf(PropTypes.object),
+  clickPoly: PropTypes.func,
   edit: PropTypes.boolean,
   handleSubmit: PropTypes.func,
   height: PropTypes.number,
