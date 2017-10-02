@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// eslint-disable-next-line max-len
 import L from 'leaflet';
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
@@ -105,14 +104,20 @@ MapSubmitButton.propTypes = {
   text: PropTypes.string,
 };
 const tooltipMessage = (polyProps, tooltipOptions) => {
-    console.log('polyProps', polyProps);
-    console.log('tooltipOptions', tooltipOptions);
   if (tooltipOptions && tooltipOptions.includeArea) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
-    const convertedArea = tooltipOptions.units.conversion ? polyProps.area * tooltipOptions.units.conversion : polyProps.area;
-    const areaWithUnit = `${convertedArea} ${unitName}`;
+    const convertedArea = tooltipOptions.units.conversion ?
+      polyProps.area * tooltipOptions.units.conversion :
+      polyProps.area;
+    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${areaWithUnit}`;
+    return tipMessage;
+  }
+  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
+    const area = polyProps.area;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
     return tipMessage;
   }
   if (tooltipOptions && !(tooltipOptions.includeArea)) {
@@ -120,10 +125,47 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
     const tipMessage = text;
     return tipMessage;
   }
-  if (!(tooltipOptions)) {
-    const tipMessage = `${polyProps.area} Sq Meters`;
+  const tipMessage = `${polyProps.area.toFixed(4)} Sq Meters`;
+  return tipMessage;
+};
+const circleTooltip = (circleProps, tooltipOptions) => {
+  if (tooltipOptions && tooltipOptions.includeArea && tooltipOptions.units) {
+    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
+    const convertedArea = tooltipOptions.units.conversion ?
+      circleProps.area * tooltipOptions.units.conversion : circleProps.area;
+    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${areaWithUnit}`;
     return tipMessage;
   }
+  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
+    const area = circleProps.area;
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
+    return tipMessage;
+  }
+  if (tooltipOptions && !(tooltipOptions.includeArea)) {
+    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = text;
+    return tipMessage;
+  }
+  const tipMessage = `${circleProps.area.toFixed(4)} Sq Meters`;
+  return tipMessage;
+};
+const rectTooltip = (rectProps, tooltipOptions) => {
+  if (tooltipOptions && tooltipOptions.includeArea) {
+    const noArea = 'Area cannot be calculated on rectangle';
+    const text = tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = `${text} ${noArea}`;
+    return tipMessage;
+  }
+  if (tooltipOptions && !(tooltipOptions.includeArea)) {
+    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
+    const tipMessage = text;
+    return tipMessage;
+  }
+  const tipMessage = 'Area cannot be calculated on rectangle';
+  return tipMessage;
 };
 const pointsTooltip = (pointProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.marker && tooltipOptions.marker.includeLocation) {
@@ -137,14 +179,16 @@ const pointsTooltip = (pointProps, tooltipOptions) => {
     const tipOpts = `${text}`;
     return tipOpts;
   }
+  const latLng = `${pointProps[1].toFixed(4)}, ${pointProps[0].toFixed(4)}`;
+  return latLng;
 };
 const tooltipClass = (tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.className) {
     const tipClass = tooltipOptions.className ? `${tooltipOptions.className}` : '';
     return tipClass;
   }
+  return 'tooltipClass';
 };
-
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
@@ -178,10 +222,11 @@ const MapComponent = (props) => {
   const circles = map(props.circles, (result, index) => {
     const p = result.properties;
     return (
-      <Circle {...style} data={result} key={index} center={result.center} radius={result.radius}>
+      <Circle {...style} data={result} key={index} center={result.center}
+        radius={result.radius} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {tooltipMessage(p, props.tooltipOptions)}
+            {circleTooltip(result, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Circle>
@@ -190,10 +235,10 @@ const MapComponent = (props) => {
   const rectangles = map(props.rectangles, (result, index) => {
     const p = result.properties;
     return (
-      <Rectangle {...style} data={result} key={index} center={result.center} radius={result.radius}>
+      <Rectangle {...style} data={result} key={index} bounds={result.bounds} area={result.area}>
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {tooltipMessage(p, props.tooltipOptions)}
+            {rectTooltip(result, props.tooltipOptions)}
           </span>
         </Tooltip>
       </Rectangle>
@@ -208,7 +253,8 @@ const MapComponent = (props) => {
   ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const submit = props.handleSubmit
-    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ? 'Submit' : 'Area too large')
+    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ?
+      'Submit' : 'Area too large')
     : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
@@ -246,6 +292,7 @@ const MapComponent = (props) => {
 MapComponent.propTypes = {
   center: PropTypes.number,
   circles: PropTypes.arrayOf(PropTypes.object),
+  clickPoly: PropTypes.func,
   edit: PropTypes.boolean,
   handleSubmit: PropTypes.func,
   height: PropTypes.number,
