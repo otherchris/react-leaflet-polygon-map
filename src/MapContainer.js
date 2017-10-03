@@ -8,6 +8,7 @@ import filter from 'lodash/filter';
 import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
+import cloneDeep from 'lodash/cloneDeep';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import L from 'leaflet';
@@ -128,26 +129,25 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    const state = this.state;
+    const state = cloneDeep(this.state);
     const { unit, maxArea } = state;
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
-    const gJWithArea = getArea(geoJson);
-    if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
-    gJWithArea.properties.uuid = uuid.v4();
-    gJWithArea.properties.editable = false;
-    gJWithArea.properties.key = this.state.polygons.length + 1;
+    console.log(geoJson);
+    let gJWithArea = {};
+    if (e.layerType === 'polygon') {
+      gJWithArea = getArea(geoJson);
+      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+      gJWithArea.properties.uuid = uuid.v4();
+      gJWithArea.properties.editable = false;
+      gJWithArea.properties.key = this.state.polygons.length + 1;
+    }
     switch (e.layerType) {
     case 'polygon':
       state.polygons.push(gJWithArea);
       break;
-    case 'circle':
-      state.circles.push(geoJson);
-      break;
-    case 'rectangle':
-      state.rectangles.push(geoJson);
-      break;
     case 'marker':
+      if (!state.points) state.points = [];
       state.points.push(geoJson);
       break;
     default:

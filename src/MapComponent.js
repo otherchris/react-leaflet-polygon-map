@@ -128,6 +128,7 @@ const tooltipMessage = (polyProps, tooltipOptions) => {
   const tipMessage = `${polyProps.area.toFixed(4)} Sq Meters`;
   return tipMessage;
 };
+
 const circleTooltip = (circleProps, tooltipOptions) => {
   if (tooltipOptions && tooltipOptions.includeArea && tooltipOptions.units) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
@@ -167,9 +168,10 @@ const rectTooltip = (rectProps, tooltipOptions) => {
   const tipMessage = 'Area cannot be calculated on rectangle';
   return tipMessage;
 };
-const pointsTooltip = (pointProps, tooltipOptions) => {
+const pointsTooltip = (point, tooltipOptions) => {
+  const coords = point.geometry.coordinates;
   if (tooltipOptions && tooltipOptions.marker && tooltipOptions.marker.includeLocation) {
-    const latLng = `${pointProps[1].toFixed(4)}, ${pointProps[0].toFixed(4)}`;
+    const latLng = `${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}`;
     const text = tooltipOptions.marker.text ? tooltipOptions.marker.text : '';
     const tipOpts = `${latLng} ${text}`;
     return tipOpts;
@@ -179,7 +181,7 @@ const pointsTooltip = (pointProps, tooltipOptions) => {
     const tipOpts = `${text}`;
     return tipOpts;
   }
-  const latLng = `${pointProps[1].toFixed(4)}, ${pointProps[0].toFixed(4)}`;
+  const latLng = `${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}`;
   return latLng;
 };
 const tooltipClass = (tooltipOptions) => {
