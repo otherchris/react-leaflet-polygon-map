@@ -28,6 +28,12 @@ const style = {
   fillColor: 'red',
   fillOpacity: 0.45,
 };
+const hoveredStyle = {
+  color: 'blue',
+  fill: true,
+  fillColor: 'blue',
+  fillOpacity: 0.45,
+};
 
 const RemovePolyBanner = (
   <div className="remove-poly-banner">
@@ -203,6 +209,12 @@ const MapComponent = (props) => {
         uuid={result.properties.uuid || 'none'}
         editable={!!(result.properties && result.properties.editable)}
         onClick={props.clickPoly}
+        onMouseOut={(e) => {
+          e.layer.setStyle(style);
+        }}
+        onMouseOver={(e) => {
+          e.layer.setStyle(hoveredStyle);
+        }}
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
@@ -222,8 +234,20 @@ const MapComponent = (props) => {
   const circles = map(props.circles, (result, index) => {
     const p = result.properties;
     return (
-      <Circle {...style} data={result} key={index} center={result.center}
-        radius={result.radius} area={result.area}>
+      <Circle
+        {...style}
+        data={result}
+        key={index}
+        center={result.center}
+        radius={result.radius}
+        area={result.area}
+        onMouseOut={(e) => {
+          e.target.setStyle(style);
+        }}
+        onMouseOver={(e) => {
+          e.target.setStyle(hoveredStyle);
+        }}
+      >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
             {circleTooltip(result, props.tooltipOptions)}
@@ -235,7 +259,19 @@ const MapComponent = (props) => {
   const rectangles = map(props.rectangles, (result, index) => {
     const p = result.properties;
     return (
-      <Rectangle {...style} data={result} key={index} bounds={result.bounds} area={result.area}>
+      <Rectangle
+        {...style}
+        data={result}
+        key={index}
+        bounds={result.bounds}
+        area={result.area}
+        onMouseOut={(e) => {
+          e.target.setStyle(style);
+        }}
+        onMouseOver={(e) => {
+          e.target.setStyle(hoveredStyle);
+        }}
+      >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
             {rectTooltip(result, props.tooltipOptions)}
