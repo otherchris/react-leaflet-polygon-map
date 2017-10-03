@@ -133,7 +133,6 @@ class MapContainer extends React.Component {
     const { unit, maxArea } = state;
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
-    console.log(geoJson);
     let gJWithArea = {};
     if (e.layerType === 'polygon') {
       gJWithArea = getArea(geoJson);
