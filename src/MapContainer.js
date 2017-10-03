@@ -274,6 +274,7 @@ MapContainer.propTypes = {
   style: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tiles: PropTypes.string,
+  tooltipOptions: PropTypes.object,
   width: PropTypes.number,
   zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
