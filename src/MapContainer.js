@@ -9,6 +9,7 @@ import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
+import reverse from 'lodash/reverse';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import L from 'leaflet';
@@ -105,7 +106,6 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
-    console.log(generateCircleApprox(10, 'miles', [35, -83], 12));
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
     let expandedPolys = [];
     map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
@@ -117,6 +117,14 @@ class MapContainer extends React.Component {
       return out;
     });
     const points = map(this.props.points, convertPoint);
+    map(points, (point) => {
+      if (point.properties.radius) {
+        console.log(point.properties);
+        const { radius, _unit, sides } = point.properties;
+        const center = point.geometry.coordinates;
+        polys.push(generateCircleApprox(radius, _unit, reverse(center), sides));
+      }
+    });
     const c = getCenter(polys);
     const center = L.latLng(c[0], c[1]);
     this.setState({

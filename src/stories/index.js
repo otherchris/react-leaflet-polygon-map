@@ -138,9 +138,9 @@ storiesOf('generate a polygon for augmented points', module)
         {
           type: 'Feature',
           properties: {
-            radius: 10,
+            radius: 5,
             units: 'miles',
-            sides: 12,
+            sides: 4,
           },
           geometry: {
             type: 'Point',
