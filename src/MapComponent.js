@@ -3,6 +3,7 @@ import L from 'leaflet';
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
+import reverse from 'lodash/reverse';
 import 'leaflet/dist/leaflet.css';
 import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
@@ -215,7 +216,7 @@ const MapComponent = (props) => {
     );
   });
   const points = map(props.points, (result, index) => (
-    <Marker position={result} key={index} icon={props.markerIcon}>
+    <Marker position={reverse(result.geometry.coordinates)} key={index} icon={props.markerIcon}>
       <Tooltip className={tooltipClass(tooltipOptions)}>
         <span>{pointsTooltip(result, tooltipOptions)}</span>
       </Tooltip>
