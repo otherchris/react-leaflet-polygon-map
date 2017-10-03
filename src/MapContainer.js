@@ -24,6 +24,7 @@ import {
 import './main.css';
 import getArea from './getArea';
 import getCenter from './getCenter';
+import convertPoint from './convertPoint';
 
 const indexByUuid = (arr, _uuid) => {
   let index = -1;
@@ -113,6 +114,7 @@ class MapContainer extends React.Component {
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
+    const points = map(this.props.points, convertPoint);
     const c = getCenter(polys);
     const center = L.latLng(c[0], c[1]);
     this.setState({
@@ -120,7 +122,7 @@ class MapContainer extends React.Component {
       center,
       maxArea: max,
       polygons: polys,
-      points: this.props.points,
+      points,
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
