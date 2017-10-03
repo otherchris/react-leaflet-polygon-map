@@ -8,6 +8,7 @@ import filter from 'lodash/filter';
 import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
+import cloneDeep from 'lodash/cloneDeep';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import L from 'leaflet';
@@ -23,6 +24,7 @@ import {
 import './main.css';
 import getArea from './getArea';
 import getCenter from './getCenter';
+import convertPoint from './convertPoint';
 
 const indexByUuid = (arr, _uuid) => {
   let index = -1;
@@ -105,7 +107,6 @@ class MapContainer extends React.Component {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
     let expandedPolys = [];
     map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
-    console.log(expandedPolys);
     const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.uuid = uuid.v4();
@@ -113,6 +114,7 @@ class MapContainer extends React.Component {
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
+    const points = map(this.props.points, convertPoint);
     const c = getCenter(polys);
     const center = L.latLng(c[0], c[1]);
     this.setState({
@@ -120,7 +122,7 @@ class MapContainer extends React.Component {
       center,
       maxArea: max,
       polygons: polys,
-      points: this.props.points,
+      points,
       rectangles: this.props.rectangles,
       circles: this.props.circles,
       edit: this.props.edit,
@@ -128,26 +130,24 @@ class MapContainer extends React.Component {
     });
   }
   updateShapes(e) {
-    const state = this.state;
+    const state = cloneDeep(this.state);
     const { unit, maxArea } = state;
     state.edit = false;
     const geoJson = e.layer.toGeoJSON();
-    const gJWithArea = getArea(geoJson);
-    if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
-    gJWithArea.properties.uuid = uuid.v4();
-    gJWithArea.properties.editable = false;
-    gJWithArea.properties.key = this.state.polygons.length + 1;
+    let gJWithArea = {};
+    if (e.layerType === 'polygon') {
+      gJWithArea = getArea(geoJson);
+      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+      gJWithArea.properties.uuid = uuid.v4();
+      gJWithArea.properties.editable = false;
+      gJWithArea.properties.key = this.state.polygons.length + 1;
+    }
     switch (e.layerType) {
     case 'polygon':
       state.polygons.push(gJWithArea);
       break;
-    case 'circle':
-      state.circles.push(geoJson);
-      break;
-    case 'rectangle':
-      state.rectangles.push(geoJson);
-      break;
     case 'marker':
+      if (!state.points) state.points = [];
       state.points.push(geoJson);
       break;
     default:
@@ -203,7 +203,6 @@ class MapContainer extends React.Component {
     this.props.handleSubmit(this.state);
   }
   onLocationSelect(loc) {
-    console.log('onLocationSelect', loc);
     this.setState({ center: L.latLng(loc.location.lat, loc.location.lng) });
   }
   render() {
