@@ -5,6 +5,7 @@ import hasIn from 'lodash/hasIn';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
 import range from 'lodash/range';
+import reverse from 'lodash/reverse';
 import math from 'mathjs';
 import logoDefault from './logoDefault';
 
@@ -82,5 +83,18 @@ export const generateCircleApprox = (radius, unit, center, sides) => {
   const points = rotatedPointsOrigin(radius, sides);
   const scaledPoints = scalePoints(points, center[0]);
   const translatedPoints = translatePoints(scaledPoints, center);
-  return translatedPoints;
+  const reversedPoints = map(translatedPoints, (x) => reverse(x));
+  return {
+    type: 'Feature',
+    properties: {
+      radius,
+      unit,
+      center,
+      sides,
+    },
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [[reversedPoints]],
+    },
+  };
 };
