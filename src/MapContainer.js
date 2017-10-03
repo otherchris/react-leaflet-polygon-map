@@ -106,7 +106,6 @@ class MapContainer extends React.Component {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
     let expandedPolys = [];
     map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
-    console.log(expandedPolys);
     const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.uuid = uuid.v4();
@@ -202,7 +201,6 @@ class MapContainer extends React.Component {
     this.props.handleSubmit(this.state);
   }
   onLocationSelect(loc) {
-    console.log('onLocationSelect', loc);
     this.setState({ center: L.latLng(loc.location.lat, loc.location.lng) });
   }
   render() {
