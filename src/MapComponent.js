@@ -198,6 +198,7 @@ const tooltipClass = (tooltipOptions) => {
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
+  merge(hoveredStyle, props.hoveredStyle);
   const polyWithArea = map(props.polygons, getArea);
   const polygons = map(polyWithArea, (result, index) => {
     const p = result.properties;
@@ -332,6 +333,7 @@ MapComponent.propTypes = {
   edit: PropTypes.boolean,
   handleSubmit: PropTypes.func,
   height: PropTypes.number,
+  hoveredStyle: PropTypes.object,
   includeZipRadius: PropTypes.boolean,
   markerIcon: PropTypes.object,
   legendComponent: PropTypes.function,
