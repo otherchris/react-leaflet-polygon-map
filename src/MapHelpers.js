@@ -3,6 +3,9 @@ import L from 'leaflet';
 import polyline from 'polyline';
 import hasIn from 'lodash/hasIn';
 import includes from 'lodash/includes';
+import map from 'lodash/map';
+import range from 'lodash/range';
+import math from 'mathjs';
 import logoDefault from './logoDefault';
 
 export const displayPoly = (poly) => {
@@ -51,4 +54,33 @@ export const expandPolys = (obj) => {
     return obj.features;
   }
   return [obj];
+};
+
+const radians = (deg) => (deg / 360) * 2 * Math.PI;
+
+const rotatedPointsOrigin = (radius, sides) => {
+  const z = new math.complex({ phi: 0, r: radius });
+  const angle = (2 * Math.PI) / sides;
+  return map(range(sides), (x) => {
+    const i = math.complex(0, 1);
+    const point = math.multiply(z, math.exp(math.multiply(x, angle, math.complex(0, 1))));
+    return [math.re(point), math.im(point)];
+  });
+};
+
+const translatePoints = (points, center) => map(
+  points,
+  (point) => [point[0] + center[0], point[1] + center[1]],
+);
+
+const scalePoints = (points, lat) => {
+  const factor = math.cos(radians(lat)) * 69.172;
+  return map(points, (x) => [x[0] / 69.172, x[1] / factor]);
+};
+
+export const generateCircleApprox = (radius, unit, center, sides) => {
+  const points = rotatedPointsOrigin(radius, sides);
+  const scaledPoints = scalePoints(points, center[0]);
+  const translatedPoints = translatePoints(scaledPoints, center);
+  return translatedPoints;
 };

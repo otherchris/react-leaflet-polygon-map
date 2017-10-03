@@ -20,6 +20,7 @@ import {
   getTilesUrl,
   generateIcon,
   expandPolys,
+  generateCircleApprox,
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
@@ -104,6 +105,7 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(this.state);
   }
   mapPropsToState(props) {
+    console.log(generateCircleApprox(10, 'miles', [35, -83], 12));
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
     let expandedPolys = [];
     map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
