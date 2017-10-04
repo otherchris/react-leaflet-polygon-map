@@ -27,6 +27,8 @@ import {
   pointsTooltip,
   tooltipClass,
 } from './tooltipHelpers';
+import EditTools from './EditTools';
+import MapSubmitButton from './MapSubmitButton';
 import './main.css';
 import getArea from './getArea';
 
@@ -49,52 +51,6 @@ const RemovePolyBanner = (
   </div>
 );
 
-const editTools = (p) => {
-  if (p.includeZipRadius) {
-    return (
-      <FeatureGroup>
-        <EditControl
-          position='topright'
-          draw={{
-            polyline: false,
-            polygon: false,
-            rectangle: false,
-            circle: false,
-            marker: {
-              icon: p.markerIcon,
-            },
-          }}
-          edit={{
-            edit: false,
-            remove: false,
-          }}
-          onCreated={p.chooseCenter}
-        />
-      </FeatureGroup>
-    );
-  } else if (p.edit) {
-    return (
-      <FeatureGroup>
-        <EditControl
-          position='topright'
-          draw={{
-            polyline: false,
-            rectangle: false,
-            circle: false,
-            marker: {
-              icon: p.markerIcon,
-            },
-          }}
-          edit={{
-            edit: false,
-          }}
-          onCreated={p.onCreated}
-        />
-      </FeatureGroup>
-    );
-  }
-  return null;
-};
 
 const Legend = (LegendComponent, props) => (
   <div className="map-legend">
@@ -102,21 +58,6 @@ const Legend = (LegendComponent, props) => (
   </div>
 );
 
-const MapSubmitButton = (submitFunc, text, disable) => (
-  <div className="map-submit-button">
-    <button
-      onClick={submitFunc}
-      className={disable ? 'button-disable' : ''}
-    >
-      {text}
-    </button>
-  </div>
-);
-
-MapSubmitButton.propTypes = {
-  handleSubmit: PropTypes.func,
-  text: PropTypes.string,
-};
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
@@ -208,7 +149,6 @@ const MapComponent = (props) => {
       </Rectangle>
     );
   });
-  const editComponent = editTools(props);
   const zipRadiusControl = includeZipRadius ? (
     <ZipRadiusControl
       center={props.setCenter || 'Choose a center'}
@@ -238,7 +178,7 @@ const MapComponent = (props) => {
           attribution={tileLayerProps.attribution}
           url={tileLayerProps.url}
         />
-        {editComponent}
+        <EditTools {...props} />
         {polygons}
         {points}
         {circles}
@@ -247,7 +187,7 @@ const MapComponent = (props) => {
       <div className="below-map">
         {zipRadiusControl}
         {legend}
-        {submit}
+        <MapSubmitButton {...props} />
       </div>
     </div>
   );
