@@ -202,8 +202,8 @@ const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
-  const polyWithArea = map(props.polygons, getArea);
-  const polygons = map(polyWithArea, (result, index) => {
+  // const polyWithArea = map(props.polygons, getArea);
+  const polygons = map(props.polygons, (result, index) => {
     const p = result.properties;
     return (
       <GeoJSON
