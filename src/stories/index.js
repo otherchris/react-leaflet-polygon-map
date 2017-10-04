@@ -131,6 +131,30 @@ storiesOf('expand google maps and feature collections', module)
     />
   ));
 
+storiesOf('generate a polygon for augmented points', module)
+  .add('12 sided \'gon', () => (
+    <MapContainerStoryWithNotes
+      points={[
+        {
+          type: 'Feature',
+          properties: {
+            radius: 5,
+            units: 'miles',
+            sides: 4,
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [-83, 35],
+          },
+        },
+      ]}
+      edit
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. 12 sided polygon around a marker
+      `}
+    />
+  ));
+
 storiesOf('Style tooltip', module)
   .add('with area/location', () => (
     <MapContainerStoryWithNotes
