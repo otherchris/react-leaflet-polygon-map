@@ -149,17 +149,7 @@ const MapComponent = (props) => {
       </Rectangle>
     );
   });
-  const zipRadiusControl = includeZipRadius ? (
-    <ZipRadiusControl
-      center={props.setCenter || 'Choose a center'}
-      zipRadiusChange={props.zipRadiusChange}
-    />
-  ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
-  const submit = props.handleSubmit
-    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ?
-      'Submit' : 'Area too large')
-    : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
     : '';
@@ -185,7 +175,6 @@ const MapComponent = (props) => {
         {rectangles}
       </Map>
       <div className="below-map">
-        {zipRadiusControl}
         {legend}
         <MapSubmitButton {...props} />
       </div>
