@@ -9,6 +9,7 @@ import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
+import reverse from 'lodash/reverse';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import L from 'leaflet';
@@ -20,6 +21,7 @@ import {
   getTilesUrl,
   generateIcon,
   expandPolys,
+  generateCircleApprox,
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
@@ -115,6 +117,14 @@ class MapContainer extends React.Component {
       return out;
     });
     const points = map(this.props.points, convertPoint);
+    map(points, (point) => {
+      if (point.properties.radius) {
+        console.log(point.properties);
+        const { radius, _unit, sides } = point.properties;
+        const center = point.geometry.coordinates;
+        polys.push(generateCircleApprox(radius, _unit, reverse(center), sides));
+      }
+    });
     const c = getCenter(polys);
     const center = L.latLng(c[0], c[1]);
     this.setState({
@@ -274,6 +284,7 @@ MapContainer.propTypes = {
   style: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tiles: PropTypes.string,
+  tooltipOptions: PropTypes.object,
   width: PropTypes.number,
   zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
