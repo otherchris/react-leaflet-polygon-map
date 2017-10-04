@@ -57,6 +57,27 @@ export const expandPolys = (obj) => {
   return [obj];
 };
 
+export const indexByKey = (arr, key) => {
+  let index = -1;
+  map(arr, (val, ind) => {
+    if (val.properties && (val.properties.key=== key)) index = ind;
+  });
+  return index;
+};
+
+export const areaAccumulator = (sum, val) => sum + val.properties.area;
+export const area = (unit, _area) => {
+  let result = _area;
+  switch (unit) {
+  case 'miles':
+    result *= 0.000000386102;
+    break;
+  default:
+    break;
+  }
+  return result;
+};
+
 const radians = (deg) => (deg / 360) * 2 * Math.PI;
 
 const rotatedPointsOrigin = (radius, sides) => {
