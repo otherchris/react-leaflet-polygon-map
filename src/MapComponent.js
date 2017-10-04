@@ -20,6 +20,15 @@ import {
 } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 import ZipRadiusControl from './ZipRadiusControl';
+import {
+  tooltipMessage,
+  circleTooltip,
+  rectTooltip,
+  pointsTooltip,
+  tooltipClass,
+} from './tooltipHelpers';
+import EditTools from './EditTools';
+import MapSubmitButton from './MapSubmitButton';
 import './main.css';
 import getArea from './getArea';
 
@@ -42,52 +51,6 @@ const RemovePolyBanner = (
   </div>
 );
 
-const editTools = (p) => {
-  if (p.includeZipRadius) {
-    return (
-      <FeatureGroup>
-        <EditControl
-          position='topright'
-          draw={{
-            polyline: false,
-            polygon: false,
-            rectangle: false,
-            circle: false,
-            marker: {
-              icon: p.markerIcon,
-            },
-          }}
-          edit={{
-            edit: false,
-            remove: false,
-          }}
-          onCreated={p.chooseCenter}
-        />
-      </FeatureGroup>
-    );
-  } else if (p.edit) {
-    return (
-      <FeatureGroup>
-        <EditControl
-          position='topright'
-          draw={{
-            polyline: false,
-            rectangle: false,
-            circle: false,
-            marker: {
-              icon: p.markerIcon,
-            },
-          }}
-          edit={{
-            edit: false,
-          }}
-          onCreated={p.onCreated}
-        />
-      </FeatureGroup>
-    );
-  }
-  return null;
-};
 
 const Legend = (LegendComponent, props) => (
   <div className="map-legend">
@@ -95,115 +58,11 @@ const Legend = (LegendComponent, props) => (
   </div>
 );
 
-const MapSubmitButton = (submitFunc, text, disable) => (
-  <div className="map-submit-button">
-    <button
-      onClick={submitFunc}
-      className={disable ? 'button-disable' : ''}
-    >
-      {text}
-    </button>
-  </div>
-);
-
-MapSubmitButton.propTypes = {
-  handleSubmit: PropTypes.func,
-  text: PropTypes.string,
-};
-const tooltipMessage = (polyProps, tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.includeArea) {
-    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
-    const convertedArea = tooltipOptions.units.conversion ?
-      polyProps.area * tooltipOptions.units.conversion :
-      polyProps.area;
-    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${areaWithUnit}`;
-    return tipMessage;
-  }
-  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
-    const area = polyProps.area;
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
-    return tipMessage;
-  }
-  if (tooltipOptions && !(tooltipOptions.includeArea)) {
-    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text;
-    return tipMessage;
-  }
-  const tipMessage = `${polyProps.area.toFixed(4)} Sq Meters`;
-  return tipMessage;
-};
-
-const circleTooltip = (circleProps, tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.includeArea && tooltipOptions.units) {
-    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
-    const convertedArea = tooltipOptions.units.conversion ?
-      circleProps.area * tooltipOptions.units.conversion : circleProps.area;
-    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${areaWithUnit}`;
-    return tipMessage;
-  }
-  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
-    const area = circleProps.area;
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
-    return tipMessage;
-  }
-  if (tooltipOptions && !(tooltipOptions.includeArea)) {
-    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text;
-    return tipMessage;
-  }
-  const tipMessage = `${circleProps.area.toFixed(4)} Sq Meters`;
-  return tipMessage;
-};
-const rectTooltip = (rectProps, tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.includeArea) {
-    const noArea = 'Area cannot be calculated on rectangle';
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${noArea}`;
-    return tipMessage;
-  }
-  if (tooltipOptions && !(tooltipOptions.includeArea)) {
-    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text;
-    return tipMessage;
-  }
-  const tipMessage = 'Area cannot be calculated on rectangle';
-  return tipMessage;
-};
-const pointsTooltip = (point, tooltipOptions) => {
-  const coords = point.geometry.coordinates;
-  if (tooltipOptions && tooltipOptions.marker && tooltipOptions.marker.includeLocation) {
-    const latLng = `${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}`;
-    const text = tooltipOptions.marker.text ? tooltipOptions.marker.text : '';
-    const tipOpts = `${latLng} ${text}`;
-    return tipOpts;
-  }
-  if (tooltipOptions && tooltipOptions.marker && !(tooltipOptions.marker.includeLocation)) {
-    const text = tooltipOptions.marker.text ? tooltipOptions.marker.text : '';
-    const tipOpts = `${text}`;
-    return tipOpts;
-  }
-  const latLng = `${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}`;
-  return latLng;
-};
-const tooltipClass = (tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.className) {
-    const tipClass = tooltipOptions.className ? `${tooltipOptions.className}` : '';
-    return tipClass;
-  }
-  return 'tooltipClass';
-};
 const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
-  const polyWithArea = map(props.polygons, getArea);
-  const polygons = map(polyWithArea, (result, index) => {
+  const polygons = map(props.polygons, (result, index) => {
     const p = result.properties;
     return (
       <GeoJSON
@@ -290,18 +149,7 @@ const MapComponent = (props) => {
       </Rectangle>
     );
   });
-  const editComponent = editTools(props);
-  const zipRadiusControl = includeZipRadius ? (
-    <ZipRadiusControl
-      center={props.setCenter || 'Choose a center'}
-      zipRadiusChange={props.zipRadiusChange}
-    />
-  ) : <div></div>;
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
-  const submit = props.handleSubmit
-    ? MapSubmitButton(props.handleSubmit, props.maxArea > props.totalArea ?
-      'Submit' : 'Area too large')
-    : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
     : '';
@@ -320,16 +168,15 @@ const MapComponent = (props) => {
           attribution={tileLayerProps.attribution}
           url={tileLayerProps.url}
         />
-        {editComponent}
+        <EditTools {...props} />
         {polygons}
         {points}
         {circles}
         {rectangles}
       </Map>
       <div className="below-map">
-        {zipRadiusControl}
         {legend}
-        {submit}
+        <MapSubmitButton {...props} />
       </div>
     </div>
   );
