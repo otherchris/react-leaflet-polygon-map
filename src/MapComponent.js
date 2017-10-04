@@ -222,7 +222,9 @@ const MapComponent = (props) => {
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {tooltipMessage(p, props.tooltipOptions)}
+            {props.edit && props.remove ?
+              'CLICK TO DELETE' :
+              `${tooltipMessage(p, props.tooltipOptions)}`}
           </span>
         </Tooltip>
       </GeoJSON>
@@ -254,7 +256,9 @@ const MapComponent = (props) => {
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {circleTooltip(result, props.tooltipOptions)}
+            {props.edit && props.remove ?
+              'CLICK TO DELETE' :
+              `${circleTooltip(result, props.tooltipOptions)}`}
           </span>
         </Tooltip>
       </Circle>
@@ -278,7 +282,9 @@ const MapComponent = (props) => {
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
-            {rectTooltip(result, props.tooltipOptions)}
+            {props.edit && props.remove ?
+              'CLICK TO DELETE' :
+              `${rectTooltip(result, props.tooltipOptions)}`}
           </span>
         </Tooltip>
       </Rectangle>
