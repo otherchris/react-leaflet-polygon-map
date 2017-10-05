@@ -62,22 +62,20 @@ const MapComponent = (props) => {
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
+
+  // Create Leaflet GeoJSON components from polygons in container state
   const polygons = map(props.polygons, (result, index) => {
     const p = result.properties;
     return (
       <GeoJSON
         style={style}
         data={result}
-        key={result.key || uuid.v4()}
-        uuid={result.properties.uuid || 'none'}
-        editable={!!(result.properties && result.properties.editable)}
+        key={uuid.v4()}
+        uuid={p.key || uuid.v4()}
+        editable={p.editable}
         onClick={props.clickPoly}
-        onMouseOut={(e) => {
-          e.layer.setStyle(style);
-        }}
-        onMouseOver={(e) => {
-          e.layer.setStyle(hoveredStyle);
-        }}
+        onMouseOut={(e) => { e.layer.setStyle(style); }}
+        onMouseOver={(e) => { e.layer.setStyle(hoveredStyle); }}
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
@@ -199,6 +197,7 @@ MapComponent.propTypes = {
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
   rectangles: PropTypes.arrayOf(PropTypes.object),
+  refresh: PropTypes.string,
   remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   style: PropTypes.object,

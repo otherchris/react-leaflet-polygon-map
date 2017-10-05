@@ -6,6 +6,7 @@ import includes from 'lodash/includes';
 import map from 'lodash/map';
 import range from 'lodash/range';
 import reverse from 'lodash/reverse';
+import flatten from 'lodash/flatten';
 import math from 'mathjs';
 import logoDefault from './logoDefault';
 
@@ -60,7 +61,7 @@ export const expandPolys = (obj) => {
 export const indexByKey = (arr, key) => {
   let index = -1;
   map(arr, (val, ind) => {
-    if (val.properties && (val.properties.key=== key)) index = ind;
+    if (val.properties && (val.properties.key === key)) index = ind;
   });
   return index;
 };
@@ -119,3 +120,17 @@ export const generateCircleApprox = (radius, unit, center, sides) => {
     },
   };
 };
+
+export const polygonArrayToProp = (polys) => map(polys, (poly) => {
+  if (poly.geometry.type === 'Polygon') {
+    return poly;
+  }
+  return {
+    type: 'Feature',
+    geometry: {
+      type: 'Polygon',
+      coordinates: flatten(poly.geometry.coordinates),
+    },
+    properties: poly.properties,
+  };
+});
