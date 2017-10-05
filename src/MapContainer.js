@@ -141,6 +141,8 @@ class MapContainer extends React.Component {
       geoJson.properties.key = uuid.v4();
       if (!state.points) state.points = [];
       state.points.push(geoJson);
+      state.newCircleCenter = reverse(cloneDeep(geoJson.geometry.coordinates));
+      state.makeCircleOn = true;
       break;
     default:
       break;
@@ -204,6 +206,30 @@ class MapContainer extends React.Component {
   onLocationSelect(loc) {
     this.setState({ center: L.latLng(loc.location.lat, loc.location.lng) });
   }
+  radiusChange(e) {
+    if (isNaN(e.target.value)) return;
+    this.setState({ newCircleRadius: e.target.value });
+  }
+  sidesChange(e) {
+    if (isNaN(e.target.value)) return;
+    this.setState({ newCircleSides: e.target.value });
+  }
+  makeCircle() {
+    const polygons = this.state.polygons;
+    const circApprox = (generateCircleApprox(
+      this.state.newCircleRadius,
+      this.state.unit,
+      this.state.newCircleCenter,
+      this.state.newCircleSides,
+    ));
+    circApprox.properties.key = uuid.v4();
+    if (area(this.state.unit, circApprox.properties.area) > this.state.maxArea.max) {
+      circApprox.properties.tooLarge = true;
+    }
+    polygons.push(circApprox);
+    console.log(polygons);
+    this.setState({ polygons, makeCircleOn: false });
+  }
   render() {
     const {
       tooltipOptions,
@@ -230,15 +256,19 @@ class MapContainer extends React.Component {
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
         handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
+        makeCircle={this.makeCircle.bind(this)}
+        makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}
         maxArea={this.state.maxArea}
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
         points={this.state.points}
         polygons={polygonArrayToProp(this.state.polygons)}
+        radiusChange={this.radiusChange.bind(this)}
         rectangles={this.state.rectangles}
         refresh={this.state.refresh}
         remove={this.state.remove}
+        sidesChange={this.sidesChange.bind(this)}
         tileLayerProps={{ url: tileUrl }}
         totalArea={this.state.totalArea}
         unit={this.state.unit}

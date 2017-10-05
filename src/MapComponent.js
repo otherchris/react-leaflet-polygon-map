@@ -30,6 +30,7 @@ import {
 } from './tooltipHelpers';
 import EditTools from './EditTools';
 import MapSubmitButton from './MapSubmitButton';
+import CircleApprox from './CircleApprox';
 import './main.css';
 import getArea from './getArea';
 
@@ -166,9 +167,17 @@ const MapComponent = (props) => {
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
     : '';
+  const makeCircleApprox = props.makeCircleOn ? (
+    <CircleApprox
+      radiusChange={props.radiusChange}
+      sidesChange={props.sidesChange}
+      makeCircle={props.makeCircle}
+    />
+  ) : '';
   return (
     <div>
       <Geosuggest onSuggestSelect={props.onLocationSelect} />
+      {makeCircleApprox}
       {removePolyBanner}
       <Map
         style={{ height }}
