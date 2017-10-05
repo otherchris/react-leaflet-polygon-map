@@ -132,7 +132,10 @@ export const polygonArrayToProp = (polys) => map(polys, (poly) => {
     p.noEdit = true;
     return {
       type: 'Feature',
-      geometry: poly.geometry,
+      geometry: {
+        type: 'Polygon',
+        coordinates: flatten(poly.geometry.coordinates),
+      },
       properties: p,
     };
   }
