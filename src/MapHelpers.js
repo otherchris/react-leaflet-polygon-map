@@ -122,8 +122,22 @@ export const generateCircleApprox = (radius, unit, center, sides) => {
 };
 
 export const polygonArrayToProp = (polys) => map(polys, (poly) => {
+  // Don't rechange polys coming from map edit
   if (poly.geometry.type === 'Polygon') {
     return poly;
+  }
+  // Can't do anything with a non-trivial MultiPolygon
+  if (poly.geometry.coordinates[0][0].length > 1) {
+    const p = poly.properties;
+    p.noEdit = true;
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: flatten(poly.geometry.coordinates),
+      },
+      properties: p,
+    };
   }
   return {
     type: 'Feature',
