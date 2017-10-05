@@ -94,7 +94,6 @@ class MapContainer extends React.Component {
     const points = map(this.props.points, convertPoint);
     map(points, (point) => {
       if (point.properties.radius) {
-        console.log(point.properties);
         const { radius, _unit, sides } = point.properties;
         const center = point.geometry.coordinates;
         const circApprox = (generateCircleApprox(radius, _unit, reverse(center), sides));
@@ -139,18 +138,15 @@ class MapContainer extends React.Component {
       state.polygons.push(gJWithArea);
       break;
     case 'marker':
-      console.log('new marker', geoJson)
       geoJson.properties.key = uuid.v4();
       if (!state.points) state.points = [];
       state.points.push(geoJson);
-      console.log('state points', state)
       break;
     default:
       break;
     }
     state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
     state.edit = false;
-    console.log('final state', state)
     this.setState(state);
     this.setState({
       edit: true,
