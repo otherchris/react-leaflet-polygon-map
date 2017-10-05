@@ -127,7 +127,7 @@ export const polygonArrayToProp = (polys) => map(polys, (poly) => {
     return poly;
   }
   // Can't do anything with a non-trivial MultiPolygon
-  if (poly.geometry.coordinates[0][0].length > 1) {
+  if (poly.geometry.coordinates[0].length > 1) {
     const p = poly.properties;
     p.noEdit = true;
     return {
