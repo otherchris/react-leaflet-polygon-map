@@ -22,32 +22,15 @@ import {
   generateIcon,
   expandPolys,
   generateCircleApprox,
+  indexByKey,
+  areaAccumulator,
+  area,
+  polygonArrayToProp,
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
 import getCenter from './getCenter';
 import convertPoint from './convertPoint';
-
-const indexByUuid = (arr, _uuid) => {
-  let index = -1;
-  map(arr, (val, ind) => {
-    if (val.properties && (val.properties.uuid === _uuid)) index = ind;
-  });
-  return index;
-};
-
-const areaAccumulator = (sum, val) => sum + val.properties.area;
-const area = (unit, _area) => {
-  let result = _area;
-  switch (unit) {
-  case 'miles':
-    result *= 0.000000386102;
-    break;
-  default:
-    break;
-  }
-  return result;
-};
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -72,15 +55,6 @@ class MapContainer extends React.Component {
     };
     this.debouncedOnChange = debounce(this.props.onChange, 100);
   }
-  componentDidMount() {
-    this.mapPropsToState(this.props);
-    if (this.props.includeZipRadius) {
-      this.setState({
-        edit: false,
-      });
-    }
-    ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
-  }
   getScriptLoaderID() {
     return ReactScriptLoaderMixin.__getScriptLoaderID();
   }
@@ -94,39 +68,48 @@ class MapContainer extends React.Component {
   onScriptError() {
     this.setState({ googleAPIError: true });
   }
-  componentDidUpdate() {
-    if (this.state.edit) {
-      const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
-      removeButton.onclick = () => {
-        const curr = this.state.remove;
-        this.setState({ remove: !curr });
-      };
-      removeButton.className = ('leaflet-draw-edit-remove');
-    }
-    this.debouncedOnChange(this.state);
+  componentDidMount() {
+    this.mapPropsToState(this.props);
+    ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   mapPropsToState(props) {
     const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
+
+    // Expand any poly collections (FeatureCollections or Google map objects
+    // into individual features
     let expandedPolys = [];
     map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
+
+    // Convert each polygon into GeoJSON with area, then
+    // add 'tooLarge' if necc. and add unique key
     const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
-      out.properties.uuid = uuid.v4();
-      out.properties.key = index + 1;
+      out.properties.key = uuid.v4();
       if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
       return out;
     });
+
+    // Convert points to GeoJSON, then add polygons for any points
+    // that have 'radius' (indicating 'draw a circle around me')
     const points = map(this.props.points, convertPoint);
     map(points, (point) => {
       if (point.properties.radius) {
         console.log(point.properties);
         const { radius, _unit, sides } = point.properties;
         const center = point.geometry.coordinates;
-        polys.push(generateCircleApprox(radius, _unit, reverse(center), sides));
+        const circApprox = (generateCircleApprox(radius, _unit, reverse(center), sides));
+        // Do same polygon processing from above to the generated poly
+        circApprox.properties.key = uuid.v4();
+        if (area(unit, circApprox.properties.area) > max) circApprox.properties.tooLarge = true;
+        polys.push(circApprox);
       }
     });
+
+    // Set the center to the center of all polys
     const c = getCenter(polys);
     const center = L.latLng(c[0], c[1]);
+
+    // Apply changes to state
     this.setState({
       unit,
       center,
@@ -139,24 +122,24 @@ class MapContainer extends React.Component {
       totalArea: area(unit, reduce(polys, areaAccumulator, 0)),
     });
   }
+
+  // updateShapes called by onCreated callback in Leaflet map
+  // e.layer represents the newly created vector layer
   updateShapes(e) {
     const state = cloneDeep(this.state);
     const { unit, maxArea } = state;
-    state.edit = false;
     const geoJson = e.layer.toGeoJSON();
     let gJWithArea = {};
-    if (e.layerType === 'polygon') {
-      gJWithArea = getArea(geoJson);
-      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
-      gJWithArea.properties.uuid = uuid.v4();
-      gJWithArea.properties.editable = false;
-      gJWithArea.properties.key = this.state.polygons.length + 1;
-    }
     switch (e.layerType) {
     case 'polygon':
+      gJWithArea = getArea(geoJson);
+      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+      gJWithArea.properties.key = uuid.v4();
+      gJWithArea.properties.editable = false;
       state.polygons.push(gJWithArea);
       break;
     case 'marker':
+      geoJson.properties.key = uuid.v4();
       if (!state.points) state.points = [];
       state.points.push(geoJson);
       break;
@@ -164,50 +147,50 @@ class MapContainer extends React.Component {
       break;
     }
     state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
+    state.edit = false;
     this.setState(state);
     this.setState({
       edit: true,
     });
   }
+  componentDidUpdate() {
+    if (this.state.edit) {
+      const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
+      removeButton.onclick = () => {
+        const curr = this.state.remove;
+        this.setState({ remove: !curr });
+      };
+      removeButton.className = ('leaflet-draw-edit-remove');
+    }
+    // Call the debounced version of the onChange prop
+    this.debouncedOnChange(this.state);
+  }
+
+  // Sometimes clicking a polygon opens/closes for editing, sometimes it
+  // deletes the poly
   clickPoly(e) {
+    console.log('called click');
     if (!this.state.edit) return;
     if (this.state.remove) {
-      const _uuid = e.layer.options.uuid;
-      const polygons = filter(this.state.polygons, (poly) => _uuid !== poly.properties.uuid);
+      const key = e.layer.options.uuid;
+      const polygons = filter(this.state.polygons, (poly) => key !== poly.properties.key);
       this.setState({ polygons });
       return;
     }
-    const _uuid = e.target.options.uuid;
+    const key = e.layer.options.uuid;
     const polygons = this.state.polygons;
-    const index = indexByUuid(polygons, _uuid);
-    if (polygons[index] && polygons[index].properties) {
-      const editable = polygons[index].properties.editable;
-      polygons[index] = getArea(e.layer.toGeoJSON());
-      polygons[index].properties.editable = !editable;
-      polygons[index].properties.key = -1 * (index + 1);
-    }
+    const index = indexByKey(polygons, key);
+    const editable = polygons[index].properties.editable || false;
+    if (editable) polygons[index] = getArea(e.layer.toGeoJSON());
+    polygons[index].properties.editable = !editable;
     this.setState({
       polygons,
       totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
+      edit: true,
+      refresh: uuid.v4(),
     });
   }
-  zipRadiusChange(e) {
-    const radius = parseFloat(e.target.value);
-    if (!isNaN(radius)) {
-      this.setState({
-        zipRadius: parseFloat(e.target.value),
-      });
-    } else {
-      this.setState({
-        zipRadius: 'NaN',
-      });
-    }
-  }
-  chooseCenter(e) {
-    this.setState({
-      zipRadiusCenter: e.layer.toGeoJSON().geometry.coordinates,
-    });
-  }
+
   handleSubmit(e) {
     if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return;
     this.props.handleSubmit(this.state);
@@ -232,11 +215,9 @@ class MapContainer extends React.Component {
       'tooltipOptions',
     ]);
     const tileUrl = getTilesUrl(tiles);
-
     return (
       <MapComponent
         center={this.state.center || L.latLng(35, -83)}
-        chooseCenter={this.chooseCenter.bind(this)}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         edit={this.state.edit}
@@ -247,18 +228,13 @@ class MapContainer extends React.Component {
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
         points={this.state.points}
-        polygons={this.state.polygons}
+        polygons={polygonArrayToProp(this.state.polygons)}
         rectangles={this.state.rectangles}
+        refresh={this.state.refresh}
         remove={this.state.remove}
         tileLayerProps={{ url: tileUrl }}
+        totalArea={this.state.totalArea}
         unit={this.state.unit}
-        zipRadiusCenter={
-          this.state.zipRadiusCenter ||
-          this.props.zipRadiusCenter ||
-          this.state.center
-        }
-        zipRadiusChange={this.zipRadiusChange.bind(this)}
-        zipRadiusClick={''}
         {...passThroughProps}
       />
     );

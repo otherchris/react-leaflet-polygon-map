@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const MapSubmitButton = (props) => {
+  console.log(props);
   if (!props.handleSubmit) return null;
   const disable = props.maxArea > props.totalArea;
   const text = disable ? 'Submit' : 'Area too large';
