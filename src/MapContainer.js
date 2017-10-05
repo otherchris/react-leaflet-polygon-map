@@ -25,6 +25,7 @@ import {
   indexByKey,
   areaAccumulator,
   area,
+  polygonArrayToProp,
 } from './MapHelpers';
 import './main.css';
 import getArea from './getArea';
@@ -146,7 +147,11 @@ class MapContainer extends React.Component {
       break;
     }
     state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
+    state.edit = false;
     this.setState(state);
+    this.setState({
+      edit: true,
+    });
   }
   componentDidUpdate() {
     if (this.state.edit) {
@@ -164,22 +169,25 @@ class MapContainer extends React.Component {
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
   // deletes the poly
   clickPoly(e) {
+    console.log('called click');
     if (!this.state.edit) return;
     if (this.state.remove) {
-      const key = e.layer.options.key;
+      const key = e.layer.options.uuid;
       const polygons = filter(this.state.polygons, (poly) => key !== poly.properties.key);
       this.setState({ polygons });
       return;
     }
-    const key = e.target.options.key;
+    const key = e.layer.options.uuid;
     const polygons = this.state.polygons;
     const index = indexByKey(polygons, key);
-    const editable = polygons[index].properties.editable;
+    const editable = polygons[index].properties.editable || false;
     if (editable) polygons[index] = getArea(e.layer.toGeoJSON());
     polygons[index].properties.editable = !editable;
     this.setState({
       polygons,
       totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
+      edit: true,
+      refresh: uuid.v4(),
     });
   }
 
@@ -220,8 +228,9 @@ class MapContainer extends React.Component {
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
         points={this.state.points}
-        polygons={this.state.polygons}
+        polygons={polygonArrayToProp(this.state.polygons)}
         rectangles={this.state.rectangles}
+        refresh={this.state.refresh}
         remove={this.state.remove}
         tileLayerProps={{ url: tileUrl }}
         totalArea={this.state.totalArea}
