@@ -94,7 +94,6 @@ class MapContainer extends React.Component {
     const points = map(this.props.points, convertPoint);
     map(points, (point) => {
       if (point.properties.radius) {
-        console.log(point.properties);
         const { radius, _unit, sides } = point.properties;
         const center = point.geometry.coordinates;
         const circApprox = (generateCircleApprox(radius, _unit, reverse(center), sides));
@@ -169,7 +168,6 @@ class MapContainer extends React.Component {
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
   // deletes the poly
   clickPoly(e) {
-    console.log('called click');
     if (!this.state.edit) return;
     if (this.state.remove) {
       const key = e.layer.options.uuid;
@@ -189,6 +187,14 @@ class MapContainer extends React.Component {
       edit: true,
       refresh: uuid.v4(),
     });
+  }
+  clickPoint(e) {
+    if (!this.state.edit) return;
+    if (this.state.remove) {
+      const key = e.target.options.uuid;
+      const points = filter(this.state.points, (point) => key !== point.properties.key);
+      this.setState({ points });
+    }
   }
 
   handleSubmit(e) {
@@ -220,6 +226,7 @@ class MapContainer extends React.Component {
         center={this.state.center || L.latLng(35, -83)}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
+        clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
         handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
