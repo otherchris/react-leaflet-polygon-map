@@ -139,15 +139,18 @@ class MapContainer extends React.Component {
       state.polygons.push(gJWithArea);
       break;
     case 'marker':
+      console.log('new marker', geoJson)
       geoJson.properties.key = uuid.v4();
       if (!state.points) state.points = [];
       state.points.push(geoJson);
+      console.log('state points', state)
       break;
     default:
       break;
     }
     state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
     state.edit = false;
+    console.log('final state', state)
     this.setState(state);
     this.setState({
       edit: true,
@@ -169,7 +172,6 @@ class MapContainer extends React.Component {
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
   // deletes the poly
   clickPoly(e) {
-    console.log('called click');
     if (!this.state.edit) return;
     if (this.state.remove) {
       const key = e.layer.options.uuid;
@@ -189,6 +191,14 @@ class MapContainer extends React.Component {
       edit: true,
       refresh: uuid.v4(),
     });
+  }
+  clickPoint(e) {
+    if (!this.state.edit) return;
+    if (this.state.remove) {
+      const key = e.target.options.uuid;
+      const points = filter(this.state.points, (point) => key !== point.properties.key);
+      this.setState({ points });
+    }
   }
 
   handleSubmit(e) {
@@ -220,6 +230,7 @@ class MapContainer extends React.Component {
         center={this.state.center || L.latLng(35, -83)}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
+        clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
         handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}

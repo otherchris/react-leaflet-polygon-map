@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
 import reverse from 'lodash/reverse';
+import cloneDeep from 'lodash/cloneDeep';
 import 'leaflet/dist/leaflet.css';
 import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
@@ -87,13 +88,27 @@ const MapComponent = (props) => {
       </GeoJSON>
     );
   });
-  const points = map(props.points, (result, index) => (
-    <Marker position={reverse(result.geometry.coordinates)} key={index} icon={props.markerIcon}>
-      <Tooltip className={tooltipClass(tooltipOptions)}>
-        <span>{pointsTooltip(result, tooltipOptions)}</span>
-      </Tooltip>
-    </Marker>
-  ));
+  const points = map(props.points, (result, index) => {
+    const p = result.properties;
+    return (
+      <Marker
+        key={uuid.v4()}
+        uuid={p.key || uuid.v4()}
+        position={reverse(cloneDeep(result.geometry.coordinates))}
+        icon={props.markerIcon}
+        onClick={props.clickPoint}
+      >
+        <Tooltip className={tooltipClass(tooltipOptions)}>
+          <span>
+            {props.edit && props.remove ?
+              'CLICK TO DELETE' :
+              `${pointsTooltip(result, props.tooltipOptions)}`
+            }
+          </span>
+        </Tooltip>
+      </Marker>
+    );
+  });
   const circles = map(props.circles, (result, index) => {
     const p = result.properties;
     return (
