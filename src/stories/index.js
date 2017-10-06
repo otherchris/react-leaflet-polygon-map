@@ -11,6 +11,7 @@ import './polygons';
 import './convertedPolys';
 import './styling';
 import './tools';
+import './heatmap';
 
 storiesOf('Tilesets', module)
   .add('tiles = minimal_light', () => (

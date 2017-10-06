@@ -245,6 +245,7 @@ class MapContainer extends React.Component {
       'includeZipRadius',
       'zoom',
       'tooltipOptions',
+      'heatmap',
     ]);
     const tileUrl = getTilesUrl(tiles);
     return (
@@ -284,6 +285,7 @@ MapContainer.propTypes = {
   edit: PropTypes.boolean,
   encoding: PropTypes.string,
   handleSubmit: PropTypes.func,
+  heatmap: PropTypes.object,
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   includeZipRadius: PropTypes.boolean,

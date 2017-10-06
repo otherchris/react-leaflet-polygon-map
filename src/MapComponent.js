@@ -33,6 +33,7 @@ import MapSubmitButton from './MapSubmitButton';
 import CircleApprox from './CircleApprox';
 import './main.css';
 import getArea from './getArea';
+import Heatmap from './Heatmap';
 
 const style = {
   color: 'red',
@@ -163,6 +164,7 @@ const MapComponent = (props) => {
       </Rectangle>
     );
   });
+  const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
@@ -191,6 +193,7 @@ const MapComponent = (props) => {
           url={tileLayerProps.url}
         />
         <EditTools {...props} />
+        {heatmap}
         {polygons}
         {points}
         {circles}
@@ -210,6 +213,7 @@ MapComponent.propTypes = {
   clickPoly: PropTypes.func,
   edit: PropTypes.boolean,
   handleSubmit: PropTypes.func,
+  heatmap: PropTypes.object,
   height: PropTypes.number,
   hoveredStyle: PropTypes.object,
   includeZipRadius: PropTypes.boolean,
