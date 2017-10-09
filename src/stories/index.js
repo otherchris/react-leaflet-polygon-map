@@ -1,11 +1,9 @@
 import React from 'react';
 import { storiesOf, action, linkTo } from '@storybook/react';
-import 'leaflet-draw/dist/leaflet.draw.css';
 import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import points from './points';
 import dpPoly from './dpPoly';
 import poly from './poly';
-import '../main.css';
 import './layout';
 import './polygons';
 import './convertedPolys';

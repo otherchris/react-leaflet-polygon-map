@@ -5,7 +5,8 @@ import merge from 'lodash/merge';
 import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
-import 'leaflet/dist/leaflet.css';
+import './leaflet.css';
+import './leaflet.draw.css';
 import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
 import {
