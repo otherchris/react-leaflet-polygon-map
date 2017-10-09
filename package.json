@@ -72,7 +72,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "BABEL_ENV=production babel src -d dist && cp src/*.css dist && cp -r src/images dist",
+    "build": "BABEL_ENV=production babel src -d dist && cp src/*.css dist",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
