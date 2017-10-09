@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import { storiesOf, linkTo } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import map from 'lodash/map';
-import 'leaflet-draw/dist/leaflet.draw.css';
 import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import { makeGeoJSON } from '../ConvertPoly';
 import poly from './poly';
-import '../main.css';
 
 
 storiesOf('Converted Polys', module)

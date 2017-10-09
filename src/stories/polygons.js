@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import { storiesOf, linkTo } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import map from 'lodash/map';
-import 'leaflet-draw/dist/leaflet.draw.css';
 import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import dpPoly from './dpPoly';
 import points from './points';
-import '../main.css';
 
 
 storiesOf('Polygons', module)
