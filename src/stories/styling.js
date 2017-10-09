@@ -1,9 +1,7 @@
 import React from 'react';
 import { storiesOf, action, linkTo } from '@storybook/react';
-import 'leaflet-draw/dist/leaflet.draw.css';
 import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import dpPoly from './dpPoly';
-import '../main.css';
 
 storiesOf('Styling', module)
   .add('polygon colors', () => (
