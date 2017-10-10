@@ -209,7 +209,7 @@ const MapComponent = (props) => {
 };
 
 MapComponent.propTypes = {
-  center: PropTypes.number,
+  center: PropTypes.object,
   circles: PropTypes.arrayOf(PropTypes.object),
   clickPoly: PropTypes.func,
   edit: PropTypes.bool,

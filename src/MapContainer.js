@@ -32,6 +32,13 @@ import getArea from './getArea';
 import getCenter from './getCenter';
 import convertPoint from './convertPoint';
 
+const makeCenter = (c) => {
+  if (c.length === 2) {
+    return L.latLng(c[0], c[1]);
+  }
+  return L.latLng(c.lat, c.lng);
+};
+
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -105,8 +112,13 @@ class MapContainer extends React.Component {
     });
 
     // Set the center to the center of all polys
-    const c = getCenter(polys);
-    const center = L.latLng(c[0], c[1]);
+    let center;
+    if (polys.length > 0) {
+      const c = getCenter(polys);
+      center = L.latLng(c[0], c[1]);
+    } else {
+      center = makeCenter(this.props.center);
+    }
 
     // Apply changes to state
     this.setState({
@@ -280,7 +292,10 @@ class MapContainer extends React.Component {
 }
 
 MapContainer.propTypes = {
-  center: PropTypes.arrayOf(PropTypes.number),
+  center: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.number),
+    PropTypes.object,
+  ]),
   circles: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.bool,
   encoding: PropTypes.string,
@@ -307,6 +322,7 @@ MapContainer.propTypes = {
 
 MapContainer.defaultProps = {
   onChange: noop,
+  center: { lat: 38.257143, lng: -85.751428 },
 };
 
 export default MapContainer;
