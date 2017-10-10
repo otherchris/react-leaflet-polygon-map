@@ -34,9 +34,9 @@ import convertPoint from './convertPoint';
 
 const makeCenter = (c) => {
   if (c.length === 2) {
-    return L.latLng(c[0], c[1]);
+    return { lat: c[0], lng: c[1] };
   }
-  return L.latLng(c.lat, c.lng);
+  return c;
 };
 
 class MapContainer extends React.Component {
@@ -115,7 +115,7 @@ class MapContainer extends React.Component {
     let center;
     if (polys.length > 0) {
       const c = getCenter(polys);
-      center = L.latLng(c[0], c[1]);
+      center = { lat: c[0], lng: c[1] };
     } else {
       center = makeCenter(this.props.center);
     }
@@ -216,7 +216,7 @@ class MapContainer extends React.Component {
     this.props.handleSubmit(this.state);
   }
   onLocationSelect(loc) {
-    this.setState({ center: L.latLng(loc.location.lat, loc.location.lng) });
+    this.setState({ center: { lat: loc.location.lat, lng: loc.location.lng } });
   }
   radiusChange(e) {
     if (isNaN(e.target.value)) return;
@@ -239,7 +239,6 @@ class MapContainer extends React.Component {
       circApprox.properties.tooLarge = true;
     }
     polygons.push(circApprox);
-    console.log(polygons);
     this.setState({ polygons, makeCircleOn: false });
   }
   render() {
@@ -252,7 +251,6 @@ class MapContainer extends React.Component {
     const passThroughProps = pick(this.props, [
       'legendComponent',
       'height',
-      'center',
       'style',
       'includeZipRadius',
       'zoom',
@@ -262,7 +260,7 @@ class MapContainer extends React.Component {
     const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
-        center={this.state.center || L.latLng(35, -83)}
+        center={this.state.center}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
@@ -281,6 +279,7 @@ class MapContainer extends React.Component {
         rectangles={this.state.rectangles}
         refresh={this.state.refresh}
         remove={this.state.remove}
+        showLocationSelect={this.state.googleAPILoaded}
         sidesChange={this.sidesChange.bind(this)}
         tileLayerProps={{ url: tileUrl }}
         totalArea={this.state.totalArea}
