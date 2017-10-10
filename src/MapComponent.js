@@ -165,6 +165,9 @@ const MapComponent = (props) => {
     );
   });
   const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
+  const geosuggest = props.showLocationSelect ?
+    <Geosuggest onSuggestSelect={props.onLocationSelect} />
+    : '';
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
@@ -178,7 +181,7 @@ const MapComponent = (props) => {
   ) : '';
   return (
     <div>
-      <Geosuggest onSuggestSelect={props.onLocationSelect} />
+      {geosuggest}
       {makeCircleApprox}
       {removePolyBanner}
       <Map
@@ -232,6 +235,7 @@ MapComponent.propTypes = {
   refresh: PropTypes.string,
   remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
+  showLocationSelect: PropTypes.bool,
   sidesChange: PropTypes.func,
   style: PropTypes.object,
   submitText: PropTypes.string,
