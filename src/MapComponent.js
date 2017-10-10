@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
 import PropTypes from 'prop-types';
+import uuid from 'uuid';
+import Geosuggest from 'react-geosuggest';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
-import './leaflet.css';
-import './leaflet.draw.css';
-import uuid from 'uuid';
-import Geosuggest from 'react-geosuggest';
+import { EditControl } from 'react-leaflet-draw';
 import {
   Map,
   Marker,
@@ -20,8 +19,8 @@ import {
   Rectangle,
   Tooltip,
 } from 'react-leaflet';
-import { EditControl } from 'react-leaflet-draw';
-import ZipRadiusControl from './ZipRadiusControl';
+import './leaflet.css';
+import './leaflet.draw.css';
 import {
   tooltipMessage,
   circleTooltip,
