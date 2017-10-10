@@ -292,6 +292,7 @@ class MapContainer extends React.Component {
 }
 
 MapContainer.propTypes = {
+  apikey: PropTypes.string,
   center: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.object,
