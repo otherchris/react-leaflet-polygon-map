@@ -23,7 +23,7 @@ export default MapSubmitButton;
 MapSubmitButton.propTypes = {
   handleSubmit: PropTypes.func,
   text: PropTypes.string,
-  disable: PropTypes.boolean,
+  disable: PropTypes.bool,
   maxArea: PropTypes.number,
   totalArea: PropTypes.number,
 };
