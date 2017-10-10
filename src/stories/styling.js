@@ -31,12 +31,21 @@ storiesOf('Styling', module)
       `}
     />
   ))
-  .add('center', () => (
+  .add('center (array)', () => (
     <MapContainerStoryWithNotes
       center={ [38.35, -85.74] }
       polygons={[dpPoly.polyline]}
       additionalNotes={`Should see \n
-        <input type="checkbox" /> 1. Centered farther north than other examples
+        <input type="checkbox" /> 1. Centered farther north than other examples (array)
+      `}
+    />
+  ))
+  .add('center (object)', () => (
+    <MapContainerStoryWithNotes
+      center={{ lat: 38.35, lng: -85.74 }}
+      polygons={[dpPoly.polyline]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Centered farther north than other examples (object)
       `}
     />
   ));
