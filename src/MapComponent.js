@@ -193,7 +193,7 @@ const MapComponent = (props) => {
       >
         <TileLayer
           attribution={tileLayerProps.attribution}
-          url={tileLayerProps.url}
+          url={props.tiles}
         />
         <EditTools {...props} />
         {heatmap}
