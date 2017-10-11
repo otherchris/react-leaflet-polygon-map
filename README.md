@@ -97,7 +97,16 @@ Sets the initial remove state of the component.
 
 ???
 
-### `tiles (string)`
+### `tileLayerProps (object)`
+
+Specify a non-default tileset.
+
+```
+{
+  url: <url of tileset>
+  attribution: <attribution string for tileset>
+}
+```
 
 URL for tileset (default `http://{s}.tile.osm.org/{z}/{x}/{y}.png`).
 
