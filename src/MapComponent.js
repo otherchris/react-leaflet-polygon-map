@@ -192,8 +192,8 @@ const MapComponent = (props) => {
         zoom={zoom}
       >
         <TileLayer
+          url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}
-          url={props.tiles}
         />
         <EditTools {...props} />
         {heatmap}
@@ -239,10 +239,7 @@ MapComponent.propTypes = {
   sidesChange: PropTypes.func,
   style: PropTypes.object,
   submitText: PropTypes.string,
-  tileLayerProps: PropTypes.shape({
-    attribution: PropTypes.string,
-    url: PropTypes.string.isRequired,
-  }),
+  tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
   totalArea: PropTypes.number,
   unit: PropTypes.string,
@@ -253,5 +250,9 @@ MapComponent.propTypes = {
 MapComponent.defaultProps = {
   height: 400,
   zoom: 11,
+  tileLayerProps: {
+    url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    attribution: '© OpenStreetMap contributors',
+  },
 };
 export default MapComponent;
