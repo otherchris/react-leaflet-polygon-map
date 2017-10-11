@@ -245,7 +245,6 @@ class MapContainer extends React.Component {
     const {
       tooltipOptions,
       tileLayerProps,
-      width,
       tiles,
     } = this.props;
     const passThroughProps = pick(this.props, [
@@ -312,8 +311,6 @@ MapContainer.propTypes = {
   style: PropTypes.object,
   tiles: PropTypes.string,
   tooltipOptions: PropTypes.object,
-  width: PropTypes.number,
-  zipRadiusCenter: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
 };
 
