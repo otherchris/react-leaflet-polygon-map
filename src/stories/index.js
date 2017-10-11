@@ -49,6 +49,7 @@ storiesOf('handleSubmit', module)
   ))
   .add('Show Submit button if handleSubmit prop is provided', () => (
     <MapContainerStoryWithNotes
+      edit={true}
       handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}

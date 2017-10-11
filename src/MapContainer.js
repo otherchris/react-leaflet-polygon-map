@@ -143,7 +143,7 @@ class MapContainer extends React.Component {
     let gJWithArea = {};
     switch (e.layerType) {
     case 'polygon':
-      gJWithArea = getArea(geoJson);
+      gJWithArea = makeGeoJSON(geoJson);
       if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
