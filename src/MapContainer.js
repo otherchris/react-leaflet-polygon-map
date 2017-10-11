@@ -269,7 +269,7 @@ class MapContainer extends React.Component {
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}
-        maxArea={this.state.maxArea}
+        maxArea={this.state.maxArea || Number.MAX_VALUE}
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
         points={this.state.points}
