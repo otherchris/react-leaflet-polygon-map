@@ -1,49 +1,120 @@
-# react-leaflet-map
+# react-leaflet-polygon-map
 
-# API
+A react component providing a multipurpose leaflet map with excellent support
+for polygons.
 
-`<MapContainer />`
+## Supported React versions
 
-### Props:
-
-`tiles`: string indicating which tileset to use
-
-  * `default`: `http://{s}.tile.osm.org/{z}/{x}/{y}.png`
-  * `minimal_light`: `https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png`
-  * `minimal_dark`: `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`
-
-`polygons`: array of polygons in PolyLine, GeoJSON, GeoJSON MultiPolygon, or WKT format
-
-`points`: array of points in `[lat, long]` format
-
-`height`: height of the resulting map
-
-`iconHTML`: map marker defined as HTML with `<src>` or `<img>`
+???
 
 
+## API
 
-All poly shapes and types will be returned as MultiPolygon Feature Objects. Format below:
+This package exports the `MapContainer` component that accepts the following
+props:
+
+### `apikey (string)`
+
+Google location API for location search.
+
+### `center (array/object)`
+
+Initial center of the map. Can be provided as an array `[ <lat>, <lng> ]` ro an
+object `{ lat: <lat>, lng: <lng }`.
+
+### `circles`
+
+???
+
+### `edit (bool)`
+
+Enable the draw layer on the map. Required for creating new polygons/points and
+editing/removing existing polygons/points
+
+### `handleSubmit (func)`
+
+Callback triggered by submit button. If not present, submit button is not
+rendered.
+
+### `heatmap (array)`
+
+Data for producing a heatmap layer on the map (see [react-leaflet-heatmap-layer](https://github.com/OpenGov/react-leaflet-heatmap-layer)).
+If not present, heatmap layer is not rendered.
+
+### `height (number)`
+
+Pixel height of the map.
+
+### `iconHTML (string)`
+
+HTML to render for map markers
+
+### `legendComponent (func)`
+
+Component to render beneath the map, useful for map legends.
+
+### `maxArea (object)`
+
+Maximum area for polygons on the map. If area is exceeded, submit button will
+be disabled
 ```
-geoJSON = {
- type: 'Feature', (req)
- properties: {
-  area: number, (optional: will be claculated)
-  key: value, (optional)
-  key2: value2,(optional)
- },
- geometry: {
-  type: 'MultiPolygon', (req)
-  coordinates: [[[ (req)
-   [lat, lng],
-   [lat, lng],
-  ]]],
- },
+{
+  area: <number>,
+  unit: <'meters'|'miles'>
 }
 ```
 
+### `onChange (func)`
 
-`<MapComponent />`
-`<Tooltip />`
-`<EditTools />`
-`<MapSubmitButton />`
-`<LegendComponent />`
+Callback triggered by state change in the container. Debounced at 100ms.
+
+### `points (array)`
+
+An array of points to be added as markers on the map. Points should be
+provided either as an array like `[ <lat>, <lng> ]` or as a GeoJSON Point
+feature (see [the feature specification](https://macwright.org/2015/03/23/geojson-second-bite.html#features)).
+
+### `polygons (array)`
+
+An array of polygons to be added to the map. Polygons can be any combination of
+the following formats:
+
+- GeoJSON Polygon feature
+- GeoJSON MultiPolygon feature
+- wkt
+- Google Maps object
+- Google [ polyline ]( https://developers.google.com/maps/documentation/utilities/polylineutility )
+
+### `rectangles (array)`
+
+???
+
+### `remove (bool)`
+
+Sets the initial remove state of the component.
+
+### `style (object)`
+
+???
+
+### `tileLayerProps (object)`
+
+Specify a non-default tileset.
+
+```
+{
+  url: <url of tileset>
+  attribution: <attribution string for tileset>
+}
+```
+
+URL for tileset (default `http://{s}.tile.osm.org/{z}/{x}/{y}.png`).
+
+### `tootTipOptions (object)`
+
+???
+
+### `zoom (number)`
+
+Inital zoom level of map. (see [Leaflet zoom levels](http://leafletjs.com/examples/zoom-levels/))
+
