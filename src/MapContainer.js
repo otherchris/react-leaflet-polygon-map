@@ -213,8 +213,9 @@ class MapContainer extends React.Component {
 
   handleSubmit(e) {
     if (!this.props.handleSubmit) return null;
-    if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return;
+    if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return null;
     this.props.handleSubmit(this.state);
+    return true;
   }
   onLocationSelect(loc) {
     this.setState({ center: { lat: loc.location.lat, lng: loc.location.lng } });
@@ -245,19 +246,17 @@ class MapContainer extends React.Component {
   render() {
     const {
       tooltipOptions,
-      tileLayerProps,
-      tiles,
     } = this.props;
     const passThroughProps = pick(this.props, [
       'legendComponent',
+      'heatmap',
       'height',
       'style',
       'includeZipRadius',
+      'tileLayerProps',
       'zoom',
       'tooltipOptions',
-      'heatmap',
     ]);
-    const tileUrl = getTilesUrl(tiles);
     return (
       <MapComponent
         center={this.state.center}
@@ -266,7 +265,7 @@ class MapContainer extends React.Component {
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
-        handleSubmit={this.props.handleSubmit.bind(this)}
+        handleSubmit={this.handleSubmit.bind(this)}
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}
@@ -281,7 +280,6 @@ class MapContainer extends React.Component {
         remove={this.state.remove}
         showLocationSelect={this.state.googleAPILoaded}
         sidesChange={this.sidesChange.bind(this)}
-        tileLayerProps={{ url: tileUrl }}
         totalArea={this.state.totalArea}
         unit={this.state.unit}
         {...passThroughProps}
@@ -310,7 +308,7 @@ MapContainer.propTypes = {
   rectangles: PropTypes.arrayOf(PropTypes.object),
   remove: PropTypes.bool,
   style: PropTypes.object,
-  tiles: PropTypes.string,
+  tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
   zoom: PropTypes.number,
 };
