@@ -212,6 +212,7 @@ class MapContainer extends React.Component {
   }
 
   handleSubmit(e) {
+    if (!this.props.handleSubmit) return null;
     if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return;
     this.props.handleSubmit(this.state);
   }
@@ -265,7 +266,7 @@ class MapContainer extends React.Component {
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
-        handleSubmit={this.props.handleSubmit ? this.handleSubmit.bind(this) : null}
+        handleSubmit={this.props.handleSubmit.bind(this)}
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}
