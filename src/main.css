@@ -38,3 +38,8 @@
 .class-for-styles-marker {
   color: blue;
 }
+
+.toggle-x {
+  font-style: bold;
+  font-size: 2rem;
+}
