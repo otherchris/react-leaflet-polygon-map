@@ -10,6 +10,9 @@ const CircleApprox = (props) => (
     <button onClick={props.makeCircle}>
       Create Circle
     </button>
+    <div className="toggle-x" onClick={props.turnOff}>
+      X
+    </div>
   </div>
 );
 
@@ -19,4 +22,5 @@ CircleApprox.propTypes = {
   radiusChange: PropTypes.func,
   sidesChange: PropTypes.func,
   makeCircle: PropTypes.func,
+  turnOff: PropTypes.func,
 };
