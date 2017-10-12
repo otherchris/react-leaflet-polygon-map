@@ -186,7 +186,10 @@ class MapContainer extends React.Component {
     if (this.state.remove) {
       const key = e.layer.options.uuid;
       const polygons = filter(this.state.polygons, (poly) => key !== poly.properties.key);
-      this.setState({ polygons });
+      this.setState({
+        polygons,
+        totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
+      });
       return;
     }
     const key = e.layer.options.uuid;
