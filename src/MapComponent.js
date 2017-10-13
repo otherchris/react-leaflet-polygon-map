@@ -177,6 +177,7 @@ const MapComponent = (props) => {
       radiusChange={props.radiusChange}
       sidesChange={props.sidesChange}
       makeCircle={props.makeCircle}
+      turnOff={props.turnOffCircleApprox}
     />
   ) : '';
   return (
@@ -242,6 +243,7 @@ MapComponent.propTypes = {
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
   totalArea: PropTypes.number,
+  turnOffCircleApprox: PropTypes.func,
   unit: PropTypes.string,
   zipRadiusChange: PropTypes.func,
   zoom: PropTypes.number,

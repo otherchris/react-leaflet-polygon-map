@@ -211,6 +211,14 @@ class MapContainer extends React.Component {
       const key = e.target.options.uuid;
       const points = filter(this.state.points, (point) => key !== point.properties.key);
       this.setState({ points });
+    } else {
+      const makeCircle = !!this.state.makeCircleOn;
+      if (!makeCircle) {
+        const geoJSON = e.target.toGeoJSON();
+        const newCircleCenter = reverse(cloneDeep(geoJSON.geometry.coordinates));
+        this.setState({ makeCircleOn: !makeCircle, newCircleCenter });
+      }
+      this.setState({ makeCircleOn: !makeCircle });
     }
   }
 
@@ -245,6 +253,9 @@ class MapContainer extends React.Component {
     }
     polygons.push(circApprox);
     this.setState({ polygons, makeCircleOn: false });
+  }
+  turnOffCircleApprox() {
+    this.setState({ makeCircleOn: false });
   }
   render() {
     const {
@@ -284,6 +295,7 @@ class MapContainer extends React.Component {
         showLocationSelect={this.state.googleAPILoaded}
         sidesChange={this.sidesChange.bind(this)}
         totalArea={this.state.totalArea}
+        turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}
         {...passThroughProps}
       />
