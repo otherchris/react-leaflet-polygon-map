@@ -51,4 +51,6 @@
   display: flex;
 }
 
-
+.test-submit-style {
+  font-size: 3rem;
+}
