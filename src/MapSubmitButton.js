@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const MapSubmitButton = (props) => {
-  console.log(props);
   if (!props.handleSubmit) return null;
+  const button = props.submitButton || {};
   const disable = props.maxArea > props.totalArea;
-  const text = disable ? 'Submit' : 'Area too large';
+  const submitText = button.text || 'Submit';
+  const text = disable ? submitText : 'Area too large';
   return (
-    <div className="map-submit-button">
+    <div className={`map-submit-button ${button.className}`}>
       <button
         onClick={props.handleSubmit}
         className={disable ? 'button-disable' : ''}
@@ -26,4 +27,5 @@ MapSubmitButton.propTypes = {
   disable: PropTypes.bool,
   maxArea: PropTypes.number,
   totalArea: PropTypes.number,
+  submitButton: PropTypes.object,
 };

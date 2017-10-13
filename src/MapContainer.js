@@ -270,6 +270,7 @@ class MapContainer extends React.Component {
       'tileLayerProps',
       'zoom',
       'tooltipOptions',
+      'submitButton',
     ]);
     return (
       <MapComponent
@@ -323,6 +324,7 @@ MapContainer.propTypes = {
   rectangles: PropTypes.arrayOf(PropTypes.object),
   remove: PropTypes.bool,
   style: PropTypes.object,
+  submitButton: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
   zoom: PropTypes.number,
