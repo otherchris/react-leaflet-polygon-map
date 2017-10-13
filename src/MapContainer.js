@@ -176,7 +176,7 @@ class MapContainer extends React.Component {
       removeButton.className = ('leaflet-draw-edit-remove');
     }
     // Call the debounced version of the onChange prop
-    this.debouncedOnChange(this.state);
+    this.debouncedOnChange(this.state, (a, b, c) => { console.log(a, b, c); });
   }
 
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
