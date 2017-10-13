@@ -59,6 +59,22 @@ storiesOf('handleSubmit', module)
       `}
     />
   ))
+  .add('Style submit button with submitButton prop', () => (
+    <MapContainerStoryWithNotes
+      edit={true}
+      submitButton={{
+        text: 'User supplied text',
+        className: 'test-submit-style',
+      }}
+      handleSubmit={(state) => {
+        alert(JSON.stringify(state, null, '  '));
+      }}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Submit button
+        <input type="checkbox" /> 2. Submit button raises alert on click
+      `}
+    />
+  ))
   .add('Submit should be disabled if any polygon is too big', () => (
     <MapContainerStoryWithNotes
       edit

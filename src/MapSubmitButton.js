@@ -8,10 +8,10 @@ const MapSubmitButton = (props) => {
   const submitText = button.text || 'Submit';
   const text = disable ? submitText : 'Area too large';
   return (
-    <div className={`map-submit-button ${button.className}`}>
+    <div className={`map-submit-button }`}>
       <button
         onClick={props.handleSubmit}
-        className={disable ? 'button-disable' : ''}
+        className={`${button.className} ${disable ? 'button-disable' : ''}`}
       >
         {text}
       </button>
