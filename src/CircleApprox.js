@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const CircleApprox = (props) => (
-  <div>
+  <div className="circle-approx">
     Radius (in miles)
     <input type="text" onChange={props.radiusChange} />
     Sides
@@ -10,9 +10,9 @@ const CircleApprox = (props) => (
     <button onClick={props.makeCircle}>
       Create Circle
     </button>
-    <div className="toggle-x" onClick={props.turnOff}>
-      X
-    </div>
+    <span className="toggle-x" onClick={props.turnOff}>
+      x
+    </span>
   </div>
 );
 
