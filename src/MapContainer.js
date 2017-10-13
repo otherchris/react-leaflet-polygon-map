@@ -101,9 +101,9 @@ class MapContainer extends React.Component {
     const points = map(this.props.points, convertPoint);
     map(points, (point) => {
       if (point.properties.radius) {
-        const { radius, _unit, sides } = point.properties;
+        const { radius, _unit } = point.properties;
         const center = point.geometry.coordinates;
-        const circApprox = (generateCircleApprox(radius, _unit, reverse(center), sides));
+        const circApprox = (generateCircleApprox(radius, _unit, reverse(center), 24));
         // Do same polygon processing from above to the generated poly
         circApprox.properties.key = uuid.v4();
         if (area(unit, circApprox.properties.area) > max) circApprox.properties.tooLarge = true;
@@ -235,17 +235,13 @@ class MapContainer extends React.Component {
     if (isNaN(e.target.value)) return;
     this.setState({ newCircleRadius: e.target.value });
   }
-  sidesChange(e) {
-    if (isNaN(e.target.value)) return;
-    this.setState({ newCircleSides: e.target.value });
-  }
   makeCircle() {
     const polygons = this.state.polygons;
     const circApprox = (generateCircleApprox(
       this.state.newCircleRadius,
       this.state.unit,
       this.state.newCircleCenter,
-      this.state.newCircleSides,
+      24,
     ));
     circApprox.properties.key = uuid.v4();
     if (area(this.state.unit, circApprox.properties.area) > this.state.maxArea.max) {
@@ -294,7 +290,6 @@ class MapContainer extends React.Component {
         refresh={this.state.refresh}
         remove={this.state.remove}
         showLocationSelect={this.state.googleAPILoaded}
-        sidesChange={this.sidesChange.bind(this)}
         totalArea={this.state.totalArea}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}

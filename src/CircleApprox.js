@@ -5,8 +5,6 @@ const CircleApprox = (props) => (
   <div className="circle-approx">
     Radius (in miles)
     <input type="text" onChange={props.radiusChange} />
-    Sides
-    <input type="text" onChange={props.sidesChange} />
     <button onClick={props.makeCircle}>
       Create Circle
     </button>

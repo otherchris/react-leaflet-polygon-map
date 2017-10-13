@@ -175,7 +175,6 @@ const MapComponent = (props) => {
   const makeCircleApprox = props.makeCircleOn ? (
     <CircleApprox
       radiusChange={props.radiusChange}
-      sidesChange={props.sidesChange}
       makeCircle={props.makeCircle}
       turnOff={props.turnOffCircleApprox}
     />
@@ -237,7 +236,6 @@ MapComponent.propTypes = {
   remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   showLocationSelect: PropTypes.bool,
-  sidesChange: PropTypes.func,
   style: PropTypes.object,
   submitText: PropTypes.string,
   tileLayerProps: PropTypes.object,
