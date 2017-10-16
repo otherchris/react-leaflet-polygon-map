@@ -192,11 +192,15 @@ const MapComponent = (props) => {
       turnOff={props.turnOffCircleApprox}
     />
   ) : '';
+  const zoomButton = props.polygons.length > 0 ? (
+    <button onClick={props.zoomToShapes}>Zoom to shapes</button>
+  ) : '';
   return (
     <div>
       {geosuggest}
       {makeCircleApprox}
       {removePolyBanner}
+      {zoomButton}
       <Map
         style={{ height }}
         center={center}
@@ -258,6 +262,7 @@ MapComponent.propTypes = {
   unit: PropTypes.string,
   zipRadiusChange: PropTypes.func,
   zoom: PropTypes.number,
+  zoomToShapes: PropTypes.func,
 };
 
 MapComponent.defaultProps = {
