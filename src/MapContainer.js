@@ -253,6 +253,18 @@ class MapContainer extends React.Component {
   turnOffCircleApprox() {
     this.setState({ makeCircleOn: false });
   }
+  zoomToShapes() {
+    let center;
+    const polys = this.state.polygons;
+    if (polys.length > 0) {
+      const c = getCenter(polys);
+      center = { lat: c[0], lng: c[1] };
+    } else {
+      center = makeCenter(this.props.center);
+    }
+    this.setState({ center });
+    console.log('zoom2shapes');
+  }
   render() {
     const {
       tooltipOptions,
@@ -293,6 +305,7 @@ class MapContainer extends React.Component {
         totalArea={this.state.totalArea}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}
+        zoomToShapes={this.zoomToShapes.bind(this)}
         {...passThroughProps}
       />
     );
