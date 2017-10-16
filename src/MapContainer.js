@@ -18,7 +18,6 @@ import { ReactScriptLoader, ReactScriptLoaderMixin } from 'react-script-loader';
 import MapComponent from './MapComponent';
 import { makeGeoJSON } from './ConvertPoly';
 import {
-  getTilesUrl,
   generateIcon,
   expandPolys,
   generateCircleApprox,
@@ -43,6 +42,7 @@ class MapContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      update: uuid.v4(),
       polygons: [],
       points: [],
       rectangles: [],
@@ -114,7 +114,7 @@ class MapContainer extends React.Component {
     // Set the center to the center of all polys
     let center;
     if (polys.length > 0) {
-      const c = getCenter(polys);
+      const c = getCenter(polys).center;
       center = { lat: c[0], lng: c[1] };
     } else {
       center = makeCenter(this.props.center);
@@ -221,7 +221,6 @@ class MapContainer extends React.Component {
       this.setState({ makeCircleOn: !makeCircle });
     }
   }
-
   handleSubmit(e) {
     if (!this.props.handleSubmit) return null;
     if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return null;
@@ -253,17 +252,21 @@ class MapContainer extends React.Component {
   turnOffCircleApprox() {
     this.setState({ makeCircleOn: false });
   }
+  setCenterAndZoom(e) {
+    this.setState({ center: e.center, zoom: e.zoom })
+  }
   zoomToShapes() {
     let center;
     const polys = this.state.polygons;
     if (polys.length > 0) {
-      const c = getCenter(polys);
-      center = { lat: c[0], lng: c[1] };
+      const bounds = getCenter(polys);
+      console.log('here go bounds', bounds);
+      console.log(this.leafletMap)
+      this.leafletMap.leafletElement.fitBounds(bounds);
     } else {
       center = makeCenter(this.props.center);
+      this.setState({ center });
     }
-    this.setState({ center });
-    console.log('zoom2shapes');
   }
   render() {
     const {
@@ -276,13 +279,14 @@ class MapContainer extends React.Component {
       'style',
       'includeZipRadius',
       'tileLayerProps',
-      'zoom',
       'tooltipOptions',
       'submitButton',
+      'update',
     ]);
     return (
       <MapComponent
-        center={this.state.center}
+        bindPoint={this}
+        bounds={this.state.bounds}
         circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
@@ -302,9 +306,12 @@ class MapContainer extends React.Component {
         refresh={this.state.refresh}
         remove={this.state.remove}
         showLocationSelect={this.state.googleAPILoaded}
+        setCenterAndZoom={this.setCenterAndZoom.bind(this)}
+        viewport={this.state.viewport}
         totalArea={this.state.totalArea}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}
+        zoom={this.state.zoom}
         zoomToShapes={this.zoomToShapes.bind(this)}
         {...passThroughProps}
       />
