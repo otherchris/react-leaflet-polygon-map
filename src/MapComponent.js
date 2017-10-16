@@ -166,7 +166,20 @@ const MapComponent = (props) => {
   });
   const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
   const geosuggest = props.showLocationSelect ?
-    <Geosuggest onSuggestSelect={props.onLocationSelect} />
+    <Geosuggest
+      onSuggestSelect={props.onLocationSelect}
+      style={{
+        input: {
+          width: '20rem',
+        },
+        suggests: {
+          listStyle: 'none',
+          width: '20rem',
+          padding: '1px',
+          overflow: 'hidden',
+        },
+      }}
+    />
     : '';
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const removePolyBanner = props.edit && props.remove
