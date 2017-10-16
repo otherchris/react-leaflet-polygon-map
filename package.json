@@ -47,6 +47,7 @@
     "react-leaflet-draw": "^0.16.0",
     "react-leaflet-heatmap-layer": "^1.0.0",
     "react-script-loader": "0.0.1",
+    "react-widgets": "^4.0.2",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.5.9",
