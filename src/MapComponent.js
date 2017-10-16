@@ -202,11 +202,13 @@ const MapComponent = (props) => {
       {removePolyBanner}
       {zoomButton}
       <Map
+        ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
-        center={center}
         minZoom = {3}
         maxZoom = {19}
-        zoom={zoom}
+        center = {props.center}
+        zoom = {props.zoom}
+        onViewportChanged={props.setCenterAndZoom}
       >
         <TileLayer
           url={tileLayerProps.url}
@@ -228,6 +230,8 @@ const MapComponent = (props) => {
 };
 
 MapComponent.propTypes = {
+  bindPoint: PropTypes.object,
+  bounds: PropTypes.array,
   center: PropTypes.object,
   circles: PropTypes.arrayOf(PropTypes.object),
   clickPoly: PropTypes.func,
@@ -252,6 +256,7 @@ MapComponent.propTypes = {
   refresh: PropTypes.string,
   remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
+  setCenterAndZoom: PropTypes.func,
   showLocationSelect: PropTypes.bool,
   style: PropTypes.object,
   submitText: PropTypes.string,
@@ -260,6 +265,7 @@ MapComponent.propTypes = {
   totalArea: PropTypes.number,
   turnOffCircleApprox: PropTypes.func,
   unit: PropTypes.string,
+  update: PropTypes.string,
   zipRadiusChange: PropTypes.func,
   zoom: PropTypes.number,
   zoomToShapes: PropTypes.func,
@@ -267,10 +273,11 @@ MapComponent.propTypes = {
 
 MapComponent.defaultProps = {
   height: 400,
-  zoom: 11,
   tileLayerProps: {
     url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
     attribution: '© OpenStreetMap contributors',
   },
+  center: [33, -85],
+  zoom: 11,
 };
 export default MapComponent;
