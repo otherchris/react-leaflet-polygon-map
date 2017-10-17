@@ -81,8 +81,8 @@ class MapContainer extends React.Component {
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   mapPropsToState(props) {
-    const { unit, max } = this.props.maxArea || { unit: 'meters', max: Number.MAX_VALUE };
-
+    const maxArea = this.props.maxArea || Number.MAX_VALUE;
+    const unit = this.props.unit || 'miles';
     // Expand any poly collections (FeatureCollections or Google map objects
     // into individual features
     let expandedPolys = [];
@@ -93,7 +93,7 @@ class MapContainer extends React.Component {
     const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.key = uuid.v4();
-      if (area(unit, out.properties.area) > max) out.properties.tooLarge = true;
+      if (area(unit, out.properties.area) > maxArea) out.properties.tooLarge = true;
       return out;
     });
 
@@ -107,7 +107,7 @@ class MapContainer extends React.Component {
         const circApprox = (generateCircleApprox(radius, _unit, reverse(center), 24));
         // Do same polygon processing from above to the generated poly
         circApprox.properties.key = uuid.v4();
-        if (area(unit, circApprox.properties.area) > max) circApprox.properties.tooLarge = true;
+        if (area(unit, circApprox.properties.area) > maxArea) circApprox.properties.tooLarge = true;
         polys.push(circApprox);
       }
     });
@@ -117,7 +117,7 @@ class MapContainer extends React.Component {
     this.setState({
       unit,
       legendProps: this.props.legendProps,
-      maxArea: max,
+      maxArea,
       polygons: polys,
       points,
       rectangles: this.props.rectangles,
