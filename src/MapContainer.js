@@ -176,7 +176,9 @@ class MapContainer extends React.Component {
       removeButton.className = ('leaflet-draw-edit-remove');
     }
     // Call the debounced version of the onChange prop
-    this.debouncedOnChange(this.state, (a, b, c) => { console.log(a, b, c); });
+    this.debouncedOnChange(this.state, (err, res) => {
+      this.setState({ legendProps: res });
+    });
   }
 
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
@@ -272,7 +274,6 @@ class MapContainer extends React.Component {
       tooltipOptions,
     } = this.props;
     const passThroughProps = pick(this.props, [
-      'legendComponent',
       'heatmap',
       'height',
       'style',
@@ -292,6 +293,7 @@ class MapContainer extends React.Component {
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
         handleSubmit={this.handleSubmit.bind(this)}
+        legendComponent={this.legendComponent}
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}
