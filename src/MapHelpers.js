@@ -7,8 +7,20 @@ import map from 'lodash/map';
 import range from 'lodash/range';
 import reverse from 'lodash/reverse';
 import flatten from 'lodash/flatten';
+import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
 import logoDefault from './logoDefault';
+import getArea from './getArea';
+
+export const cleanPoly = (poly) => {
+  const p = cloneDeep(poly);
+  p.properties.area = getArea(p);
+  if (p.geometry.type === 'Polygon') {
+    p.geometry.type = 'MultiPolygon';
+    p.geometry.coordinates = [p.geometry.coordinates];
+  }
+  return p;
+};
 
 export const displayPoly = (poly) => {
   if (hasIn(poly, 'features')) return poly;

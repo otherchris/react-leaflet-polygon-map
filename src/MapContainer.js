@@ -26,9 +26,9 @@ import {
   areaAccumulator,
   area,
   polygonArrayToProp,
+  cleanPoly,
 } from './MapHelpers';
 import './main.css';
-import getArea from './getArea';
 import getCenter from './getCenter';
 import convertPoint from './convertPoint';
 
@@ -195,7 +195,7 @@ class MapContainer extends React.Component {
     const polygons = this.state.polygons;
     const index = indexByKey(polygons, key);
     const editable = polygons[index].properties.editable || false;
-    if (editable) polygons[index] = getArea(e.layer.toGeoJSON());
+    if (editable) polygons[index] = cleanPoly(e.layer.toGeoJSON());
     polygons[index].properties.editable = !editable;
     this.setState({
       polygons,
