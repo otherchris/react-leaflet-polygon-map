@@ -199,11 +199,12 @@ class MapContainer extends React.Component {
     console.log(polygons)
     if (editable) polygons[index] = cleanPoly(e.layer.toGeoJSON());
     polygons[index].properties.editable = !editable;
-    this.setState({
-      polygons,
-      totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
-      edit: true,
-      refresh: uuid.v4(),
+    this.debouncedOnChange(this.state, (err, res) => {
+      const s = cloneDeep(this.state);
+      s.polygons = polygons;
+      s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
+      s.legendProps = merge(res, s);
+      this.setState(s);
     });
   }
   clickPoint(e) {
