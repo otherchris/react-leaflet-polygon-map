@@ -124,6 +124,7 @@ class MapContainer extends React.Component {
     this.setState({
       unit,
       center,
+      legendProps: this.props.legendProps,
       maxArea: max,
       polygons: polys,
       points,
@@ -276,6 +277,7 @@ class MapContainer extends React.Component {
     const passThroughProps = pick(this.props, [
       'heatmap',
       'height',
+      'legendComponent',
       'style',
       'includeZipRadius',
       'tileLayerProps',
@@ -293,7 +295,7 @@ class MapContainer extends React.Component {
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
         handleSubmit={this.handleSubmit.bind(this)}
-        legendComponent={this.legendComponent}
+        legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}

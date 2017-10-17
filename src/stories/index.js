@@ -10,6 +10,7 @@ import './convertedPolys';
 import './styling';
 import './tools';
 import './heatmap';
+import './legend';
 
 storiesOf('Tilesets', module)
   .add('tiles = minimal_light', () => (
