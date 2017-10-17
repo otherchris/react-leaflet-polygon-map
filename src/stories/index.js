@@ -124,7 +124,7 @@ storiesOf('Click to remove', module)
 storiesOf('Geolocation search', module)
   .add('do the thing', () => (
     <MapContainerStoryWithNotes
-      apikey={}
+      apikey={''}
       polygons={[dpPoly.polyline]}
       edit
       remove
