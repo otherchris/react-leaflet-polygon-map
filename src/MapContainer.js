@@ -112,19 +112,10 @@ class MapContainer extends React.Component {
       }
     });
 
-    // Set the center to the center of all polys
-    let center;
-    if (polys.length > 0) {
-      const c = getCenter(polys, points).center;
-      center = { lat: c[0], lng: c[1] };
-    } else {
-      center = makeCenter(this.props.center);
-    }
 
     // Apply changes to state
     this.setState({
       unit,
-      center,
       legendProps: this.props.legendProps,
       maxArea: max,
       polygons: polys,
@@ -133,7 +124,7 @@ class MapContainer extends React.Component {
       circles: this.props.circles,
       edit: this.props.edit,
       totalArea: area(unit, reduce(polys, areaAccumulator, 0)),
-    });
+    }, this.zoomToShapes);
   }
 
   // updateShapes called by onCreated callback in Leaflet map
@@ -180,8 +171,8 @@ class MapContainer extends React.Component {
       removeButton.className = ('leaflet-draw-edit-remove');
     }
     // Call the debounced version of the onChange prop
-    this.debouncedOnChange(this.state, (err, res) => {
-    });
+    // Actually, don't. onChange will be called when polygons/points are added
+    // or removed
   }
 
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
@@ -191,9 +182,12 @@ class MapContainer extends React.Component {
     if (this.state.remove) {
       const key = e.layer.options.uuid;
       const polygons = filter(this.state.polygons, (poly) => key !== poly.properties.key);
-      this.setState({
-        polygons,
-        totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
+      this.debouncedOnChange(this.state, (err, res) => {
+        const s = cloneDeep(this.state);
+        s.polygons = polygons;
+        s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
+        s.legendProps = merge(res, s);
+        this.setState(s);
       });
       return;
     }
@@ -215,7 +209,12 @@ class MapContainer extends React.Component {
     if (this.state.remove) {
       const key = e.target.options.uuid;
       const points = filter(this.state.points, (point) => key !== point.properties.key);
-      this.setState({ points });
+      this.debouncedOnChange(this.state, (err, res) => {
+        const s = cloneDeep(this.state);
+        s.points = points;
+        s.legendProps = merge(res, s);
+        this.setState(s);
+      });
     } else {
       const makeCircle = !!this.state.makeCircleOn;
       if (!makeCircle) {
