@@ -10,6 +10,7 @@ import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
 import reverse from 'lodash/reverse';
+import merge from 'lodash/merge';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import L from 'leaflet';
@@ -178,7 +179,7 @@ class MapContainer extends React.Component {
     }
     // Call the debounced version of the onChange prop
     this.debouncedOnChange(this.state, (err, res) => {
-      this.setState({ legendProps: res });
+      this.setState({ legendProps: merge(res, this.state) });
     });
   }
 

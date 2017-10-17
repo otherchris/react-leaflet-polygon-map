@@ -19,4 +19,17 @@ storiesOf('Legend', module)
         <input type="checkbox" /> 1. Red rectangle in the lower right
       `}
     />
+  ))
+  .add('With legend component update with state', () => (
+    <MapContainerStoryWithNotes
+      edit={true}
+      onChange={(data, cb) => {
+        cb(null, data.polygons);
+      }}
+      legendComponent={DummyComponent}
+      legendProps={{ aProp: 'a value' }}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Red rectangle in the lower right
+      `}
+    />
   ));
