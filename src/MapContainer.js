@@ -163,9 +163,11 @@ class MapContainer extends React.Component {
     }
     state.totalArea = area(this.state.unit, reduce(state.polygons, areaAccumulator, 0));
     state.edit = false;
-    this.setState(state);
-    this.setState({
-      edit: true,
+    this.debouncedOnChange(state, (err, res) => {
+      const s = cloneDeep(state);
+      s.legendProps = merge(res, state);
+      this.setState(s);
+      this.setState({ edit: true });
     });
   }
   componentDidUpdate() {
@@ -179,7 +181,6 @@ class MapContainer extends React.Component {
     }
     // Call the debounced version of the onChange prop
     this.debouncedOnChange(this.state, (err, res) => {
-      this.setState({ legendProps: merge(res, this.state) });
     });
   }
 
@@ -350,7 +351,7 @@ MapContainer.propTypes = {
 };
 
 MapContainer.defaultProps = {
-  onChange: noop,
+  onChange: (a, cb) => { cb(); },
   center: { lat: 38.257143, lng: -85.751428 },
 };
 
