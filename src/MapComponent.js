@@ -192,7 +192,7 @@ const MapComponent = (props) => {
       turnOff={props.turnOffCircleApprox}
     />
   ) : '';
-  const zoomButton = props.polygons.length > 0 ? (
+  const zoomButton = props.polygons.length > 0 || props.points.length > 1 ? (
     <button onClick={props.zoomToShapes}>Zoom to shapes</button>
   ) : '';
   return (
