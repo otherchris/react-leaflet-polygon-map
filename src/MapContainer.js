@@ -114,7 +114,7 @@ class MapContainer extends React.Component {
     // Set the center to the center of all polys
     let center;
     if (polys.length > 0) {
-      const c = getCenter(polys).center;
+      const c = getCenter(polys, points).center;
       center = { lat: c[0], lng: c[1] };
     } else {
       center = makeCenter(this.props.center);
@@ -253,15 +253,14 @@ class MapContainer extends React.Component {
     this.setState({ makeCircleOn: false });
   }
   setCenterAndZoom(e) {
-    this.setState({ center: e.center, zoom: e.zoom })
+    this.setState({ center: e.center, zoom: e.zoom });
   }
   zoomToShapes() {
     let center;
     const polys = this.state.polygons;
-    if (polys.length > 0) {
-      const bounds = getCenter(polys);
-      console.log('here go bounds', bounds);
-      console.log(this.leafletMap)
+    const points = this.state.points;
+    if (polys.length > 0 || points.length > 1) {
+      const bounds = getCenter(polys, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
     } else {
       center = makeCenter(this.props.center);
