@@ -13,8 +13,8 @@ import logoDefault from './logoDefault';
 import getArea from './getArea';
 
 export const cleanPoly = (poly) => {
-  const p = cloneDeep(poly);
-  p.properties.area = getArea(p);
+  let p = cloneDeep(poly);
+  p = getArea(p);
   if (p.geometry.type === 'Polygon') {
     p.geometry.type = 'MultiPolygon';
     p.geometry.coordinates = [p.geometry.coordinates];

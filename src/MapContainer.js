@@ -195,6 +195,8 @@ class MapContainer extends React.Component {
     const polygons = this.state.polygons;
     const index = indexByKey(polygons, key);
     const editable = polygons[index].properties.editable || false;
+    console.log(editable)
+    console.log(polygons)
     if (editable) polygons[index] = cleanPoly(e.layer.toGeoJSON());
     polygons[index].properties.editable = !editable;
     this.setState({
