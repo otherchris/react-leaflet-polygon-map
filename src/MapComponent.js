@@ -167,6 +167,7 @@ const MapComponent = (props) => {
   const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
   const geosuggest = props.showLocationSelect ?
     <Geosuggest
+      className="geosuggest"
       onSuggestSelect={props.onLocationSelect}
       style={{
         input: {
@@ -197,7 +198,6 @@ const MapComponent = (props) => {
   ) : '';
   return (
     <div>
-      {geosuggest}
       {makeCircleApprox}
       {removePolyBanner}
       <Map
@@ -209,6 +209,7 @@ const MapComponent = (props) => {
         zoom = {props.zoom}
         onViewportChanged={props.setCenterAndZoom}
       >
+        {geosuggest}
         {zoomButton}
         <TileLayer
           url={tileLayerProps.url}

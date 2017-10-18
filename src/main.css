@@ -61,3 +61,10 @@
   bottom: 10px;
   left: 10px;
 }
+
+.geosuggest {
+  position: absolute;
+  z-index:1000;
+  top: 10px;
+  left: 60px;
+}
