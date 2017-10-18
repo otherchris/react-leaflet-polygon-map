@@ -3,6 +3,7 @@ import map from 'lodash/map';
 import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import pick from 'lodash/pick';
+import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
 import filter from 'lodash/filter';
 import noop from 'lodash/noop';
@@ -26,9 +27,9 @@ import {
   areaAccumulator,
   area,
   polygonArrayToProp,
+  cleanPoly,
 } from './MapHelpers';
 import './main.css';
-import getArea from './getArea';
 import getCenter from './getCenter';
 import convertPoint from './convertPoint';
 
@@ -93,6 +94,7 @@ class MapContainer extends React.Component {
     const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.key = uuid.v4();
+      out.properties.unit = unit;
       if (area(unit, out.properties.area) > maxArea) out.properties.tooLarge = true;
       return out;
     });
@@ -140,6 +142,7 @@ class MapContainer extends React.Component {
       if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
+      gJWithArea.properties.unit = unit;
       state.polygons.push(gJWithArea);
       break;
     case 'marker':
@@ -186,7 +189,7 @@ class MapContainer extends React.Component {
         const s = cloneDeep(this.state);
         s.polygons = polygons;
         s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
-        s.legendProps = merge(res, s);
+        s.legendProps = omit(merge(res, s), 'legendProps');
         this.setState(s);
       });
       return;
@@ -195,13 +198,16 @@ class MapContainer extends React.Component {
     const polygons = this.state.polygons;
     const index = indexByKey(polygons, key);
     const editable = polygons[index].properties.editable || false;
-    if (editable) polygons[index] = getArea(e.layer.toGeoJSON());
+    console.log(editable)
+    console.log(polygons)
+    if (editable) polygons[index] = cleanPoly(e.layer.toGeoJSON());
     polygons[index].properties.editable = !editable;
-    this.setState({
-      polygons,
-      totalArea: area(this.state.unit, reduce(polygons, areaAccumulator, 0)),
-      edit: true,
-      refresh: uuid.v4(),
+    this.debouncedOnChange(this.state, (err, res) => {
+      const s = cloneDeep(this.state);
+      s.polygons = polygons;
+      s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
+      s.legendProps = omit(merge(res, s), 'legendProps');
+      this.setState(s);
     });
   }
   clickPoint(e) {
@@ -212,7 +218,7 @@ class MapContainer extends React.Component {
       this.debouncedOnChange(this.state, (err, res) => {
         const s = cloneDeep(this.state);
         s.points = points;
-        s.legendProps = merge(res, s);
+        s.legendProps = omit(merge(res, s), 'legendProps');
         this.setState(s);
       });
     } else {
@@ -346,6 +352,7 @@ MapContainer.propTypes = {
   submitButton: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
+  unit: PropTypes.number,
   zoom: PropTypes.number,
 };
 

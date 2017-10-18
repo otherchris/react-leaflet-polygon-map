@@ -167,6 +167,7 @@ const MapComponent = (props) => {
   const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
   const geosuggest = props.showLocationSelect ?
     <Geosuggest
+      className="geosuggest"
       onSuggestSelect={props.onLocationSelect}
       style={{
         input: {
@@ -193,14 +194,12 @@ const MapComponent = (props) => {
     />
   ) : '';
   const zoomButton = props.polygons.length > 0 || props.points.length > 1 ? (
-    <button onClick={props.zoomToShapes}>Zoom to shapes</button>
+    <button className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</button>
   ) : '';
   return (
     <div>
-      {geosuggest}
       {makeCircleApprox}
       {removePolyBanner}
-      {zoomButton}
       <Map
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
@@ -210,6 +209,8 @@ const MapComponent = (props) => {
         zoom = {props.zoom}
         onViewportChanged={props.setCenterAndZoom}
       >
+        {geosuggest}
+        {zoomButton}
         <TileLayer
           url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}

@@ -8,6 +8,7 @@ storiesOf('Edit tools', module)
   .add('with edit tools', () => (
     <MapContainerStoryWithNotes
       edit
+      unit="miles"
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Edit tools in upper right
         <input type="checkbox" /> 2. Tools include polygon, edit, trash
