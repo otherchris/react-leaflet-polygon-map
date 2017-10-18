@@ -3,6 +3,7 @@ import map from 'lodash/map';
 import hasIn from 'lodash/hasIn';
 import extend from 'lodash/extend';
 import pick from 'lodash/pick';
+import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
 import filter from 'lodash/filter';
 import noop from 'lodash/noop';
@@ -186,7 +187,7 @@ class MapContainer extends React.Component {
         const s = cloneDeep(this.state);
         s.polygons = polygons;
         s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
-        s.legendProps = merge(res, s);
+        s.legendProps = omit(merge(res, s), 'legendProps');
         this.setState(s);
       });
       return;
@@ -203,7 +204,7 @@ class MapContainer extends React.Component {
       const s = cloneDeep(this.state);
       s.polygons = polygons;
       s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
-      s.legendProps = merge(res, s);
+      s.legendProps = omit(merge(res, s), 'legendProps');
       this.setState(s);
     });
   }
@@ -215,7 +216,7 @@ class MapContainer extends React.Component {
       this.debouncedOnChange(this.state, (err, res) => {
         const s = cloneDeep(this.state);
         s.points = points;
-        s.legendProps = merge(res, s);
+        s.legendProps = omit(merge(res, s), 'legendProps');
         this.setState(s);
       });
     } else {
