@@ -94,6 +94,7 @@ class MapContainer extends React.Component {
     const polys = map(expandedPolys, (poly, index) => {
       const out = makeGeoJSON(poly);
       out.properties.key = uuid.v4();
+      out.properties.unit = unit;
       if (area(unit, out.properties.area) > maxArea) out.properties.tooLarge = true;
       return out;
     });
@@ -141,6 +142,7 @@ class MapContainer extends React.Component {
       if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
+      gJWithArea.properties.unit = unit;
       state.polygons.push(gJWithArea);
       break;
     case 'marker':
@@ -350,6 +352,7 @@ MapContainer.propTypes = {
   submitButton: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
+  unit: PropTypes.number,
   zoom: PropTypes.number,
 };
 
