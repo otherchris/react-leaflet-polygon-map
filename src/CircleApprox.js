@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NumberPicker } from 'react-widgets';
 
 const CircleApprox = (props) => (
   <div className="circle-approx">
     Radius (in miles)
-    <input type="text" onChange={props.radiusChange} />
+    <NumberPicker
+      onChange={props.radiusChange}
+      max={10}
+      min={0}
+      defaultValue={0}
+     />
     <button onClick={props.makeCircle}>
       Create Circle
     </button>

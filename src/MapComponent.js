@@ -193,14 +193,13 @@ const MapComponent = (props) => {
     />
   ) : '';
   const zoomButton = props.polygons.length > 0 || props.points.length > 1 ? (
-    <button onClick={props.zoomToShapes}>Zoom to shapes</button>
+    <button className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</button>
   ) : '';
   return (
     <div>
       {geosuggest}
       {makeCircleApprox}
       {removePolyBanner}
-      {zoomButton}
       <Map
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
@@ -210,6 +209,7 @@ const MapComponent = (props) => {
         zoom = {props.zoom}
         onViewportChanged={props.setCenterAndZoom}
       >
+        {zoomButton}
         <TileLayer
           url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}
