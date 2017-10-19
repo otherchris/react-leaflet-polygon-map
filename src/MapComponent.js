@@ -194,7 +194,7 @@ const MapComponent = (props) => {
     />
   ) : '';
   const zoomButton = props.polygons.length > 0 || props.points.length > 1 ? (
-    <button className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</button>
+    <btn className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</btn>
   ) : '';
   return (
     <div>
