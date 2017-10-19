@@ -62,7 +62,7 @@ class MapContainer extends React.Component {
       zipRadiusCenter: [],
       totalArea: 0,
     };
-    this.debouncedOnChange = debounce(this.props.onChange, 100);
+    this.debouncedOnChange = debounce(this.props.onShapeChange, 100);
   }
   getScriptLoaderID() {
     return ReactScriptLoaderMixin.__getScriptLoaderID();
@@ -232,6 +232,7 @@ class MapContainer extends React.Component {
     }
   }
   handleSubmit(e) {
+    console.log('HNDLE SBMT');
     if (!this.props.handleSubmit) return null;
     if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return null;
     this.props.handleSubmit(this.state);
@@ -343,7 +344,7 @@ MapContainer.propTypes = {
   iconHTML: PropTypes.string,
   legendComponent: PropTypes.func,
   maxArea: PropTypes.object,
-  onChange: PropTypes.func,
+  onShapeChange: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.array),
   polygons: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
