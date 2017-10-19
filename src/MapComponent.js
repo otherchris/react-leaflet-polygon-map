@@ -224,7 +224,6 @@ const MapComponent = (props) => {
       </Map>
       <div className="below-map">
         {legend}
-        <MapSubmitButton {...props} />
       </div>
     </div>
   );
