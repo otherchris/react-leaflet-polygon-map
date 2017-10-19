@@ -12,6 +12,28 @@ import './tools';
 import './heatmap';
 import './legend';
 
+
+storiesOf('real view example', module)
+  .add('realview', () => (
+    <MapContainerStoryWithNotes
+      polygons={
+        [
+          {
+            area: 6374.521398354146,
+            editable: false,
+            id: 0,
+            options: { fillColor: '#caebba' },
+            path: [
+              { lat: 38.25690729748336, lng: -85.75257182121277 },
+              { lat: 38.2562080410474, lng: -85.75265765190125 },
+              { lat: 38.25615749212858, lng: -85.75173497200012 },
+              { lat: 38.256898872747065, lng: -85.75168132781982 },
+            ],
+          },
+        ]
+      }
+    />
+  ));
 storiesOf('Tilesets', module)
   .add('tiles = minimal_light', () => (
     <MapContainerStoryWithNotes

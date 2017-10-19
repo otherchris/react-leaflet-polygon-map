@@ -15,6 +15,7 @@ import getArea from './getArea';
 
 
 export const translateGooglePoly = (gPoly) => {
+  console.log('gotta googler!')
   const coords = map(gPoly.path, (coord) => [coord.lng, coord.lat]);
   return {
     type: 'Feature',
