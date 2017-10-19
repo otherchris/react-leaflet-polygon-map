@@ -358,7 +358,7 @@ MapContainer.propTypes = {
 };
 
 MapContainer.defaultProps = {
-  onChange: (a, cb) => { cb(); },
+  onShapeChange: (a, cb) => { cb(); },
   center: { lat: 38.257143, lng: -85.751428 },
 };
 

@@ -23,7 +23,7 @@ storiesOf('Legend', module)
   .add('With legend component update with state', () => (
     <MapContainerStoryWithNotes
       edit={true}
-      onChange={(data, cb) => {
+      onShapeChange={(data, cb) => {
         cb(null, data.polygons);
       }}
       legendComponent={DummyComponent}

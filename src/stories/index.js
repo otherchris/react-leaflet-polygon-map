@@ -27,11 +27,11 @@ storiesOf('Tilesets', module)
     />
   ));
 
-storiesOf('onChange prop', module)
-  .add('pass an onChange function', () => (
+storiesOf('onShapeChange prop', module)
+  .add('pass an onShapeChange function', () => (
     <MapContainerStoryWithNotes
       edit
-      onChange={(state) => {
+      onShapeChange={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
       additionalNotes={`Should see \n
