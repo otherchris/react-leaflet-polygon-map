@@ -292,7 +292,6 @@ class MapContainer extends React.Component {
       <MapComponent
         bindPoint={this}
         bounds={this.state.bounds}
-        circles={this.state.circles}
         clickPoly={this.clickPoly.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
@@ -307,7 +306,6 @@ class MapContainer extends React.Component {
         points={this.state.points}
         polygons={polygonArrayToProp(this.state.polygons)}
         radiusChange={this.radiusChange.bind(this)}
-        rectangles={this.state.rectangles}
         refresh={this.state.refresh}
         remove={this.state.remove}
         showLocationSelect={this.state.googleAPILoaded}

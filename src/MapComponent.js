@@ -111,59 +111,6 @@ const MapComponent = (props) => {
       </Marker>
     );
   });
-  const circles = map(props.circles, (result, index) => {
-    const p = result.properties;
-    return (
-      <Circle
-        {...style}
-        data={result}
-        key={index}
-        center={result.center}
-        radius={result.radius}
-        area={result.area}
-        onMouseOut={(e) => {
-          e.target.setStyle(style);
-        }}
-        onMouseOver={(e) => {
-          e.target.setStyle(hoveredStyle);
-        }}
-      >
-        <Tooltip className={tooltipClass(tooltipOptions)}>
-          <span>
-            {props.edit && props.remove ?
-              'CLICK TO DELETE' :
-              `${circleTooltip(result, props.tooltipOptions)}`}
-          </span>
-        </Tooltip>
-      </Circle>
-    );
-  });
-  const rectangles = map(props.rectangles, (result, index) => {
-    const p = result.properties;
-    return (
-      <Rectangle
-        {...style}
-        data={result}
-        key={index}
-        bounds={result.bounds}
-        area={result.area}
-        onMouseOut={(e) => {
-          e.target.setStyle(style);
-        }}
-        onMouseOver={(e) => {
-          e.target.setStyle(hoveredStyle);
-        }}
-      >
-        <Tooltip className={tooltipClass(tooltipOptions)}>
-          <span>
-            {props.edit && props.remove ?
-              'CLICK TO DELETE' :
-              `${rectTooltip(result, props.tooltipOptions)}`}
-          </span>
-        </Tooltip>
-      </Rectangle>
-    );
-  });
   const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
   const geosuggest = props.showLocationSelect ?
     <Geosuggest
@@ -234,7 +181,6 @@ MapComponent.propTypes = {
   bindPoint: PropTypes.object,
   bounds: PropTypes.array,
   center: PropTypes.object,
-  circles: PropTypes.arrayOf(PropTypes.object),
   clickPoly: PropTypes.func,
   edit: PropTypes.bool,
   handleSubmit: PropTypes.func,
@@ -253,7 +199,6 @@ MapComponent.propTypes = {
   points: PropTypes.arrayOf(PropTypes.object),
   polygons: PropTypes.arrayOf(PropTypes.string),
   radiusChange: PropTypes.func,
-  rectangles: PropTypes.arrayOf(PropTypes.object),
   refresh: PropTypes.string,
   remove: PropTypes.bool,
   setCenter: PropTypes.arrayOf(PropTypes.number),
