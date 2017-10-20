@@ -224,6 +224,7 @@ const MapComponent = (props) => {
       </Map>
       <div className="below-map">
         {legend}
+        {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
       </div>
     </div>
   );

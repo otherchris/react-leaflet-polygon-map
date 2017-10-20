@@ -105,10 +105,7 @@ storiesOf('handleSubmit', module)
       handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
       }}
-      maxArea={{
-        unit: 'miles',
-        max: 1,
-      }}
+      maxArea={1}
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Submit button in disabled state
         <input type="checkbox" /> 2. Visual indication that the poly is too big

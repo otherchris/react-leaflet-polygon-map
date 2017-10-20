@@ -160,6 +160,7 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(state, (err, res) => {
       const s = cloneDeep(state);
       s.legendProps = merge(res, state);
+      if (this.props.maxArea && (s.totalArea > s.maxArea)) return;
       this.setState(s);
       this.setState({ edit: true });
     });
@@ -231,13 +232,6 @@ class MapContainer extends React.Component {
       this.setState({ makeCircleOn: !makeCircle });
     }
   }
-  handleSubmit(e) {
-    console.log('HNDLE SBMT');
-    if (!this.props.handleSubmit) return null;
-    if (this.props.maxArea && this.state.totalArea > this.props.maxArea.max) return null;
-    this.props.handleSubmit(this.state);
-    return true;
-  }
   onLocationSelect(loc) {
     this.setState({ center: { lat: loc.location.lat, lng: loc.location.lng } });
   }
@@ -303,7 +297,6 @@ class MapContainer extends React.Component {
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
-        handleSubmit={this.handleSubmit.bind(this)}
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
