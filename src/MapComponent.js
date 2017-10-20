@@ -23,8 +23,6 @@ import './leaflet.css';
 import './leaflet.draw.css';
 import {
   tooltipMessage,
-  circleTooltip,
-  rectTooltip,
   pointsTooltip,
   tooltipClass,
 } from './tooltipHelpers';
@@ -166,8 +164,6 @@ const MapComponent = (props) => {
         {heatmap}
         {polygons}
         {points}
-        {circles}
-        {rectangles}
       </Map>
       <div className="below-map">
         {legend}
