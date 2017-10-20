@@ -82,7 +82,6 @@ class MapContainer extends React.Component {
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   mapPropsToState(props) {
-    if (props.center)
     const maxArea = this.props.maxArea || Number.MAX_VALUE;
     const unit = this.props.unit || 'miles';
     // Expand any poly collections (FeatureCollections or Google map objects
@@ -191,6 +190,7 @@ class MapContainer extends React.Component {
         s.polygons = polygons;
         s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
         s.legendProps = omit(merge(res, s), 'legendProps');
+        s.remove = false;
         this.setState(s);
       });
       return;
@@ -218,6 +218,7 @@ class MapContainer extends React.Component {
         const s = cloneDeep(this.state);
         s.points = points;
         s.legendProps = omit(merge(res, s), 'legendProps');
+        s.remove = false;
         this.setState(s);
       });
     } else {
