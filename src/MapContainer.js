@@ -82,6 +82,7 @@ class MapContainer extends React.Component {
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   mapPropsToState(props) {
+    if (props.center)
     const maxArea = this.props.maxArea || Number.MAX_VALUE;
     const unit = this.props.unit || 'miles';
     // Expand any poly collections (FeatureCollections or Google map objects
@@ -281,6 +282,7 @@ class MapContainer extends React.Component {
       tooltipOptions,
     } = this.props;
     const passThroughProps = pick(this.props, [
+      'center',
       'heatmap',
       'height',
       'legendComponent',
