@@ -109,6 +109,7 @@ const scalePoints = (points, lat) => {
 };
 
 export const generateCircleApprox = (radius, unit, center, sides) => {
+  if (unit !== 'miles') radius /= 1609.34;
   console.log('stuff', radius, unit, center, sides);
   const points = rotatedPointsOrigin(radius, sides);
   const scaledPoints = scalePoints(points, center[0]);

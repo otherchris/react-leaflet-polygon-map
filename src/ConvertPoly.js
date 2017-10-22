@@ -12,6 +12,7 @@ import isEqual from 'lodash/isEqual';
 import polyline from 'polyline';
 import rewind from 'geojson-rewind';
 import getArea from './getArea';
+import { generateCircleApprox } from './MapHelpers';
 
 
 export const translateGooglePoly = (gPoly) => {
@@ -85,11 +86,16 @@ export const convertPoly = poly => {
       geometry: wkx.Geometry.parse(poly.data).toGeoJSON(),
     };
   }
-  case 'Circle': {
-    const circleCoords = map(poly.data.path, (x) => [x.lng, x.lat]);
-    const center = poly.data.center;
-    const radius = poly.data.radius;
-    const area = poly.data ? poly.data.area : null;
+  case 'circle': {
+    let circleCoords = [];
+    const center = poly.center;
+    const radius = poly.radius;
+    const area = poly.area || null;
+    if (poly.path) {
+      circleCoords = map(poly.path, (x) => [x.lng, x.lat]);
+    } else {
+      return generateCircleApprox(poly.radius, 'meters', poly.center, 24);
+    }
     return {
       type: 'Feature',
       properties: { center: center || '', radius: radius || '', area: area || '' },
@@ -101,18 +107,23 @@ export const convertPoly = poly => {
       },
     };
   }
-  case 'Rectangle': {
-    const bounds = poly.data.bounds;
-    const rectCoords = [
-      [bounds.west, bounds.north],
-      [bounds.west, bounds.south],
-      [bounds.east, bounds.south],
-      [bounds.east, bounds.north],
-    ];
+  case 'rectangle': {
+    let rectCoords = [];
+    if (poly.path) {
+      rectCoords = map(poly.path, (x) => [x.lng, x.lat]);
+    } else {
+      const bounds = poly.data.bounds;
+      rectCoords = [
+        [bounds.west, bounds.north],
+        [bounds.west, bounds.south],
+        [bounds.east, bounds.south],
+        [bounds.east, bounds.north],
+      ];
+    }
     const area = poly.data ? poly.data.area : null;
     return {
       type: 'Feature',
-      properties: { bounds: bounds || '', area: area || '' },
+      properties: { bounds: poly.bounds || '', area: area || '' },
       geometry: {
         type: 'Polygon',
         coordinates: [rectCoords],

@@ -87,7 +87,19 @@ class MapContainer extends React.Component {
     // Expand any poly collections (FeatureCollections or Google map objects
     // into individual features
     let expandedPolys = [];
-    map(props.polygons, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
+    const polygons = props.polygons || [];
+    const rectanglesRaw = props.rectangles || [];
+    const circlesRaw = props.circles || [];
+    const rectangles = map(rectanglesRaw, (rect) => {
+      rect.type = 'rectangle';
+      return rect;
+    });
+    const circles = map(circlesRaw, (circ) => {
+      circ.type = 'circle';
+      return circ;
+    });
+    const rawPolys = polygons.concat(rectangles).concat(circles);
+    map(rawPolys, (poly) => {  console.log(poly); expandedPolys = expandedPolys.concat(expandPolys(poly)); });
 
     // Convert each polygon into GeoJSON with area, then
     // add 'tooLarge' if necc. and add unique key
