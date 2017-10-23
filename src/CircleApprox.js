@@ -15,12 +15,12 @@ const CircleApprox = (props) => (
       format={'##.###'}
       precision={2}
     />
-    <button onClick={props.makeCircle}>
+    <btn onClick={props.makeCircle}>
       Create Circle
-    </button>
-    <span className="toggle-x" onClick={props.turnOff}>
+    </btn>
+    <btn className="toggle-x" onClick={props.turnOff}>
       x
-    </span>
+    </btn>
   </div>
 );
 
