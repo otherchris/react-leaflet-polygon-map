@@ -99,7 +99,7 @@ class MapContainer extends React.Component {
       return circ;
     });
     const rawPolys = polygons.concat(rectangles).concat(circles);
-    map(rawPolys, (poly) => {  console.log(poly); expandedPolys = expandedPolys.concat(expandPolys(poly)); });
+    map(rawPolys, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
 
     // Convert each polygon into GeoJSON with area, then
     // add 'tooLarge' if necc. and add unique key
@@ -289,7 +289,6 @@ class MapContainer extends React.Component {
       tooltipOptions,
     } = this.props;
     const passThroughProps = pick(this.props, [
-      'center',
       'heatmap',
       'height',
       'legendComponent',
@@ -304,6 +303,7 @@ class MapContainer extends React.Component {
       <MapComponent
         bindPoint={this}
         bounds={this.state.bounds}
+        center={this.state.center}
         clickPoly={this.clickPoly.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
