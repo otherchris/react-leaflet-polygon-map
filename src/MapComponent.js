@@ -121,8 +121,9 @@ const MapComponent = (props) => {
         suggests: {
           listStyle: 'none',
           width: '20rem',
-          padding: '1px',
           overflow: 'hidden',
+          backgroundColor: 'rgba(150, 150, 150, .3)',
+
         },
       }}
     />
