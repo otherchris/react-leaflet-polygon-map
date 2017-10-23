@@ -263,7 +263,14 @@ class MapContainer extends React.Component {
       circApprox.properties.tooLarge = true;
     }
     polygons.push(circApprox);
-    this.setState({ polygons, makeCircleOn: false });
+    this.debouncedOnChange(this.state, (err, res) => {
+      const s = cloneDeep(this.state);
+      s.polygons = polygons;
+      s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
+      s.makeCircleOn = false;
+      s.legendProps = omit(merge(res, s), 'legendProps');
+      this.setState(s);
+    });
   }
   turnOffCircleApprox() {
     this.setState({ makeCircleOn: false });

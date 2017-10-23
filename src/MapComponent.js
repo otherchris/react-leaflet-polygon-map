@@ -123,7 +123,6 @@ const MapComponent = (props) => {
           width: '20rem',
           overflow: 'hidden',
           backgroundColor: 'rgba(150, 150, 150, .3)',
-
         },
       }}
     />
@@ -194,7 +193,7 @@ MapComponent.propTypes = {
   onCreated: PropTypes.func,
   onLocationSelect: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.object),
-  polygons: PropTypes.arrayOf(PropTypes.string),
+  polygons: PropTypes.arrayOf(PropTypes.object),
   radiusChange: PropTypes.func,
   refresh: PropTypes.string,
   remove: PropTypes.bool,

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NumberPicker } from 'react-widgets';
+import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
+
+numberLocalizer();
 
 const CircleApprox = (props) => (
   <div className="circle-approx">
@@ -9,7 +12,6 @@ const CircleApprox = (props) => (
       onChange={props.radiusChange}
       max={10}
       min={0}
-      defaultValue={0.1}
       format={'##.###'}
       precision={2}
     />
