@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NumberPicker } from 'react-widgets';
+import numberLocalizer from 'react-widgets-simple-number';
+
+// load custom CSS (over-rides and app)
+
+numberLocalizer();
 
 const CircleApprox = (props) => (
   <div className="circle-approx">
