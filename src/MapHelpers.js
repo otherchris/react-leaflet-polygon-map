@@ -75,6 +75,7 @@ export const indexByKey = (arr, key) => {
 
 export const areaAccumulator = (sum, val) => sum + val.properties.area;
 export const area = (unit, _area) => {
+  console.log(unit, _area);
   let result = _area;
   switch (unit) {
   case 'miles':

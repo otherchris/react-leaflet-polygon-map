@@ -24,9 +24,22 @@ storiesOf('Legend', module)
     <MapContainerStoryWithNotes
       edit={true}
       onShapeChange={(data, cb) => {
-        cb(null, data.polygons);
+        cb(null, data);
       }}
-      legendComponent={DummyComponent}
+      legendComponent={(p) => {
+        let area = '';
+        if (p.area && !isNaN(p.area)) {
+          area = `in ${p.totalArea.toFixed(3)} square miles`;
+        }
+        return (
+          <div>
+            { p.matches > 0 ?
+              `Found ${p.matches} matches ${area}` :
+              ''
+            }
+          </div>
+        );
+      }}
       legendProps={{ aProp: 'a value' }}
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Red rectangle in the lower right

@@ -44,18 +44,10 @@ class MapContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      update: uuid.v4(),
       polygons: [],
       points: [],
       rectangles: [],
       circles: [],
-      drawn: {
-        polys: [],
-        lines: [],
-        rects: [],
-        circles: [],
-        markers: [],
-      },
       googleAPILoaded: false,
       edit: false,
       markerIcon: generateIcon(props.iconHTML),
@@ -84,10 +76,10 @@ class MapContainer extends React.Component {
   mapPropsToState(props) {
     const maxArea = this.props.maxArea || Number.MAX_VALUE;
     const unit = this.props.unit || 'miles';
-    // Expand any poly collections (FeatureCollections or Google map objects
-    // into individual features
-    let expandedPolys = [];
     const polygons = props.polygons || [];
+    //
+    // Set a 'type' property for rectangles and circles
+    // TODO: after data migration, get rid of this
     const rectanglesRaw = props.rectangles || [];
     const circlesRaw = props.circles || [];
     const rectangles = map(rectanglesRaw, (rect) => {
@@ -99,6 +91,10 @@ class MapContainer extends React.Component {
       return circ;
     });
     const rawPolys = polygons.concat(rectangles).concat(circles);
+    //
+    // Expand any poly collections (FeatureCollections or Google map objects
+    // into individual features
+    let expandedPolys = [];
     map(rawPolys, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
 
     // Convert each polygon into GeoJSON with area, then
@@ -111,21 +107,8 @@ class MapContainer extends React.Component {
       return out;
     });
 
-    // Convert points to GeoJSON, then add polygons for any points
-    // that have 'radius' (indicating 'draw a circle around me')
+    // Convert points to GeoJSON
     const points = map(this.props.points, convertPoint);
-    map(points, (point) => {
-      if (point.properties.radius) {
-        const { radius, _unit } = point.properties;
-        const center = point.geometry.coordinates;
-        const circApprox = (generateCircleApprox(radius, _unit, reverse(center), 24));
-        // Do same polygon processing from above to the generated poly
-        circApprox.properties.key = uuid.v4();
-        if (area(unit, circApprox.properties.area) > maxArea) circApprox.properties.tooLarge = true;
-        polys.push(circApprox);
-      }
-    });
-
 
     // Apply changes to state
     this.setState({
@@ -252,21 +235,24 @@ class MapContainer extends React.Component {
   }
   makeCircle() {
     const polygons = this.state.polygons;
-    const circApprox = (generateCircleApprox(
+    const cA = (generateCircleApprox(
       this.state.newCircleRadius,
       this.state.unit,
       this.state.newCircleCenter,
       24,
     ));
+    const circApprox = makeGeoJSON(cA);
     circApprox.properties.key = uuid.v4();
     if (area(this.state.unit, circApprox.properties.area) > this.state.maxArea.max) {
       circApprox.properties.tooLarge = true;
     }
     polygons.push(circApprox);
-    this.debouncedOnChange(this.state, (err, res) => {
-      const s = cloneDeep(this.state);
+    const state = cloneDeep(this.state);
+    state.polygons = polygons;
+    this.debouncedOnChange(state, (err, res) => {
+      const s = cloneDeep(state);
       s.polygons = polygons;
-      s.totalArea = area(this.state.unit, reduce(polygons, areaAccumulator, 0));
+      s.totalArea = area(state.unit, reduce(polygons, areaAccumulator, 0));
       s.makeCircleOn = false;
       s.legendProps = omit(merge(res, s), 'legendProps');
       this.setState(s);
@@ -369,7 +355,7 @@ MapContainer.propTypes = {
 };
 
 MapContainer.defaultProps = {
-  onShapeChange: (a, cb) => { cb(); },
+  onShapeChange: (a, cb) => { cb(a); },
   center: { lat: 38.257143, lng: -85.751428 },
 };
 
