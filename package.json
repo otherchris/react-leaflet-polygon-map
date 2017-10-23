@@ -58,8 +58,7 @@
     "wkx": "^0.4.1"
   },
   "peerDependencies": {
-    "react-widgets": "^4.0.2",
-    "react-widgets-simple-number": "^4.0.2"
+    "react-widgets": "^3.4.8"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.2.6",
