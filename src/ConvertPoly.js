@@ -71,6 +71,14 @@ export const convertPoly = poly => {
   if (typeof poly.id === 'number') {
     return translateGooglePoly(poly);
   }
+  // shim for current new movers, will remove:
+  if (poly.path && poly.zip) {
+    return {
+      type: 'Feature',
+      properties: {},
+      geometry: polyline.toGeoJSON(poly.path),
+    };
+  }
   switch (poly.type) {
   case 'polyline': {
     return {
