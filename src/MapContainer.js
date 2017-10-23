@@ -248,8 +248,7 @@ class MapContainer extends React.Component {
     this.setState({ center: { lat: loc.location.lat, lng: loc.location.lng } });
   }
   radiusChange(e) {
-    if (isNaN(e.target.value)) return;
-    this.setState({ newCircleRadius: e.target.value });
+    this.setState({ newCircleRadius: e });
   }
   makeCircle() {
     const polygons = this.state.polygons;
