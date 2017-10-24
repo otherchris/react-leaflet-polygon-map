@@ -143,8 +143,6 @@ const MapComponent = (props) => {
   ) : '';
   return (
     <div>
-      {makeCircleApprox}
-      {removePolyBanner}
       <Map
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
@@ -168,6 +166,8 @@ const MapComponent = (props) => {
       <div className="below-map">
         {legend}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
+        {makeCircleApprox}
+        {removePolyBanner}
       </div>
     </div>
   );
