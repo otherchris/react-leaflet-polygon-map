@@ -11,6 +11,7 @@
 
 .below-map {
   display: flex;
+  justify-content: space-between;
 }
 
 .map-legend: {
@@ -79,5 +80,4 @@
 }
 
 .radius-picker {
-  width: 25%;
 }
