@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NumberPicker } from 'react-widgets';
-import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
+import numberLocalizer from 'react-widgets-simple-number';
 
 numberLocalizer();
 
