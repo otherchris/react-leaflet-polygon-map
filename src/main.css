@@ -50,6 +50,7 @@
 .circle-approx {
   display: flex;
   flex-shrink: 1;
+  line-height: 1;
 }
 
 .test-submit-style {
@@ -77,4 +78,8 @@
 .geosuggest__item--active {
   background: #267dc0;
   color: #fff;
+}
+
+.radius-picker {
+  width: 25%;
 }
