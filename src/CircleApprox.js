@@ -16,14 +16,14 @@ const CircleApprox = (props) => (
       precision={2}
     />
     <button
-      type="text"
+      type="button"
       className="circ-approx-button btn"
       onClick={props.makeCircle}
     >
       Create Circle
     </button>
     <button
-      type="text"
+      type="button"
       className="circ-approx-button btn toggle-x"
       onClick={props.turnOff}
     >
