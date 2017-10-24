@@ -13,6 +13,7 @@ const DummyComponent = (props) => (
 storiesOf('Legend', module)
   .add('With legend component', () => (
     <MapContainerStoryWithNotes
+      edit
       legendComponent={DummyComponent}
       legendProps={{ aProp: 'a value' }}
       additionalNotes={`Should see \n

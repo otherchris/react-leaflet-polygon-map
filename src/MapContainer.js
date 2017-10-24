@@ -234,6 +234,7 @@ class MapContainer extends React.Component {
     this.setState({ newCircleRadius: e });
   }
   makeCircle() {
+    if (!this.state.newCircleRadius || !this.state.newCircleCenter) return;
     const polygons = this.state.polygons;
     const cA = (generateCircleApprox(
       this.state.newCircleRadius,
