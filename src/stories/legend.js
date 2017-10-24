@@ -29,15 +29,12 @@ storiesOf('Legend', module)
       }}
       legendComponent={(p) => {
         let area = '';
-        if (p.area && !isNaN(p.area)) {
+        if (p.totalArea && !isNaN(p.totalArea)) {
           area = `in ${p.totalArea.toFixed(3)} square miles`;
         }
         return (
           <div>
-            { p.matches > 0 ?
-              `Found ${p.matches} matches ${area}` :
-              ''
-            }
+            {`Found p.matches matches ${area}`}
           </div>
         );
       }}
