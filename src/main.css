@@ -49,6 +49,7 @@
 
 .circle-approx {
   display: flex;
+  flex-shrink: 1;
 }
 
 .test-submit-style {

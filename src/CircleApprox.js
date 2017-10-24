@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NumberPicker } from 'react-widgets';
-import numberLocalizer from 'react-widgets-simple-number';
-
-numberLocalizer();
 
 const CircleApprox = (props) => (
   <div className="circle-approx">
@@ -17,14 +14,14 @@ const CircleApprox = (props) => (
     />
     <button
       type="button"
-      className="circ-approx-button btn"
+      className="btn-primary save btn"
       onClick={props.makeCircle}
     >
       Create Circle
     </button>
     <button
       type="button"
-      className="circ-approx-button btn toggle-x"
+      className="btn-primary save btn toggle-x"
       onClick={props.turnOff}
     >
       x
