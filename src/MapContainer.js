@@ -44,10 +44,8 @@ class MapContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      polygons: [],
+      features: [],
       points: [],
-      rectangles: [],
-      circles: [],
       googleAPILoaded: false,
       edit: false,
       markerIcon: generateIcon(props.iconHTML),
@@ -76,31 +74,20 @@ class MapContainer extends React.Component {
   mapPropsToState(props) {
     const maxArea = this.props.maxArea || Number.MAX_VALUE;
     const unit = this.props.unit || 'miles';
-    const polygons = props.polygons || [];
+    const features = props.features || [];
     //
     // Set a 'type' property for rectangles and circles
     // TODO: after data migration, get rid of this
-    const rectanglesRaw = props.rectangles || [];
-    const circlesRaw = props.circles || [];
-    const rectangles = map(rectanglesRaw, (rect) => {
-      rect.type = 'rectangle';
-      return rect;
-    });
-    const circles = map(circlesRaw, (circ) => {
-      circ.type = 'circle';
-      return circ;
-    });
-    const rawPolys = polygons.concat(rectangles).concat(circles);
     //
     // Expand any poly collections (FeatureCollections or Google map objects
     // into individual features
-    let expandedPolys = [];
-    map(rawPolys, (poly) => { expandedPolys = expandedPolys.concat(expandPolys(poly)); });
+    let expandedFeatures = [];
+    map(features, (feat) => { expandedFeatures = expandedFeatures.concat(expandFeatures(feat)); });
 
     // Convert each polygon into GeoJSON with area, then
     // add 'tooLarge' if necc. and add unique key
-    const polys = map(expandedPolys, (poly, index) => {
-      const out = makeGeoJSON(poly);
+    const feats = map(expandedFeatures, (feat, index) => {
+      const out = makeGeoJSON(feat);
       out.properties.key = uuid.v4();
       out.properties.unit = unit;
       if (area(unit, out.properties.area) > maxArea) out.properties.tooLarge = true;
@@ -115,10 +102,8 @@ class MapContainer extends React.Component {
       unit,
       legendProps: this.props.legendProps,
       maxArea,
-      polygons: polys,
+      features: feats,
       points,
-      rectangles: this.props.rectangles,
-      circles: this.props.circles,
       edit: this.props.edit,
       totalArea: area(unit, reduce(polys, areaAccumulator, 0)),
     }, this.zoomToShapes);
