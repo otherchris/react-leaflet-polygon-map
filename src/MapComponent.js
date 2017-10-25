@@ -64,8 +64,8 @@ const MapComponent = (props) => {
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
 
-  // Create Leaflet GeoJSON components from polygons in container state
-  const polygons = map(props.polygons, (result, index) => {
+  // Create Leaflet GeoJSON components from features in container state
+  const features = map(props.features, (result, index) => {
     const p = result.properties;
     return (
       <GeoJSON
@@ -160,7 +160,7 @@ const MapComponent = (props) => {
         />
         <EditTools {...props} />
         {heatmap}
-        {polygons}
+        {features}
         {points}
       </Map>
       <div className="below-map">
@@ -193,7 +193,7 @@ MapComponent.propTypes = {
   onCreated: PropTypes.func,
   onLocationSelect: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.object),
-  polygons: PropTypes.arrayOf(PropTypes.object),
+  features: PropTypes.arrayOf(PropTypes.object),
   radiusChange: PropTypes.func,
   refresh: PropTypes.string,
   remove: PropTypes.bool,
