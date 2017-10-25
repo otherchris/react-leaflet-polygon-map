@@ -21,7 +21,7 @@ import MapComponent from './MapComponent';
 import { makeGeoJSON } from './ConvertPoly';
 import {
   generateIcon,
-  expandPolys,
+  expandFeatures,
   generateCircleApprox,
   indexByKey,
   areaAccumulator,
@@ -105,7 +105,7 @@ class MapContainer extends React.Component {
       features: feats,
       points,
       edit: this.props.edit,
-      totalArea: area(unit, reduce(polys, areaAccumulator, 0)),
+      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
     }, this.zoomToShapes);
   }
 
