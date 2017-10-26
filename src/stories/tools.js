@@ -18,7 +18,7 @@ storiesOf('Edit tools', module)
   .add('edit an existing polygon', () => (
     <MapContainerStoryWithNotes
       edit
-      polygons={[dpPoly.wkt]}
+      features={[dpPoly.wkt]}
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Clicking a polygon should make it editable
       `}

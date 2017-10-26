@@ -74,7 +74,7 @@ const MapComponent = (props) => {
         key={uuid.v4()}
         uuid={p.key || uuid.v4()}
         editable={p.editable}
-        onClick={props.clickPoly}
+        onClick={props.clickFeature}
         onMouseOut={(e) => { e.layer.setStyle(style); }}
         onMouseOver={(e) => { e.layer.setStyle(hoveredStyle); }}
       >
