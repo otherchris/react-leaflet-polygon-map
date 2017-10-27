@@ -68,14 +68,22 @@
   z-index:1000;
   top: 10px;
   left: 60px;
+  list-style: none;
 }
+
+
+.geosuggests__suggests {
+  list-style: none;
+  z-index: 1000;
+}
+
 .geosuggest__suggests--hidden {
   max-height: 0;
   overflow: hidden;
   border-width: 0;
 }
 .geosuggest__item--active {
-  background: #267dc0;
+  background-color: #999;
   color: #fff;
 }
 
