@@ -50,3 +50,20 @@ storiesOf('Given location and radius', module)
       `}
     />
   ));
+
+storiesOf('Feature validator', module)
+  .add('an area validation', () => (
+    <MapContainerStoryWithNotes
+      edit
+      featureValidator={(feature) => {
+        if (feature.properties.area > 2590000) return ['Polygon area too large'];
+        return [];
+      }}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Radius input, lower left
+        <input type="checkbox" /> 2. Point edit tool
+        <input type="checkbox" /> 3. Place a point, enter radius, and circle with
+                                     given radius is added
+      `}
+    />
+  ));

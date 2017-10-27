@@ -39,10 +39,15 @@ const style = {
   fillColor: 'green',
   fillOpacity: 0.45,
 };
+const errorStyle = {
+  color: 'red',
+  fillColor: 'red',
+  dashArray: '1,5',
+  fillOpacity: '0.1',
+};
 const hoveredStyle = {
   color: 'blue',
   fill: true,
-  fillColor: 'blue',
   fillOpacity: 0.45,
 };
 
@@ -66,33 +71,31 @@ const MapComponent = (props) => {
   // Create Leaflet GeoJSON components from features in container state
   const features = map(props.features, (result, index) => {
     const p = result.properties;
+    const thisStyle = cloneDeep(style);
+    const thisTooltipOptions = cloneDeep(tooltipOptions);
     if (p.errors && p.errors.length && p.errors.length > 0) {
-      merge(style, {
-        color: 'red',
-        fillColor: 'red',
-        dashArray: '1,5',
-      });
-      merge(tooltipOptions, {
+      merge(thisStyle, errorStyle);
+      merge(thisTooltipOptions, {
         tipMessage: p.errors.join(', '),
       });
     }
     console.log('tto', tooltipOptions);
     return (
       <GeoJSON
-        style={style}
+        style={thisStyle}
         data={result}
         key={uuid.v4()}
         uuid={p.key || uuid.v4()}
         editable={p.editable}
         onClick={props.clickFeature}
-        onMouseOut={(e) => { e.layer.setStyle(style); }}
+        onMouseOut={(e) => { e.layer.setStyle(thisStyle); }}
         onMouseOver={(e) => { e.layer.setStyle(hoveredStyle); }}
       >
-        <Tooltip className={tooltipClass(tooltipOptions)}>
+        <Tooltip className={tooltipClass(thisTooltipOptions)}>
           <span>
             {props.edit && props.remove ?
               'CLICK TO DELETE' :
-              `${tooltipMessage(p, tooltipOptions)}`}
+              `${tooltipMessage(p, thisTooltipOptions)}`}
           </span>
         </Tooltip>
       </GeoJSON>

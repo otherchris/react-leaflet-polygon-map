@@ -71,6 +71,13 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
+  validateShape(_feature) {
+    const feature = cloneDeep(_feature);
+    const newErrors = this.props.featureValidator(feature);
+    if (newErrors.length > 0) feature.properties.errors = newErrors;
+    else delete feature.properties.errors;
+    return feature;
+  }
   mapPropsToState(props) {
     const maxArea = this.props.maxArea || Number.MAX_VALUE;
     const unit = this.props.unit || 'miles';
@@ -90,8 +97,7 @@ class MapContainer extends React.Component {
       const out = makeGeoJSON(feat);
       out.properties.key = uuid.v4();
       out.properties.unit = unit;
-      if (area(unit, out.properties.area) > maxArea) out.properties.tooLarge = true;
-      return out;
+      return this.validateShape(out);
     });
 
     // Convert points to GeoJSON
@@ -123,7 +129,7 @@ class MapContainer extends React.Component {
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
       gJWithArea.properties.unit = unit;
-      state.features.push(gJWithArea);
+      state.features.push(this.validateShape(gJWithArea));
       break;
     case 'rectangle':
       gJWithArea = makeGeoJSON(geoJson);
@@ -131,7 +137,7 @@ class MapContainer extends React.Component {
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
       gJWithArea.properties.unit = unit;
-      state.features.push(gJWithArea);
+      state.features.push(this.validateShape(gJWithArea));
       break;
     case 'marker':
       geoJson.properties.key = uuid.v4();
@@ -188,7 +194,7 @@ class MapContainer extends React.Component {
     const features = this.state.features;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
-    if (editable) features[index] = cleanPoly(e.layer.toGeoJSON());
+    if (editable) features[index] = this.validateShape(cleanPoly(e.layer.toGeoJSON()));
     features[index].properties.editable = !editable;
     this.debouncedOnChange(this.state, (err, res) => {
       const s = cloneDeep(this.state);
@@ -228,6 +234,7 @@ class MapContainer extends React.Component {
   }
   makeCircle() {
     if (!this.state.newCircleRadius || !this.state.newCircleCenter) return;
+    console.log('making circle');
     const features = this.state.features;
     const cA = (generateCircleApprox(
       this.state.newCircleRadius,
@@ -235,12 +242,13 @@ class MapContainer extends React.Component {
       this.state.newCircleCenter,
       24,
     ));
+    console.log('the circle', cA)
     const circApprox = makeGeoJSON(cA);
     circApprox.properties.key = uuid.v4();
     if (area(this.state.unit, circApprox.properties.area) > this.state.maxArea.max) {
       circApprox.properties.tooLarge = true;
     }
-    features.push(circApprox);
+    features.push(this.validateShape(circApprox));
     const state = cloneDeep(this.state);
     state.features = features;
     this.debouncedOnChange(state, (err, res) => {
@@ -328,6 +336,7 @@ MapContainer.propTypes = {
   ]),
   circles: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.bool,
+  featureValidator: PropTypes.func,
   handleSubmit: PropTypes.func,
   heatmap: PropTypes.array,
   height: PropTypes.number,
@@ -351,6 +360,7 @@ MapContainer.propTypes = {
 MapContainer.defaultProps = {
   onShapeChange: (a, cb) => { cb(a); },
   center: { lat: 38.257143, lng: -85.751428 },
+  featureValidator: () => [],
 };
 
 export default MapContainer;
