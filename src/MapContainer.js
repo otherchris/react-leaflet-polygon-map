@@ -336,7 +336,7 @@ MapContainer.propTypes = {
   submitButton: PropTypes.object,
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
-  unit: PropTypes.number,
+  unit: PropTypes.string,
   zoom: PropTypes.number,
 };
 

@@ -75,15 +75,7 @@ export const indexByKey = (arr, key) => {
 
 export const areaAccumulator = (sum, val) => sum + val.properties.area;
 export const area = (unit, _area) => {
-  console.log(unit, _area);
-  let result = _area;
-  switch (unit) {
-  case 'miles':
-    result *= 0.000000386102;
-    break;
-  default:
-    break;
-  }
+  const result = _area;
   return result;
 };
 
@@ -105,13 +97,11 @@ const translatePoints = (points, center) => map(
 );
 
 const scalePoints = (points, lat) => {
-  const factor = math.cos(radians(lat)) * 69.172;
-  return map(points, (x) => [x[0] / 69.172, x[1] / factor]);
+  const factor = math.cos(radians(lat)) * 111321.543;
+  return map(points, (x) => [x[0] / 111321.543, x[1] / factor]);
 };
 
 export const generateCircleApprox = (radius, unit, center, sides) => {
-  if (unit !== 'miles') radius /= 1609.34;
-  console.log('stuff', radius, unit, center, sides);
   const points = rotatedPointsOrigin(radius, sides);
   const scaledPoints = scalePoints(points, center[0]);
   const translatedPoints = translatePoints(scaledPoints, center);
