@@ -1,66 +1,26 @@
 const displayArea = (area, unit) => (unit === 'miles' ? area / 2590000 : area);
 
-export const tooltipMessage = (polyProps, tooltipOptions) => {
+export const tooltipMessage = (polyProps, tooltipOptions = {}) => {
+  if (tooltipOptions.tipMessage) return tooltipOptions.tipMessage;
   const area = displayArea(polyProps.area, polyProps.unit) || 0;
-  if (tooltipOptions && tooltipOptions.includeArea) {
+  if (tooltipOptions.text && tooltipOptions.includeArea) {
     const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
     const areaWithUnit = `${area} ${unitName}`;
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${areaWithUnit}`;
     return tipMessage;
   }
-  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
+  if (tooltipOptions.text && tooltipOptions.includeArea && !tooltipOptions.units) {
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
     return tipMessage;
   }
-  if (tooltipOptions && !(tooltipOptions.includeArea)) {
+  if (tooltipOptions.text && !(tooltipOptions.includeArea)) {
     const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = text;
     return tipMessage;
   }
   const tipMessage = `${area.toFixed(4)} Sq ${polyProps.unit}`;
-  return tipMessage;
-};
-
-export const circleTooltip = (circleProps, tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.includeArea && tooltipOptions.units) {
-    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
-    const convertedArea = tooltipOptions.units.conversion ?
-      circleProps.area * tooltipOptions.units.conversion : circleProps.area;
-    const areaWithUnit = `${convertedArea.toFixed(4)} ${unitName}`;
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${areaWithUnit}`;
-    return tipMessage;
-  }
-  if (tooltipOptions && tooltipOptions.includeArea && !tooltipOptions.units) {
-    const area = circleProps.area;
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${area.toFixed(4)} Sq Meters`;
-    return tipMessage;
-  }
-  if (tooltipOptions && !(tooltipOptions.includeArea)) {
-    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text;
-    return tipMessage;
-  }
-  const tipMessage = `${circleProps.area.toFixed(4)} Sq Meters`;
-  return tipMessage;
-};
-
-export const rectTooltip = (rectProps, tooltipOptions) => {
-  if (tooltipOptions && tooltipOptions.includeArea) {
-    const noArea = 'Area cannot be calculated on rectangle';
-    const text = tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = `${text} ${noArea}`;
-    return tipMessage;
-  }
-  if (tooltipOptions && !(tooltipOptions.includeArea)) {
-    const text = tooltipOptions && tooltipOptions.text ? tooltipOptions.text : '';
-    const tipMessage = text;
-    return tipMessage;
-  }
-  const tipMessage = 'Area cannot be calculated on rectangle';
   return tipMessage;
 };
 

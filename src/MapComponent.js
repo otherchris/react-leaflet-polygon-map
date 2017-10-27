@@ -34,9 +34,9 @@ import getArea from './getArea';
 import Heatmap from './Heatmap';
 
 const style = {
-  color: 'red',
+  color: 'green',
   fill: true,
-  fillColor: 'red',
+  fillColor: 'green',
   fillOpacity: 0.45,
 };
 const hoveredStyle = {
@@ -52,7 +52,6 @@ const RemovePolyBanner = (
   </div>
 );
 
-
 const Legend = (LegendComponent, props) => (
   <div className="map-legend">
     <LegendComponent {...props} />
@@ -60,13 +59,24 @@ const Legend = (LegendComponent, props) => (
 );
 
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions } = props;
+  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions = {} } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
 
   // Create Leaflet GeoJSON components from features in container state
   const features = map(props.features, (result, index) => {
     const p = result.properties;
+    if (p.errors && p.errors.length && p.errors.length > 0) {
+      merge(style, {
+        color: 'red',
+        fillColor: 'red',
+        dashArray: '1,5',
+      });
+      merge(tooltipOptions, {
+        tipMessage: p.errors.join(', '),
+      });
+    }
+    console.log('tto', tooltipOptions);
     return (
       <GeoJSON
         style={style}
@@ -82,7 +92,7 @@ const MapComponent = (props) => {
           <span>
             {props.edit && props.remove ?
               'CLICK TO DELETE' :
-              `${tooltipMessage(p, props.tooltipOptions)}`}
+              `${tooltipMessage(p, tooltipOptions)}`}
           </span>
         </Tooltip>
       </GeoJSON>
