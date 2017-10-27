@@ -125,6 +125,14 @@ class MapContainer extends React.Component {
       gJWithArea.properties.unit = unit;
       state.features.push(gJWithArea);
       break;
+    case 'rectangle':
+      gJWithArea = makeGeoJSON(geoJson);
+      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+      gJWithArea.properties.key = uuid.v4();
+      gJWithArea.properties.editable = false;
+      gJWithArea.properties.unit = unit;
+      state.features.push(gJWithArea);
+      break;
     case 'marker':
       geoJson.properties.key = uuid.v4();
       if (!state.points) state.points = [];
