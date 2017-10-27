@@ -157,7 +157,7 @@ const MapComponent = (props) => {
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
         minZoom = {3}
-        maxZoom = {19}
+        maxZoom = {18}
         center = {props.center}
         zoom = {props.zoom}
         onViewportChanged={props.setCenterAndZoom}
