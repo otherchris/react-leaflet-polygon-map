@@ -10,7 +10,7 @@ const EditTools = (p) => {
           position='topright'
           draw={{
             polyline: false,
-            rectangle: false,
+            circlemarker: false,
             circle: false,
             marker: {
               icon: p.markerIcon,
