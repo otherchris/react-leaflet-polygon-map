@@ -53,6 +53,14 @@ storiesOf('features', module)
         <input type="checkbox" /> 1. Default styled polygon
       `}
     />
+  ))
+  .add('map with a \'gon (non-trivial MP)', () => (
+    <MapContainerStoryWithNotes
+      features={[dpPoly.geoJSONmulti]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Default styled polygon
+      `}
+    />
   ));
 storiesOf('Points', module)
   .add('map with a point', () => (
