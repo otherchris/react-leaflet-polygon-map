@@ -15,7 +15,6 @@ const getCoords = (arr) => {
 };
 
 const getCenter = (polygons, points) => {
-  console.log(polygons);
   if (polygons.length === 0 && points.length === 0) return [35, -83];
   let coords = [];
   map(polygons, (poly) => {
@@ -24,14 +23,12 @@ const getCenter = (polygons, points) => {
   map(points, (point) => {
     coords.push(point.geometry.coordinates);
   });
-  console.log('coords', coords);
   const lats = [];
   const longs = [];
   map(coords, (coord) => {
     lats.push(coord[1]);
     longs.push(coord[0]);
   });
-  console.log([max(lats), min(lats), max(longs), min(longs)]);
   const c1 = L.latLng(max(lats), max(longs));
   const c2 = L.latLng(min(lats), min(longs));
   return L.latLngBounds(c1, c2);
