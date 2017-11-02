@@ -196,9 +196,9 @@ class MapContainer extends React.Component {
     if (this.state.remove) {
       const key = e.layer.options.uuid;
       const features = filter(this.state.features, (feat) => key !== feat.properties.key);
-      this.debouncedOnChange(this.state, (err, res) => {
-        const s = cloneDeep(this.state);
-        s.features = features;
+      const s = cloneDeep(this.state);
+      s.features = features;
+      this.debouncedOnChange(s, (err, res) => {
         s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
         s.legendProps = omit(merge(res, s), 'legendProps');
         s.remove = false;
