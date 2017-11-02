@@ -40,6 +40,11 @@ const makeCenter = (c) => {
   return c;
 };
 
+const makeCenterLeaflet = (c) => {
+  if (!c) return '';
+  return L.latLng(c.lat, c.lng);
+};
+
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -105,13 +110,12 @@ class MapContainer extends React.Component {
 
     // Set center of map as L.latLng
     let center = {};
-    if (this.props.center && ((
+    if (
+      this.props.center &&
       this.props.center.length &&
-      this.props.center.length === 2) || (
-        this.props.center.lat &&
-        this.props.center.lng
-      ))) {
-      center = L.latLng(this.props.center[1], this.props.center[0]);
+      this.props.center.length === 2
+    ) {
+      center = { lat: this.props.center[1], lng: this.props.center[0] };
     } else center = this.props.center || {};
     const zoom = this.props.zoom || null;
 
@@ -285,8 +289,9 @@ class MapContainer extends React.Component {
   setCenterAndZoom() {
     console.log('SET CENTER AND ZOOM');
     if (this.leafletMap) {
+      const ctr = cloneDeep(this.leafletMap.leafletElement.getCenter());
       this.setState({
-        center: this.leafletMap.leafletElement.getCenter(),
+        center: { lat: ctr.lat, lng: ctr.lng },
         zoom: this.leafletMap.leafletElement.getZoom(),
       });
     }
@@ -304,7 +309,7 @@ class MapContainer extends React.Component {
     }
   }
   maybeZoomToShapes() {
-    if (!this.state.center.clone) this.zoomToShapes();
+    if (!this.state.center.lat) this.zoomToShapes();
   }
   render() {
     const {
@@ -325,7 +330,7 @@ class MapContainer extends React.Component {
       <MapComponent
         bindPoint={this}
         bounds={this.state.bounds}
-        center={this.state.center}
+        center={makeCenterLeaflet(this.state.center)}
         clickFeature={this.clickFeature.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
@@ -387,7 +392,6 @@ MapContainer.propTypes = {
 
 MapContainer.defaultProps = {
   onShapeChange: (a, cb) => { cb(a); },
-  center: { lat: 38.257143, lng: -85.751428 },
   featureValidator: () => [],
 };
 

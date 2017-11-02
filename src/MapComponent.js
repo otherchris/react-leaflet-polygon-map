@@ -234,6 +234,5 @@ MapComponent.defaultProps = {
     attribution: '© OpenStreetMap contributors',
   },
   center: [33, -85],
-  zoom: 11,
 };
 export default MapComponent;
