@@ -105,7 +105,12 @@ class MapContainer extends React.Component {
 
     // Set center of map as L.latLng
     let center = {};
-    if (this.props.center && this.props.center.length && this.props.center.length === 2) {
+    if (this.props.center && ((
+      this.props.center.length &&
+      this.props.center.length === 2) || (
+        this.props.center.lat &&
+        this.props.center.lng
+      ))) {
       center = L.latLng(this.props.center[1], this.props.center[0]);
     } else center = this.props.center || {};
     const zoom = this.props.zoom || null;

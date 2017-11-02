@@ -162,7 +162,7 @@ const MapComponent = (props) => {
         minZoom = {3}
         maxZoom = {18}
         center = {props.center}
-        zoom = {props.zoom}
+        zoom = {props.zoom || 9}
         onViewportChanged={props.setCenterAndZoom}
         onMoveend={props.setCenterAndZoom}
       >
