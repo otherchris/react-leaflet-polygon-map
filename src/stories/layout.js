@@ -28,4 +28,22 @@ storiesOf('Layout', module)
         <input type="checkbox" /> 1. Red rectangle in the lower right
       `}
     />
+  ))
+  .add('If a center (or center and zoom) is provided, use those instead of zoom to shapes', () => (
+    <MapContainerStoryWithNotes
+      features={[dpPoly.geoJSON]}
+      center={[-102, 35]}
+      zoom={9}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Red rectangle in the lower right
+      `}
+    />
+  ))
+  .add('conversely, if there\'s not, a center and zoom, go to the shape', () => (
+    <MapContainerStoryWithNotes
+      features={[dpPoly.geoJSON]}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Red rectangle in the lower right
+      `}
+    />
   ));

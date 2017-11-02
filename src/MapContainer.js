@@ -103,6 +103,13 @@ class MapContainer extends React.Component {
     // Convert points to GeoJSON
     const points = map(this.props.points, convertPoint);
 
+    // Set center of map as L.latLng
+    let center = {};
+    if (this.props.center && this.props.center.length && this.props.center.length === 2) {
+      center = L.latLng(this.props.center[1], this.props.center[0]);
+    } else center = this.props.center || {};
+    const zoom = this.props.zoom || null;
+
     // Apply changes to state
     this.debouncedOnChange(this.state, (err, res) => {
       const old = cloneDeep(this.state);
@@ -112,23 +119,15 @@ class MapContainer extends React.Component {
         maxArea,
         features: feats,
         points,
+        center,
+        zoom,
         edit: this.props.edit,
         totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
       });
       s.legendProps = merge(res, this.state);
       if (this.props.maxArea && (s.totalArea > s.maxArea)) return;
-      this.setState(s);
-      this.setState({ edit: true });
+      this.setState(s, this.maybeZoomToShapes);
     });
-    this.setState({
-      unit,
-      legendProps: this.props.legendProps,
-      maxArea,
-      features: feats,
-      points,
-      edit: this.props.edit,
-      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
-    }, this.zoomToShapes);
   }
 
   // updateShapes called by onCreated callback in Leaflet map
@@ -298,6 +297,9 @@ class MapContainer extends React.Component {
       center = makeCenter(this.props.center);
       this.setState({ center });
     }
+  }
+  maybeZoomToShapes() {
+    if (!this.state.center.clone) this.zoomToShapes();
   }
   render() {
     const {
