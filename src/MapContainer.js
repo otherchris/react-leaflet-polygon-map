@@ -258,7 +258,6 @@ class MapContainer extends React.Component {
       this.state.newCircleCenter,
       24,
     ));
-    console.log('the circle', cA)
     const circApprox = makeGeoJSON(cA);
     circApprox.properties.key = uuid.v4();
     if (area(this.state.unit, circApprox.properties.area) > this.state.maxArea.max) {
@@ -279,8 +278,14 @@ class MapContainer extends React.Component {
   turnOffCircleApprox() {
     this.setState({ makeCircleOn: false });
   }
-  setCenterAndZoom(e) {
-    this.setState({ center: e.center, zoom: e.zoom });
+  setCenterAndZoom() {
+    console.log('SET CENTER AND ZOOM');
+    if (this.leafletMap) {
+      this.setState({
+        center: this.leafletMap.leafletElement.getCenter(),
+        zoom: this.leafletMap.leafletElement.getZoom(),
+      });
+    }
   }
   zoomToShapes() {
     let center;

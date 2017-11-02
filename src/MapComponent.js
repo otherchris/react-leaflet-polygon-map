@@ -164,6 +164,7 @@ const MapComponent = (props) => {
         center = {props.center}
         zoom = {props.zoom}
         onViewportChanged={props.setCenterAndZoom}
+        onMoveend={props.setCenterAndZoom}
       >
         {geosuggest}
         {zoomButton}
