@@ -41,7 +41,7 @@ const makeCenter = (c) => {
 };
 
 const makeCenterLeaflet = (c) => {
-  if (!c) return {};
+  if (!c) return '';
   return L.latLng(c.lat, c.lng);
 };
 
@@ -84,9 +84,11 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToState(props) {
+    console.log('mappropstostate', props)
     const maxArea = this.props.maxArea || Number.MAX_VALUE;
     const unit = this.props.unit || 'miles';
     const features = props.features || [];
+    console.log('features in mappropstostate', features);
     //
     // Set a 'type' property for rectangles and circles
     // TODO: after data migration, get rid of this
@@ -95,6 +97,7 @@ class MapContainer extends React.Component {
     // into individual features
     let expandedFeatures = [];
     map(features, (feat) => { expandedFeatures = expandedFeatures.concat(expandFeatures(feat)); });
+    console.log('expanded features', expandedFeatures);
 
     // Convert each polygon into GeoJSON with area, then
     // add 'tooLarge' if necc. and add unique key
@@ -104,6 +107,8 @@ class MapContainer extends React.Component {
       out.properties.unit = unit;
       return this.validateShape(out);
     });
+
+    console.log('feats', feats);
 
     // Convert points to GeoJSON
     const points = map(this.props.points, convertPoint);

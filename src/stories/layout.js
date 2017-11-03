@@ -29,6 +29,16 @@ storiesOf('Layout', module)
       `}
     />
   ))
+  .add('center is null', () => (
+    <MapContainerStoryWithNotes
+      features={[dpPoly.geoJSON]}
+      center={null}
+      zoom={9}
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Red rectangle in the lower right
+      `}
+    />
+  ))
   .add('If a center (or center and zoom) is provided as array, use those instead of zoom to shapes', () => (
     <MapContainerStoryWithNotes
       features={[dpPoly.geoJSON]}
