@@ -154,6 +154,9 @@ const MapComponent = (props) => {
   const zoomButton = props.features.length > 0 || props.points.length > 1 ? (
     <btn className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</btn>
   ) : '';
+  const removeAllButton = (props.features.length > 0 && props.edit) ? (
+    <btn onClick={props.removeAllFeatures}>Remove all shapes</btn>
+  ) : '';
   return (
     <div>
       <Map
@@ -182,6 +185,7 @@ const MapComponent = (props) => {
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
         {removePolyBanner}
+        {removeAllButton}
       </div>
     </div>
   );
@@ -211,6 +215,7 @@ MapComponent.propTypes = {
   radiusChange: PropTypes.func,
   refresh: PropTypes.string,
   remove: PropTypes.bool,
+  removeAllFeatures: PropTypes.func,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   setCenterAndZoom: PropTypes.func,
   showLocationSelect: PropTypes.bool,

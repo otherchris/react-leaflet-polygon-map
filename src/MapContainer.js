@@ -311,6 +311,13 @@ class MapContainer extends React.Component {
   maybeZoomToShapes() {
     if (!this.state.center.lat) this.zoomToShapes();
   }
+  removeAllFeatures() {
+    this.setState({
+      features: [],
+      markers: [],
+      totalArea: 0,
+    });
+  }
   render() {
     const {
       tooltipOptions,
@@ -347,6 +354,7 @@ class MapContainer extends React.Component {
         radiusChange={this.radiusChange.bind(this)}
         refresh={this.state.refresh}
         remove={this.state.remove}
+        removeAllFeatures={this.removeAllFeatures.bind(this)}
         showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         viewport={this.state.viewport}

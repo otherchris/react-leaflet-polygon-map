@@ -56,4 +56,13 @@ storiesOf('Layout', module)
         <input type="checkbox" /> 1. Red rectangle in the lower right
       `}
     />
+  ))
+  .add('remove all shapes button', () => (
+    <MapContainerStoryWithNotes
+      features={[dpPoly.geoJSON]}
+      edit
+      additionalNotes={`Should see \n
+        <input type="checkbox" /> 1. Red rectangle in the lower right
+      `}
+    />
   ));
