@@ -105,6 +105,12 @@ class MapContainer extends React.Component {
       return this.validateShape(out);
     });
     const points = map(props.points, convertPoint);
+    this.setState({
+      features: feats,
+      points,
+      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+    });
+    /*
     this.debouncedOnChange(this.state, (err, res) => {
       const old = cloneDeep(this.state);
       const s = merge(old, {
@@ -120,6 +126,7 @@ class MapContainer extends React.Component {
       if (props.maxArea && (s.totalArea > s.maxArea)) return;
       this.setState(s);
     });
+    */
   }
   mapPropsToState(props) {
     console.log('mappropstostate', props)
