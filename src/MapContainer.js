@@ -76,8 +76,11 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
-  componentWillUpdate() {
-    this.mapPropsToState();
+  componentShouldUpdate(nextProps, nextState) {
+    if (!isEqual(this.props.features, this.state.features)) {
+      this.mapPropsToStateLite(nextProps);
+    }
+    return true;
   }
   validateShape(_feature) {
     const feature = cloneDeep(_feature);
@@ -86,10 +89,40 @@ class MapContainer extends React.Component {
     else delete feature.properties.errors;
     return feature;
   }
+  mapPropsToStateLite(props) {
+    console.log('mappropstostatelite', props)
+    const maxArea = props.maxArea || Number.MAX_VALUE;
+    const unit = props.unit || 'miles';
+    const features = props.features || [];
+    let expandedFeatures = [];
+    map(features, (feat) => { expandedFeatures = expandedFeatures.concat(expandFeatures(feat)); });
+    const feats = map(expandedFeatures, (feat, index) => {
+      const out = makeGeoJSON(feat);
+      out.properties.key = uuid.v4();
+      out.properties.unit = unit;
+      return this.validateShape(out);
+    });
+    const points = map(props.points, convertPoint);
+    this.debouncedOnChange(this.state, (err, res) => {
+      const old = cloneDeep(this.state);
+      const s = merge(old, {
+        unit,
+        legendProps: props.legendProps,
+        maxArea,
+        features: feats,
+        points,
+        edit: props.edit,
+        totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+      });
+      s.legendProps = merge(res, this.state);
+      if (props.maxArea && (s.totalArea > s.maxArea)) return;
+      this.setState(s);
+    });
+  }
   mapPropsToState(props) {
     console.log('mappropstostate', props)
-    const maxArea = this.props.maxArea || Number.MAX_VALUE;
-    const unit = this.props.unit || 'miles';
+    const maxArea = props.maxArea || Number.MAX_VALUE;
+    const unit = props.unit || 'miles';
     const features = props.features || [];
     console.log('features in mappropstostate', features);
     //
@@ -114,7 +147,7 @@ class MapContainer extends React.Component {
     console.log('feats', feats);
 
     // Convert points to GeoJSON
-    const points = map(this.props.points, convertPoint);
+    const points = map(props.points, convertPoint);
 
     // Set center of map as L.latLng
     let center = {};
