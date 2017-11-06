@@ -47,7 +47,6 @@ const makeCenterLeaflet = (c) => {
 
 class MapContainer extends React.Component {
   constructor(props) {
-    console.log('MapContainer constructor')
     super(props);
     this.state = {
       features: [],
@@ -74,12 +73,10 @@ class MapContainer extends React.Component {
     this.setState({ googleAPIError: true });
   }
   componentDidMount() {
-    console.log('MapContainer didmount')
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   componentWillReceiveProps(nextProps) {
-    console.log('MapContainer willrecieveprops')
     if (!isEqual(this.props.features, nextProps.features)) {
       this.mapPropsToStateLite(nextProps);
     }
@@ -92,7 +89,6 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToStateLite(props) {
-    console.log('mappropstostatelite', props)
     const maxArea = props.maxArea || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
@@ -108,6 +104,7 @@ class MapContainer extends React.Component {
     this.setState({
       features: feats,
       points,
+      edit: this.props.edit,
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
     });
     /*
@@ -129,11 +126,9 @@ class MapContainer extends React.Component {
     */
   }
   mapPropsToState(props) {
-    console.log('mappropstostate', props)
     const maxArea = props.maxArea || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
-    console.log('features in mappropstostate', features);
     //
     // Set a 'type' property for rectangles and circles
     // TODO: after data migration, get rid of this
@@ -142,7 +137,6 @@ class MapContainer extends React.Component {
     // into individual features
     let expandedFeatures = [];
     map(features, (feat) => { expandedFeatures = expandedFeatures.concat(expandFeatures(feat)); });
-    console.log('expanded features', expandedFeatures);
 
     // Convert each polygon into GeoJSON with area, then
     // add 'tooLarge' if necc. and add unique key
@@ -152,8 +146,6 @@ class MapContainer extends React.Component {
       out.properties.unit = unit;
       return this.validateShape(out);
     });
-
-    console.log('feats', feats);
 
     // Convert points to GeoJSON
     const points = map(props.points, convertPoint);
@@ -308,7 +300,6 @@ class MapContainer extends React.Component {
   }
   makeCircle() {
     if (!this.state.newCircleRadius || !this.state.newCircleCenter) return;
-    console.log('making circle');
     const features = this.state.features;
     const cA = (generateCircleApprox(
       this.state.newCircleRadius,
@@ -337,7 +328,6 @@ class MapContainer extends React.Component {
     this.setState({ makeCircleOn: false });
   }
   setCenterAndZoom() {
-    console.log('SET CENTER AND ZOOM');
     if (this.leafletMap) {
       const ctr = cloneDeep(this.leafletMap.leafletElement.getCenter());
       this.setState({

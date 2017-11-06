@@ -79,7 +79,6 @@ const MapComponent = (props) => {
         tipMessage: p.errors.join(', '),
       });
     }
-    console.log('tto', tooltipOptions);
     return (
       <GeoJSON
         style={thisStyle}
