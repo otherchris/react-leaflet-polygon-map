@@ -47,6 +47,7 @@ const makeCenterLeaflet = (c) => {
 
 class MapContainer extends React.Component {
   constructor(props) {
+    console.log('MapContainer constructor')
     super(props);
     this.state = {
       features: [],
@@ -73,10 +74,12 @@ class MapContainer extends React.Component {
     this.setState({ googleAPIError: true });
   }
   componentDidMount() {
+    console.log('MapContainer didmount')
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
-  componentShouldUpdate(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
+    console.log('MapContainer willrecieveprops')
     if (!isEqual(this.props.features, this.state.features)) {
       this.mapPropsToStateLite(nextProps);
     }
