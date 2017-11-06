@@ -8,6 +8,8 @@ import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
 import { EditControl } from 'react-leaflet-draw';
+import 'react-leaflet-fullscreen/dist/styles.css';
+import FullscreenControl from 'react-leaflet-fullscreen';
 import {
   Map,
   Marker,
@@ -175,6 +177,7 @@ const MapComponent = (props) => {
           url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}
         />
+        <FullscreenControl position="topright" />
         <EditTools {...props} />
         {heatmap}
         {features}
