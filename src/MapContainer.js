@@ -76,6 +76,9 @@ class MapContainer extends React.Component {
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
+  componentWillUpdate() {
+    this.mapPropsToState();
+  }
   validateShape(_feature) {
     const feature = cloneDeep(_feature);
     const newErrors = this.props.featureValidator(feature);
