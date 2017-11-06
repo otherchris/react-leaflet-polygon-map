@@ -19,7 +19,7 @@ storiesOf('features', module)
   ))
   .add('map with a \'gon (GeoJson)', () => (
     <MapContainerStoryWithNotes
-      features={[dpPoly.geoJSON]}
+      features={[dpPoly.geoJSON, dpPoly.geoJSON2]}
       additionalNotes={`Should see \n
         <input type="checkbox" /> 1. Default styled polygon
       `}

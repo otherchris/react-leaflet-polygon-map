@@ -80,10 +80,9 @@ class MapContainer extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     console.log('MapContainer willrecieveprops')
-    if (!isEqual(this.props.features, this.state.features)) {
+    if (!isEqual(this.props.features, nextProps.features)) {
       this.mapPropsToStateLite(nextProps);
     }
-    return true;
   }
   validateShape(_feature) {
     const feature = cloneDeep(_feature);
