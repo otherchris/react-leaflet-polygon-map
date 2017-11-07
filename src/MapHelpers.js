@@ -56,10 +56,10 @@ export const generateIcon = (html) => new L.divIcon({
 
 export const expandFeatures = (obj) => {
   if (obj && obj.length) return obj;
-  if (obj.map && obj.map.polygons) {
+  if (obj && obj.map && obj.map.polygons) {
     return obj.map.polygons;
   }
-  if (obj.type === 'FeatureCollection') {
+  if (obj && obj.type === 'FeatureCollection') {
     return obj.features;
   }
   return [obj];
