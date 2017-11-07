@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NumberPicker } from 'react-widgets';
+import NumberPicker from 'react-widgets/lib/NumberPicker';
 
 const CircleApprox = (props) => (
   <div className="circle-approx btn-group">
@@ -8,7 +8,9 @@ const CircleApprox = (props) => (
     <NumberPicker
       className="radius-picker"
       onChange={props.radiusChange}
+      step={0.1}
       max={10}
+      defaultValue={0.100}
       min={0}
       format={'##.###'}
       precision={2}
