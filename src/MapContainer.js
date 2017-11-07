@@ -47,6 +47,7 @@ const makeCenterLeaflet = (c) => {
 
 class MapContainer extends React.Component {
   constructor(props) {
+    console.log('props recieved by map', props);
     super(props);
     this.state = {
       features: [],
