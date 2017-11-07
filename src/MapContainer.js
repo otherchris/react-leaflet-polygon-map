@@ -104,7 +104,6 @@ class MapContainer extends React.Component {
     this.setState({
       features: feats,
       points,
-      edit: this.props.edit,
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
     });
     /*
