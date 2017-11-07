@@ -6,7 +6,6 @@ const CircleApprox = (props) => (
   <div className="circle-approx btn-group">
     Radius (in miles)
     <NumberPicker
-      className="radius-picker"
       onChange={props.radiusChange}
       step={0.1}
       max={10}
