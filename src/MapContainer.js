@@ -40,10 +40,8 @@ const makeCenter = (c) => {
   return c;
 };
 
-const makeCenterLeaflet = (c) => {
-  if (!c) return '';
-  return L.latLng(c.lat, c.lng);
-};
+// input a geoJSON point geometry
+const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
 
 class MapContainer extends React.Component {
   constructor(props) {
