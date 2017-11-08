@@ -240,6 +240,6 @@ MapComponent.defaultProps = {
     url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
     attribution: '© OpenStreetMap contributors',
   },
-  center: [33, -85],
+  center: L.latLng([33, -85]),
 };
 export default MapComponent;
