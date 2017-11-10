@@ -299,7 +299,7 @@ class MapContainer extends React.Component {
     }
   }
   onLocationSelect(loc) {
-    this.setState({ center: { lat: loc.location.lat, lng: loc.location.lng } });
+    this.setState({ center: { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] } });
   }
   radiusChange(e) {
     this.setState({ newCircleRadius: e });
