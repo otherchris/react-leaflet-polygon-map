@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import NumberPicker from 'react-widgets/lib/NumberPicker';
 
 const CircleApprox = (props) => (
-  <div className="circle-approx btn-group">
+  <div className="circle-approx">
     Radius (in miles)
     <NumberPicker
       onChange={props.radiusChange}
