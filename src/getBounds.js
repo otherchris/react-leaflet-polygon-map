@@ -14,7 +14,7 @@ const getCoords = (arr) => {
   return arr;
 };
 
-const getCenter = (polygons, points) => {
+const getBounds = (polygons, points) => {
   if (polygons.length === 0 && points.length === 0) return [35, -83];
   let coords = [];
   map(polygons, (poly) => {
@@ -34,5 +34,5 @@ const getCenter = (polygons, points) => {
   return L.latLngBounds(c1, c2);
 };
 
-export default getCenter;
+export default getBounds;
 

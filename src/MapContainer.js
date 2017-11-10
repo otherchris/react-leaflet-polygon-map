@@ -30,14 +30,28 @@ import {
   cleanPoly,
 } from './MapHelpers';
 import './main.css';
-import getCenter from './getCenter';
+import getBounds from './getBounds';
 import convertPoint from './convertPoint';
 
+const validCoordsArray = (arr) =>
+  arr.length &&
+  arr.length === 2 &&
+  arr[0] < 180 &&
+  arr[0] > -180 &&
+  arr[1] < 90 &&
+  arr[1] > -90;
+
+const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === 'number';
+const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
+const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
+
 const makeCenter = (c) => {
-  if (c.length === 2) {
-    return { lat: c[0], lng: c[1] };
-  }
-  return c;
+  if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
+  if (validCoordsArray(c)) return { type: 'Point', coordinates: c };
+  if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
+  if (validGeoJSONPoint(c)) return c;
+  if (validGeoJSONPointFeature(c)) return c.geometry;
+  return { type: 'Point', coordinates: [-85.751528, 38.257222] };
 };
 
 // input a geoJSON point geometry
@@ -48,6 +62,7 @@ class MapContainer extends React.Component {
     console.log('props recieved by map', props);
     super(props);
     this.state = {
+      center: makeCenter(props.center),
       features: [],
       points: [],
       googleAPILoaded: false,
@@ -149,14 +164,7 @@ class MapContainer extends React.Component {
     const points = map(props.points, convertPoint);
 
     // Set center of map as L.latLng
-    let center = {};
-    if (
-      this.props.center &&
-      this.props.center.length &&
-      this.props.center.length === 2
-    ) {
-      center = { lat: this.props.center[1], lng: this.props.center[0] };
-    } else center = this.props.center || {};
+    const center = makeCenter(this.props.center);
     const zoom = this.props.zoom || null;
 
     // Apply changes to state
@@ -329,7 +337,10 @@ class MapContainer extends React.Component {
     if (this.leafletMap) {
       const ctr = cloneDeep(this.leafletMap.leafletElement.getCenter());
       this.setState({
-        center: { lat: ctr.lat, lng: ctr.lng },
+        center: {
+          type: 'Point',
+          coordinates: [ctr.lng, ctr.lat],
+        },
         zoom: this.leafletMap.leafletElement.getZoom(),
       });
     }
@@ -339,7 +350,7 @@ class MapContainer extends React.Component {
     const feats = this.state.features;
     const points = this.state.points;
     if (feats.length > 0 || points.length > 1) {
-      const bounds = getCenter(feats, points);
+      const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
     } else {
       center = makeCenter(this.props.center);
