@@ -70,6 +70,7 @@ class MapContainer extends React.Component {
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
       totalArea: 0,
+      newCircleRadius: 0.1,
     };
     this.debouncedOnChange = debounce(this.props.onShapeChange, 100);
   }
@@ -327,6 +328,7 @@ class MapContainer extends React.Component {
       s.totalArea = area(state.unit, reduce(features, areaAccumulator, 0));
       s.makeCircleOn = false;
       s.legendProps = omit(merge(res, s), 'legendProps');
+      s.newCircleRadius = 0.1;
       this.setState(s);
     });
   }
@@ -361,10 +363,13 @@ class MapContainer extends React.Component {
     if (!this.state.center.lat) this.zoomToShapes();
   }
   removeAllFeatures() {
-    this.setState({
-      features: [],
-      markers: [],
-      totalArea: 0,
+    const state = cloneDeep(this.state);
+    this.debouncedOnChange(state, (err, res) => {
+      const s = cloneDeep(state);
+      s.features = [];
+      s.totalArea = 0;
+      s.legendProps = omit(merge(res, s), 'legendProps');
+      this.setState(s);
     });
   }
   render() {
@@ -435,7 +440,7 @@ MapContainer.propTypes = {
   legendProps: PropTypes.object,
   maxArea: PropTypes.object,
   onShapeChange: PropTypes.func,
-  points: PropTypes.arrayOf(PropTypes.array),
+  points: PropTypes.arrayOf(PropTypes.object),
   features: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
   remove: PropTypes.bool,
