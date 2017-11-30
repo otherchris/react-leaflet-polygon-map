@@ -368,7 +368,7 @@ class MapContainer extends React.Component {
       const s = cloneDeep(state);
       s.features = [];
       s.totalArea = 0;
-      s.legendProps = omit(merge(res, s), 'legendProps');
+      s.legendProps = {}; // omit(merge(res, s), 'legendProps');
       this.setState(s);
     });
   }
