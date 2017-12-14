@@ -21,11 +21,6 @@ export const cleanPoly = (poly) => {
   return p;
 };
 
-export const displayPoly = (poly) => {
-  if (hasIn(poly, 'features')) return poly;
-  return polyline.toGeoJSON(poly);
-};
-
 export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
   html: html || logoDefault,
