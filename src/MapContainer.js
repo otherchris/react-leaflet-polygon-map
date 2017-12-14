@@ -1,12 +1,8 @@
-import includes from 'lodash/includes';
 import map from 'lodash/map';
-import hasIn from 'lodash/hasIn';
-import extend from 'lodash/extend';
 import pick from 'lodash/pick';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
 import filter from 'lodash/filter';
-import noop from 'lodash/noop';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
@@ -18,7 +14,7 @@ import L from 'leaflet';
 import React from 'react';
 import { ReactScriptLoader, ReactScriptLoaderMixin } from 'react-script-loader';
 import MapComponent from './MapComponent';
-import { makeGeoJSON } from './ConvertPoly';
+import makeGeoJSON from './ConvertPoly';
 import {
   generateIcon,
   expandFeatures,
