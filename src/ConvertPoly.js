@@ -4,7 +4,6 @@
 // in the form of 'FeatureCollection' objects
 // Original Circle and Rectangle dat is saved in object.features.properties
 // see https://tools.ietf.org/html/rfc7946 for geoJSONFORMAT
-import wkx from 'wkx';
 import map from 'lodash/map';
 import size from 'lodash/size';
 import flatten from 'lodash/flatten';
@@ -85,13 +84,6 @@ export const convertPoly = poly => {
       type: 'Feature',
       properties: {},
       geometry: polyline.toGeoJSON(poly.data),
-    };
-  }
-  case 'wkt': {
-    return {
-      type: 'Feature',
-      properties: {},
-      geometry: wkx.Geometry.parse(poly.data).toGeoJSON(),
     };
   }
   case 'circle': {

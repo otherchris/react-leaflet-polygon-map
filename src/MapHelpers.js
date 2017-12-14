@@ -1,4 +1,3 @@
-import wkx from 'wkx';
 import L from 'leaflet';
 import polyline from 'polyline';
 import hasIn from 'lodash/hasIn';
@@ -24,29 +23,7 @@ export const cleanPoly = (poly) => {
 
 export const displayPoly = (poly) => {
   if (hasIn(poly, 'features')) return poly;
-  if (includes(poly, 'POLYGON')) {
-    return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(poly).toGeoJSON(),
-      }],
-    };
-  }
-  try {
-    const buf = Buffer.from(poly, 'base64');
-    return {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        properties: {},
-        geometry: wkx.Geometry.parse(buf).toGeoJSON(),
-      }],
-    };
-  } catch (e) {
-    return polyline.toGeoJSON(poly);
-  }
+  return polyline.toGeoJSON(poly);
 };
 
 export const generateIcon = (html) => new L.divIcon({
