@@ -13,30 +13,17 @@ import rewind from 'geojson-rewind';
 import getArea from './getArea';
 import { generateCircleApprox } from './MapHelpers';
 
-
-export const translateGooglePoly = (gPoly) => {
-  const coords = map(gPoly.path, (coord) => [coord.lng, coord.lat]);
-  return {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'MultiPolygon',
-      coordinates: [[coords]],
-    },
-  };
-};
-
 // given set of coordinates, checks to see if last set is equal to first set
 // (read: makes sure it's closed)
 // if not, closes shape by adding first set to end of coordinate array
-export const ensureShapeIsClosed = shape => {
+const ensureShapeIsClosed = shape => {
   const last = shape.length - 1;
   if (!isEqual(shape[0], shape[last])) shape.push(shape[0]);
   return shape;
 };
 // given geoJSON FEATURE OBJ, calls ensureShapeIsClosed() to check coord
 // validity
-export const ensureGeometryIsValid = featObj => {
+const ensureGeometryIsValid = featObj => {
   switch (featObj.geometry.type) {
   case 'LineString': {
     featObj.geometry.type = 'Polygon';
@@ -63,87 +50,7 @@ export const ensureGeometryIsValid = featObj => {
     throw Error(`Ensure Geometry - invalid geometry type: ${featObj.geometry.type}`);
   }
 };
-// given different poly types: polyline, geoJSON (both poly and multipoly),
-// wkt, wkb, circle (center/radius), rectangle (bounds/path)
-// Returns as geoJSON Feature Objects
-export const convertPoly = poly => {
-  if (typeof poly.id === 'number') {
-    return translateGooglePoly(poly);
-  }
-  // shim for current new movers, will remove:
-  if (poly.path && poly.zip) {
-    return {
-      type: 'Feature',
-      properties: {},
-      geometry: polyline.toGeoJSON(poly.path),
-    };
-  }
-  switch (poly.type) {
-  case 'polyline': {
-    return {
-      type: 'Feature',
-      properties: {},
-      geometry: polyline.toGeoJSON(poly.data),
-    };
-  }
-  case 'circle': {
-    let circleCoords = [];
-    const center = poly.center;
-    const radius = poly.radius;
-    const area = poly.area || null;
-    if (poly.path) {
-      circleCoords = map(poly.path, (x) => [x.lng, x.lat]);
-    } else {
-      return generateCircleApprox(poly.radius, 'meters', poly.center, 24);
-    }
-    return {
-      type: 'Feature',
-      properties: { center: center || '', radius: radius || '', area: area || '' },
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          circleCoords,
-        ],
-      },
-    };
-  }
-  case 'rectangle': {
-    let rectCoords = [];
-    if (poly.path) {
-      rectCoords = map(poly.path, (x) => [x.lng, x.lat]);
-    } else {
-      const bounds = poly.data.bounds;
-      rectCoords = [
-        [bounds.west, bounds.north],
-        [bounds.west, bounds.south],
-        [bounds.east, bounds.south],
-        [bounds.east, bounds.north],
-      ];
-    }
-    const area = poly.data ? poly.data.area : null;
-    return {
-      type: 'Feature',
-      properties: { bounds: poly.bounds || '', area: area || '' },
-      geometry: {
-        type: 'Polygon',
-        coordinates: [rectCoords],
-      },
-    };
-  }
-  case 'Feature': {
-    return poly;
-  }
-  case 'geoJSON': {
-    return {
-      type: poly.data.type,
-      properties: poly.data.properties,
-      geometry: poly.data.geometry,
-    };
-  }
-  default:
-    throw Error(`Ensure Geometry - invalid poly type: ${poly.type}`);
-  }
-};
+
 // Given geoJSON Feature Obj
 // Returns geoJSON Feature Collection
 /* export const featCollWrap = (featObj) =>
@@ -155,7 +62,7 @@ export const convertPoly = poly => {
 // Returns Polygons as MultiPolys,
 // Multipolys pass through
 // Everything else is error
-export const polyToMulti = geoJSONObj => {
+const polyToMulti = geoJSONObj => {
   const { properties } = geoJSONObj;
   const { type, coordinates } = geoJSONObj.geometry;
   switch (type) {
@@ -178,58 +85,15 @@ export const polyToMulti = geoJSONObj => {
   }
 };
 
-
-// Given geoJSON feature
-// Returns that same object with the coordinates array properly nested
-/* export const sizeArray = geoJSONObj => {
- *   const { properties } = geoJSONObj;
- *   const { type, coordinates } = geoJSONObj.geometry;
- *   switch (type) {
- *   case 'Polygon': {
- *     const coordSize = coordinates.length;
- *     console.log('coord size', coordSize);
- *     if (coordSize === 1) {
- *       const flatterArray = flatten(coordinates);
- *       const newFeature = {
- *         type: 'Feature',
- *         properties,
- *         geometry: {
- *           type: 'Polygon',
- *           coordinates: flatterArray,
- *         },
- *       };
- *       return sizeArray(newFeature);
- *     }
- *     return geoJSONObj;
- *   }
- *   case 'MultiPolygon': {
- *     const coordSize = size(coordinates[0][0]);
- *     if (coordSize === 1) {
- *       const flatterArray = flatten(coordinates);
- *       const newFeature = {
- *         type: 'Feature',
- *         properties,
- *         geometry: {
- *           type: 'MultiPolygon',
- *           coordinates: flatterArray,
- *         },
- *       };
- *       return sizeArray(newFeature);
- *     }
- *     return geoJSONObj;
- *   }
- *   default:
- *     throw Error(`Ensure Geometry - invalid geometry type: ${geoJSONObj.geometry.type}`);
- *   }
- * }; */
 // Given one of our specified poly types, runs it through the series of
 // functions above
 // Returns valid geoJSON Feature
-export const makeGeoJSON = poly => {
-  const featObj = convertPoly(poly);
-  const validatedObj = ensureGeometryIsValid(featObj);
+const makeGeoJSON = poly => {
+  const validatedObj = ensureGeometryIsValid(poly);
   const resizedArray = polyToMulti(validatedObj);
   const woundCoords = rewind(resizedArray, false);
   const resizedWithArea = getArea(woundCoords);
   return resizedWithArea;
 };
+
+export default makeGeoJSON;
