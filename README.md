@@ -22,10 +22,6 @@ Google location API for location search.
 Initial center of the map. Can be provided as an array `[ <lat>, <lng> ]` ro an
 object `{ lat: <lat>, lng: <lng }`.
 
-### `circles`
-
-???
-
 ### `edit (bool)`
 
 Enable the draw layer on the map. Required for creating new polygons/points and
@@ -35,11 +31,6 @@ editing/removing existing polygons/points
 
 Callback triggered by submit button. If not present, submit button is not
 rendered.
-
-### `heatmap (array)`
-
-Data for producing a heatmap layer on the map (see [react-leaflet-heatmap-layer](https://github.com/OpenGov/react-leaflet-heatmap-layer)).
-If not present, heatmap layer is not rendered.
 
 ### `height (number)`
 
@@ -74,20 +65,10 @@ An array of points to be added as markers on the map. Points should be
 provided either as an array like `[ <lat>, <lng> ]` or as a GeoJSON Point
 feature (see [the feature specification](https://macwright.org/2015/03/23/geojson-second-bite.html#features)).
 
-### `polygons (array)`
+### `features (array)`
 
-An array of polygons to be added to the map. Polygons can be any combination of
-the following formats:
-
-- GeoJSON Polygon feature
-- GeoJSON MultiPolygon feature
-- wkt
-- Google Maps object
-- Google [ polyline ]( https://developers.google.com/maps/documentation/utilities/polylineutility )
-
-### `rectangles (array)`
-
-???
+An array of polygons to be added to the map. Polygons must be a valid GeoJSON
+MultiPolygon
 
 ### `remove (bool)`
 
