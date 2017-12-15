@@ -197,7 +197,6 @@ MapComponent.propTypes = {
   clickPoly: PropTypes.func,
   edit: PropTypes.bool,
   handleSubmit: PropTypes.func,
-  heatmap: PropTypes.object,
   height: PropTypes.number,
   hoveredStyle: PropTypes.object,
   includeZipRadius: PropTypes.bool,
