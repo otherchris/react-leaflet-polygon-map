@@ -19,8 +19,16 @@ Google location API for location search.
 
 ### `center (array/object)`
 
-Initial center of the map. Can be provided as an array `[ <lat>, <lng> ]` ro an
-object `{ lat: <lat>, lng: <lng }`.
+Initial center of the map. Can be provided as
+  - an array `[ <lat>, <lng> ]`
+  - an object `{ lat: <lat>, lng: <lng> }`
+  - a GeoJSON Point `{ "type": "Point", "coordinates": [ <lat>, <lng> ] }`
+  - a GeoJSON Feature ```
+    {
+      "type": "Feature",
+      "properties": { <props> },
+      "geometry": { <GeoJSON Point> }
+    }```
 
 ### `edit (bool)`
 
