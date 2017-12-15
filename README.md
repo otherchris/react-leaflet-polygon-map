@@ -52,20 +52,19 @@ HTML to render for map markers
 
 Component to render beneath the map, useful for map legends.
 
-### `maxArea (object)`
+### `legendProps (object)`
+
+Initial props for legend component
+
+### `maxArea (number)`
 
 Maximum area for polygons on the map. If area is exceeded, submit button will
-be disabled
-```
-{
-  area: <number>,
-  unit: <'meters'|'miles'>
-}
-```
+be disabled. Measured in sq meters.
 
-### `onChange (func)`
+### `onShapeChange (func)`
 
-Callback triggered by state change in the container. Debounced at 100ms.
+Callback triggered by state change in the container. Debounced at 100ms. Second
+arg should be an (err, res) callback.
 
 ### `points (array)`
 
@@ -76,7 +75,7 @@ feature (see [the feature specification](https://macwright.org/2015/03/23/geojso
 ### `features (array)`
 
 An array of polygons to be added to the map. Polygons must be a valid GeoJSON
-MultiPolygon
+Feature with MultiPolygon geometry.
 
 ### `remove (bool)`
 
