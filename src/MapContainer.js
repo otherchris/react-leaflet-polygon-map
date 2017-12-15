@@ -373,7 +373,6 @@ class MapContainer extends React.Component {
       tooltipOptions,
     } = this.props;
     const passThroughProps = pick(this.props, [
-      'heatmap',
       'height',
       'legendComponent',
       'style',
