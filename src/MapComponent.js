@@ -33,7 +33,6 @@ import MapSubmitButton from './MapSubmitButton';
 import CircleApprox from './CircleApprox';
 import './main.css';
 import getArea from './getArea';
-import Heatmap from './Heatmap';
 
 const style = {
   color: 'green',
@@ -123,7 +122,6 @@ const MapComponent = (props) => {
       </Marker>
     );
   });
-  const heatmap = props.heatmap ? (<Heatmap heatmap={props.heatmap} />) : '';
   const geosuggest = props.showLocationSelect ?
     <Geosuggest
       className="geosuggest"
@@ -178,7 +176,6 @@ const MapComponent = (props) => {
         />
         <FullscreenControl position="topright" />
         <EditTools {...props} />
-        {heatmap}
         {features}
         {points}
       </Map>
@@ -200,7 +197,6 @@ MapComponent.propTypes = {
   clickPoly: PropTypes.func,
   edit: PropTypes.bool,
   handleSubmit: PropTypes.func,
-  heatmap: PropTypes.object,
   height: PropTypes.number,
   hoveredStyle: PropTypes.object,
   includeZipRadius: PropTypes.bool,
