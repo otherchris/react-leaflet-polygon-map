@@ -425,7 +425,6 @@ MapContainer.propTypes = {
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.object,
   ]),
-  circles: PropTypes.arrayOf(PropTypes.object),
   edit: PropTypes.bool,
   featureValidator: PropTypes.func,
   handleSubmit: PropTypes.func,
