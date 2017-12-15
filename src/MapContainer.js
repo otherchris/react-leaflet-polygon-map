@@ -433,7 +433,7 @@ MapContainer.propTypes = {
   iconHTML: PropTypes.string,
   legendComponent: PropTypes.func,
   legendProps: PropTypes.object,
-  maxArea: PropTypes.object,
+  maxArea: PropTypes.number,
   onShapeChange: PropTypes.func,
   points: PropTypes.arrayOf(PropTypes.object),
   features: PropTypes.arrayOf(PropTypes.object),
