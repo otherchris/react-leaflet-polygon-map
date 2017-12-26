@@ -117,23 +117,8 @@ class MapContainer extends React.Component {
       points,
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
     });
-    /*
     this.debouncedOnChange(this.state, (err, res) => {
-      const old = cloneDeep(this.state);
-      const s = merge(old, {
-        unit,
-        legendProps: props.legendProps,
-        maxArea,
-        features: feats,
-        points,
-        edit: props.edit,
-        totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
-      });
-      s.legendProps = merge(res, this.state);
-      if (props.maxArea && (s.totalArea > s.maxArea)) return;
-      this.setState(s);
     });
-    */
   }
   mapPropsToState(props) {
     const maxArea = props.maxArea || Number.MAX_VALUE;

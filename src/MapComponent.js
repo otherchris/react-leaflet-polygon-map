@@ -123,23 +123,22 @@ const MapComponent = (props) => {
     );
   });
   const geosuggest = props.showLocationSelect ?
-    <div onClick = {(e) => {e.stopPropagation()}} >
-      <Geosuggest
-        className="geosuggest"
-        onSuggestSelect={props.onLocationSelect}
-        style={{
-          input: {
-            width: '20rem',
-          },
-          suggests: {
-            listStyle: 'none',
-            width: '20rem',
-            overflow: 'hidden',
-            backgroundColor: 'rgba(150, 150, 150, .3)',
-          },
-        }}
-      />
-    </div>
+    <Geosuggest
+      className="geosuggest"
+      onSuggestSelect={props.onLocationSelect}
+      onClick={(e) => { e.stopPropagation(); }}
+      style={{
+        input: {
+          width: '20rem',
+        },
+        suggests: {
+          listStyle: 'none',
+          width: '20rem',
+          overflow: 'hidden',
+          backgroundColor: 'rgba(150, 150, 150, .3)',
+        },
+      }}
+    />
     : '';
   const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const removePolyBanner = props.edit && props.remove
