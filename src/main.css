@@ -82,6 +82,11 @@
   width: 100%;
 }
 
+.geosuggest__item {
+  z-index: 1010;
+  background-color: green;
+}
+
 .geosuggest__suggests--hidden {
   max-height: 0;
   overflow: hidden;
