@@ -117,8 +117,6 @@ class MapContainer extends React.Component {
       points,
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
     });
-    this.debouncedOnChange(this.state, (err, res) => {
-    });
   }
   mapPropsToState(props) {
     const maxArea = props.maxArea || Number.MAX_VALUE;
