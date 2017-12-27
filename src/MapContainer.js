@@ -59,7 +59,7 @@ class MapContainer extends React.Component {
     super(props);
     this.state = {
       center: makeCenter(props.center),
-      features: [],
+      features: props.features || [],
       points: [],
       googleAPILoaded: false,
       edit: false,
