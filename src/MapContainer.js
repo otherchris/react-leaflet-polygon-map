@@ -58,6 +58,7 @@ class MapContainer extends React.Component {
     console.log('props recieved by map', props);
     super(props);
     this.state = {
+      openFeature: false,
       center: makeCenter(props.center),
       features: props.features || [],
       points: [],
@@ -250,6 +251,7 @@ class MapContainer extends React.Component {
     features[index].properties.editable = !editable;
     this.debouncedOnChange(this.state, (err, res) => {
       const s = cloneDeep(this.state);
+      s.openFeature = !editable;
       s.features = features;
       s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
       s.legendProps = omit(merge(res, s), 'legendProps');
@@ -381,6 +383,7 @@ class MapContainer extends React.Component {
         maxArea={this.state.maxArea || Number.MAX_VALUE}
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
+        openFeature={this.state.openFeature}
         points={this.state.points}
         features={polygonArrayToProp(this.state.features)}
         radiusChange={this.radiusChange.bind(this)}

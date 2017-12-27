@@ -157,8 +157,14 @@ const MapComponent = (props) => {
   const removeAllButton = (props.features.length > 0 && props.edit) ? (
     <btn onClick={props.removeAllFeatures}>Remove all shapes</btn>
   ) : '';
+  const openFeatureMessage = (props.openFeature) ? (
+    <div>
+      Click the polygon again to finish editing
+    </div>
+  ) : '';
   return (
     <div>
+      {openFeatureMessage}
       <Map
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
@@ -209,6 +215,7 @@ MapComponent.propTypes = {
   maxArea: PropTypes.number,
   onCreated: PropTypes.func,
   onLocationSelect: PropTypes.func,
+  openFeature: PropTypes.bool,
   points: PropTypes.arrayOf(PropTypes.object),
   features: PropTypes.arrayOf(PropTypes.object),
   radiusChange: PropTypes.func,
