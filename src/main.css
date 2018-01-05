@@ -11,7 +11,7 @@
 
 .below-map {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .map-legend: {
@@ -60,12 +60,18 @@
   font-size: 3rem;
 }
 
-.zoom-button {
+.btn-group {
   position: absolute;
   z-index: 1000;
   bottom: 10px;
   left: 10px;
 }
+/* .zoom-button {
+ *   position: absolute;
+ *   z-index: 1000;
+ *   bottom: 10px;
+ *   left: 10px;
+ * } */
 
 .geosuggest {
   position: absolute;

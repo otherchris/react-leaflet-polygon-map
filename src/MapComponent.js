@@ -152,10 +152,10 @@ const MapComponent = (props) => {
     />
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 1 ? (
-    <btn className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</btn>
+    <button className="zoom-button btn btn-secondary btn-sm" onClick={props.zoomToShapes}>Zoom to shapes</button>
   ) : '';
   const removeAllButton = (props.features.length > 0 && props.edit) ? (
-    <btn onClick={props.removeAllFeatures}>Remove all shapes</btn>
+    <button className="btn btn-danger btn-sm" onClick={props.removeAllFeatures}>Remove all shapes</button>
   ) : '';
   const openFeatureMessage = (props.openFeature) ? (
     <div>
@@ -176,7 +176,6 @@ const MapComponent = (props) => {
         onMoveend={props.setCenterAndZoom}
       >
         {geosuggest}
-        {zoomButton}
         <TileLayer
           url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}
@@ -185,13 +184,16 @@ const MapComponent = (props) => {
         <EditTools {...props} />
         {features}
         {points}
+        // <div className="btn-group" role="group" aria-label="Basic example">
+          {zoomButton}
+          {removeAllButton}
+        // </div>
       </Map>
       <div className="below-map">
         {legend}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
         {removePolyBanner}
-        {removeAllButton}
       </div>
     </div>
   );
