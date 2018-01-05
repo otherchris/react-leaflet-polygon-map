@@ -281,7 +281,11 @@ class MapContainer extends React.Component {
     }
   }
   onLocationSelect(loc) {
+    const { b, f } = loc.gmaps.geometry.viewport;
     this.setState({ center: { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] } });
+    const b1 = L.latLng(f.b, b.b);
+    const b2 = L.latLng(f.f, b.f);
+    this.leafletMap.leafletElement.fitBounds(L.latLngBounds(b1, b2));
   }
   radiusChange(e) {
     this.setState({ newCircleRadius: e });
