@@ -25,6 +25,7 @@ import {
   polygonArrayToProp,
   cleanPoly,
 } from './MapHelpers';
+import 'bootstrap/dist/css/bootstrap.css';
 import './main.css';
 import getBounds from './getBounds';
 import convertPoint from './convertPoint';
@@ -282,6 +283,7 @@ class MapContainer extends React.Component {
   }
   onLocationSelect(loc) {
     this.setState({ center: { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] } });
+    console.log(loc);
   }
   radiusChange(e) {
     this.setState({ newCircleRadius: e });
