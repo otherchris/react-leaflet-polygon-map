@@ -155,7 +155,7 @@ const MapComponent = (props) => {
     <btn className="zoom-button" onClick={props.zoomToShapes}>Zoom to shapes</btn>
   ) : '';
   const removeAllButton = (props.features.length > 0 && props.edit) ? (
-    <button className="btn" onClick={props.removeAllFeatures}>Remove all shapes</button>
+    <button className='btn' onClick={props.removeAllFeatures}>Remove all shapes</button>
   ) : '';
   const openFeatureMessage = (props.openFeature) ? (
     <div>
