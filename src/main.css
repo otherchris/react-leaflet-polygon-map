@@ -61,17 +61,11 @@
 }
 
 .btn-group {
-  position: absolute;
+  position: absolute !important;
   z-index: 1000;
   bottom: 10px;
   left: 10px;
 }
-/* .zoom-button {
- *   position: absolute;
- *   z-index: 1000;
- *   bottom: 10px;
- *   left: 10px;
- * } */
 
 .geosuggest {
   position: absolute;

@@ -135,7 +135,7 @@ const MapComponent = (props) => {
           listStyle: 'none',
           width: '20rem',
           overflow: 'hidden',
-          backgroundColor: 'rgba(150, 150, 150, .3)',
+          backgroundColor: 'rgba(247, 247, 247, .8)',
         },
       }}
     />
@@ -184,10 +184,10 @@ const MapComponent = (props) => {
         <EditTools {...props} />
         {features}
         {points}
-        // <div className="btn-group" role="group" aria-label="Basic example">
+        <div className="btn-group">
           {zoomButton}
           {removeAllButton}
-        // </div>
+        </div>
       </Map>
       <div className="below-map">
         {legend}
