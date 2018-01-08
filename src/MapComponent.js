@@ -161,10 +161,14 @@ const MapComponent = (props) => {
     />
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 1 ? (
-    <button className="zoom-button btn btn-secondary btn-sm" onClick={props.zoomToShapes}>Zoom to shapes</button>
+    <button type="button" className="zoom-button btn btn-secondary btn-sm" onClick={props.zoomToShapes}>
+      Zoom to shapes
+    </button>
   ) : '';
   const removeAllButton = (props.features.length > 0 && props.edit) ? (
-    <button className="btn btn-danger btn-sm" onClick={props.removeAllFeatures}>Remove all shapes</button>
+    <button type="button" className="btn btn-danger btn-sm" onClick={props.removeAllFeatures}>
+      Remove all shapes
+    </button>
   ) : '';
   const openFeatureMessage = (props.openFeature) ? (
     <div>
