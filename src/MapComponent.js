@@ -40,6 +40,12 @@ const style = {
   fillColor: 'green',
   fillOpacity: 0.45,
 };
+const deleteStyle = {
+  color: 'red',
+  fill: true,
+  fillColor: 'red',
+  fillOpacity: 0.45,
+};
 const errorStyle = {
   color: 'red',
   fillColor: 'red',
@@ -53,7 +59,7 @@ const hoveredStyle = {
 };
 
 const RemovePolyBanner = (
-  <div className="remove-poly-banner">
+  <div className="alert alert-info" role="alert">
     Click a shape to remove.
   </div>
 );
@@ -79,6 +85,9 @@ const MapComponent = (props) => {
       merge(thisTooltipOptions, {
         tipMessage: p.errors.join(', '),
       });
+    }
+    if (props.edit && props.remove) {
+      merge(thisStyle, deleteStyle);
     }
     return (
       <GeoJSON
@@ -176,6 +185,7 @@ const MapComponent = (props) => {
         onMoveend={props.setCenterAndZoom}
       >
         {geosuggest}
+        {removePolyBanner}
         <TileLayer
           url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}
@@ -188,12 +198,14 @@ const MapComponent = (props) => {
           {zoomButton}
           {removeAllButton}
         </div>
+        <div className="remove-poly-banner">
+          {removePolyBanner}
+        </div>
       </Map>
       <div className="below-map">
         {legend}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
-        {removePolyBanner}
       </div>
     </div>
   );
