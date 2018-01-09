@@ -198,15 +198,15 @@ const MapComponent = (props) => {
         <EditTools {...props} />
         {features}
         {points}
-        <div className="btn-group">
+        <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}
         </div>
-        <div className="remove-poly-banner">
+        <div className="map-remove-poly-banner">
           {removePolyBanner}
         </div>
       </Map>
-      <div className="below-map">
+      <div className="map-below-map">
         {legend}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
