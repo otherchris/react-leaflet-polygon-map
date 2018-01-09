@@ -4,12 +4,12 @@
   width: 400px;
 }
 
-.my-div-icon: {
-  background-color: red;
-  color: green;
-}
+/* .my-div-icon: {
+ *   background-color: red;
+ *   color: green;
+ * } */
 
-.below-map {
+.map-below-map {
   display: flex;
   /* justify-content: space-between; */
 }
@@ -27,19 +27,19 @@
 
 }
 
-.class-for-styles-poly {
+.map-class-for-styles-poly {
   color: red;
 }
 
-.and-another {
+.map-and-another {
   background-color: green;
 }
 
-.class-for-styles-marker {
+.map-class-for-styles-marker {
   color: blue;
 }
 
-.toggle-x {
+.map-toggle-x {
   font-family: sans-serif;
   font-size: 1rem;
   align: right;
@@ -47,20 +47,20 @@
   margin-left: 10px;
 }
 
-.circle-approx {
+.map-circle-approx {
   line-height: 1;
   width: 33.333%;
 }
 
-.circle-approx button {
+.map-circle-approx button {
   font-size: 0.75rem;
 }
 
-.test-submit-style {
+.map-test-submit-style {
   font-size: 3rem;
 }
 
-.btn-group {
+.map-btn-group {
   position: absolute !important;
   z-index: 1000;
   bottom: 10px;
@@ -98,10 +98,8 @@
   color: #fff;
 }
 
-.radius-picker {
-}
 
-.remove-poly-banner {
+.map-remove-poly-banner {
   position: absolute !important;
   left: 70%;
   top: 80%;
