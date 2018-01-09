@@ -87,7 +87,7 @@ storiesOf('handleSubmit', module)
       edit={true}
       submitButton={{
         text: 'User supplied text',
-        className: 'test-submit-style',
+        className: 'map-test-submit-style',
       }}
       handleSubmit={(state) => {
         alert(JSON.stringify(state, null, '  '));
@@ -201,7 +201,7 @@ storiesOf('Style tooltip', module)
         },
         includeArea: true,
         text: 'A word before the area',
-        className: 'class-for-styles-poly and-another',
+        className: 'map-class-for-styles-poly map-and-another',
       }}
       polygons={[poly.tooBigPoly]}
       additionalNotes={`Should see \n
@@ -216,11 +216,11 @@ storiesOf('Style tooltip', module)
       tooltipOptions={{
         includeArea: false,
         text: 'A word ',
-        className: 'class-for-styles-poly and-another',
+        className: 'map-class-for-styles-poly map-and-another',
         marker: {
           includeLocation: false,
           text: 'a point is here',
-          className: 'class-for-styles-marker and-another',
+          className: 'map-class-for-styles-marker map-and-another',
         },
       }}
       polygons={[poly.tooBigPoly]}
@@ -237,7 +237,7 @@ storiesOf('Style tooltip', module)
           includeLocation: true,
           text: 'a point is here',
         },
-        className: 'class-for-styles-marker and-another points',
+        className: 'map-class-for-styles-marker map-and-another points',
       }}
       points={points}
       additionalNotes={`Should see \n
@@ -253,7 +253,7 @@ storiesOf('Style tooltip', module)
           includeLocation: false,
           text: 'a point is here',
         },
-        className: 'class-for-styles-marker and-another points',
+        className: 'map-class-for-styles-marker map-and-another points',
       }}
       points={points}
       additionalNotes={`Should see \n
