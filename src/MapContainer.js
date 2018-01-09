@@ -25,7 +25,6 @@ import {
   polygonArrayToProp,
   cleanPoly,
 } from './MapHelpers';
-import 'bootstrap/dist/css/bootstrap.css';
 import './main.css';
 import getBounds from './getBounds';
 import convertPoint from './convertPoint';
