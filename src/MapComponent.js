@@ -71,8 +71,7 @@ const Legend = (LegendComponent, props) => (
 );
 
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions = {} } = props;
-  console.log('tlp', tileLayerProps);
+  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions, onTileSet = {} } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
 
@@ -171,6 +170,16 @@ const MapComponent = (props) => {
       Remove all shapes
     </button>
   ) : '';
+  const satButton = (props.onTileSet) ? (
+    <button type="button" className="btn btn-danger btn-sm maps-tiles" id="sat" onClick={props.onTileSet}>
+     SATELLITE VIEW 
+    </button>
+  ) : '';
+  const streetButton = (props.onTileSet) ? (
+    <button type="button" className="btn btn-danger btn-sm maps-tiles" id="street" onClick={props.onTileSet}>
+     STREET VIEW 
+    </button>
+  ) : '';
   const openFeatureMessage = (props.openFeature) ? (
     <div>
       Click the polygon again to finish editing
@@ -207,6 +216,10 @@ const MapComponent = (props) => {
         <div className="map-remove-poly-banner">
           {removePolyBanner}
         </div>
+        <div className="maps-tiles btn-group">
+          {satButton}
+          {streetButton}
+        </div>
       </Map>
       <div className="map-below-map">
         {legend}
@@ -235,6 +248,7 @@ MapComponent.propTypes = {
   maxArea: PropTypes.number,
   onCreated: PropTypes.func,
   onLocationSelect: PropTypes.func,
+  onTileSet: PropTypes.func,
   openFeature: PropTypes.bool,
   points: PropTypes.arrayOf(PropTypes.object),
   features: PropTypes.arrayOf(PropTypes.object),
