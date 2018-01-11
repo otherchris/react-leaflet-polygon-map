@@ -1,12 +1,6 @@
 {
   "name": "react-leaflet-polygon-map",
-<<<<<<< HEAD
   "version": "0.6.21",
-||||||| merged common ancestors
-  "version": "0.6.19",
-=======
-  "version": "0.6.20",
->>>>>>> a5ed1272ce485e39a905c84568d2c83625438a2a
   "main": "dist/MapContainer.js",
   "dependencies": {
     "autoprefixer": "7.1.2",

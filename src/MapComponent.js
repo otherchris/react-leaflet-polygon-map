@@ -259,7 +259,7 @@ MapComponent.propTypes = {
 MapComponent.defaultProps = {
   height: 400,
   tileLayerProps: {
-    url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     attribution: '© OpenStreetMap contributors',
   },
   center: L.latLng([33, -85]),
