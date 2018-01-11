@@ -161,7 +161,8 @@ const MapComponent = (props) => {
     />
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 1 ? (
-    <button type="button" className="zoom-button btn btn-secondary btn-sm" onClick={props.zoomToShapes}>
+    <button type="button" className="zoom-button btn btn-secondary btn-sm"
+      onClick={props.zoomToShapes}>
       Zoom to shapes
     </button>
   ) : '';
@@ -171,13 +172,15 @@ const MapComponent = (props) => {
     </button>
   ) : '';
   const satButton = (
-    <button type="button" className="btn btn-danger btn-sm maps-tiles" id="sat" onClick={props.onTileSet}>
-      SATELLITE VIEW
+    <button type="button" className="btn btn-secondary btn-sm maps-tiles"
+      id="sat" onClick={props.onTileSet}>
+     Satellite View
     </button>
   );
   const streetButton = (
-    <button type="button" className="btn btn-danger btn-sm maps-tiles" id="street" onClick={props.onTileSet}>
-      STREET VIEW
+    <button type="button" className="btn btn-secondary btn-sm maps-tiles"
+      id="street" onClick={props.onTileSet}>
+     Street View
     </button>
   );
   const openFeatureMessage = (props.openFeature) ? (
@@ -212,13 +215,13 @@ const MapComponent = (props) => {
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}
-          {satButton}
-          {streetButton}
+          {props.tileLayerProps.url === "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" ?
+            satButton :
+            streetButton
+          }
         </div>
         <div className="map-remove-poly-banner">
           {removePolyBanner}
-        </div>
-        <div className="maps-tiles btn-group">
         </div>
       </Map>
       <div className="map-below-map">

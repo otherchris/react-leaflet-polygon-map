@@ -55,7 +55,6 @@ const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
 
 class MapContainer extends React.Component {
   constructor(props) {
-    console.log('props recieved by map', props);
     super(props);
     this.state = {
       openFeature: false,
@@ -360,7 +359,6 @@ class MapContainer extends React.Component {
   }
   onTileSet(e) {
     const tiles = e.target.id;
-    console.log('tiles')
     if (tiles === 'street')
       this.setState({
         tileLayerProps: {
