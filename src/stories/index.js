@@ -11,7 +11,7 @@ import './styling';
 import './tools';
 import './heatmap';
 import './legend';
-
+import 'bootstrap/dist/css/bootstrap.css';
 
 storiesOf('real view example', module)
   .add('realview', () => (

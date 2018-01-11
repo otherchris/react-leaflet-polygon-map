@@ -98,6 +98,12 @@
   color: #fff;
 }
 
+.maps-tiles: {
+  position: absolute !important;
+  z-index: 9999 !important;
+  bottom: 10px;
+  left: 10px;
+}
 
 .map-remove-poly-banner {
   position: absolute !important;
