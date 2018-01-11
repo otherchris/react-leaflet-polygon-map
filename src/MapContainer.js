@@ -358,12 +358,14 @@ class MapContainer extends React.Component {
       this.setState(s);
     });
   }
-  onTileSet(tiles) {
+  onTileSet(e) {
+    const tiles = e.target.id;
+    console.log('tiles')
     if (tiles === 'street')
       this.setState({
         tileLayerProps: {
-          url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-          subdomains: []
+          url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         }
       });
     else {

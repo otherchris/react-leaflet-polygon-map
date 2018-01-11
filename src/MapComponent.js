@@ -170,16 +170,16 @@ const MapComponent = (props) => {
       Remove all shapes
     </button>
   ) : '';
-  const satButton = (props.onTileSet) ? (
+  const satButton = (
     <button type="button" className="btn btn-danger btn-sm maps-tiles" id="sat" onClick={props.onTileSet}>
-     SATELLITE VIEW 
+      SATELLITE VIEW
     </button>
-  ) : '';
-  const streetButton = (props.onTileSet) ? (
+  );
+  const streetButton = (
     <button type="button" className="btn btn-danger btn-sm maps-tiles" id="street" onClick={props.onTileSet}>
-     STREET VIEW 
+      STREET VIEW
     </button>
-  ) : '';
+  );
   const openFeatureMessage = (props.openFeature) ? (
     <div>
       Click the polygon again to finish editing
@@ -212,13 +212,13 @@ const MapComponent = (props) => {
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}
+          {satButton}
+          {streetButton}
         </div>
         <div className="map-remove-poly-banner">
           {removePolyBanner}
         </div>
         <div className="maps-tiles btn-group">
-          {satButton}
-          {streetButton}
         </div>
       </Map>
       <div className="map-below-map">
