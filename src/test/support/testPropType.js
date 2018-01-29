@@ -3,23 +3,32 @@ import { shallow } from 'enzyme';
 import spyConsole from './spyConsole';
 
 const testPropType = (Component, propName, type) => {
-  let value = null;
+  let badValue = null;
+  let goodValue = null;
   switch (type) {
     case 'string':
-      value = 1234;
+      badValue = 1234;
+      goodValue = '1234'
       break;
     case 'number':
-      value = '1234';
+      badValue = '1234';
+      goodValue = 1234;
       break;
     default:
-      value = null;
+      badValue = null;
   }
-  const props = {};
-  props[propName] = value;
+  const badProps = {};
+  const goodProps = {};
+  badProps[propName] = badValue;
+  goodProps[propName] = goodValue;
   return describe(propName, () => {
     let spy = spyConsole();
+    it(`accepts a ${type}`, () => {
+      const wrapper = shallow(<Component { ...goodProps } /> );
+      expect(console.error).not.toHaveBeenCalled();
+    });
     it(`must be a ${type}`, () => {
-      const wrapper = shallow(<Component { ...props } /> );
+      const wrapper = shallow(<Component { ...badProps } /> );
       expect(console.error).toHaveBeenCalled();
       expect(spy.console.mock.calls[0][0]).toContain('Failed prop type');
     });
