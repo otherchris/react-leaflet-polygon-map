@@ -88,7 +88,10 @@ class MapContainer extends React.Component {
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.features, nextProps.features)) {
+    if (
+      !isEqual(this.props.features, nextProps.features) ||
+      !isEqual(this.props.points, nextProps.points)
+  ) {
       this.mapPropsToStateLite(nextProps);
     }
   }
