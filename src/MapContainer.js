@@ -142,6 +142,7 @@ class MapContainer extends React.Component {
 
     // Convert points to GeoJSON
     const points = map(props.points, convertPoint);
+    console.log(points)
 
     // Set center of map as L.latLng
     const center = makeCenter(this.props.center);
