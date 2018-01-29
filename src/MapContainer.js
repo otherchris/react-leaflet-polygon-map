@@ -119,6 +119,7 @@ class MapContainer extends React.Component {
     });
   }
   mapPropsToState(props) {
+    console.log('Props supplied to mapPropsToState: ', props)
     const maxArea = props.maxArea || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
@@ -139,10 +140,10 @@ class MapContainer extends React.Component {
       out.properties.unit = unit;
       return this.validateShape(out);
     });
-
+    console.log('feats: ', feats);
     // Convert points to GeoJSON
     const points = map(props.points, convertPoint);
-    console.log(points)
+    console.log('points: ', points)
 
     // Set center of map as L.latLng
     const center = makeCenter(this.props.center);
