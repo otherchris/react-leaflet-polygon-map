@@ -5,8 +5,7 @@ for polygons.
 
 ## Supported React versions
 
-???
-
+^15.6.1
 
 ## API
 
