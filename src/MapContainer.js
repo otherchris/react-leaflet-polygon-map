@@ -41,14 +41,12 @@ const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === '
 const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
-const makeCenter = (props) => {
-  const { c, markers, centerOnFirstMarker } = props;
+const makeCenter = (c) => {
   if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
   if (validCoordsArray(c)) return { type: 'Point', coordinates: c };
   if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
   if (validGeoJSONPoint(c)) return c;
   if (validGeoJSONPointFeature(c)) return c.geometry;
-  if (centerOnFirstMarker && markers[0]) return makeCenter(markers[0]);
   return { type: 'Point', coordinates: [-85.751528, 38.257222] };
 };
 
@@ -60,7 +58,7 @@ class MapContainer extends React.Component {
     super(props);
     this.state = {
       openFeature: false,
-      center: makeCenter(props),
+      center: makeCenter(props.center),
       features: props.features || [],
       points: [],
       googleAPILoaded: false,
