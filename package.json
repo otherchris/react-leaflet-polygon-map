@@ -87,7 +87,8 @@
     "build": "BABEL_ENV=production babel src -d dist --ignore src/stories,src/test && cp src/*.css dist",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "pre-publish": "npm version patch && git push --tags && npm run build"
   },
   "jest": {
     "collectCoverageFrom": [
