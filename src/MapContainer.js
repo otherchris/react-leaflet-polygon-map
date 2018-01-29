@@ -100,6 +100,7 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToStateLite(props) {
+    console.log('Props supplied to mapPropsToStateLITE: ', props)
     const maxArea = props.maxArea || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
@@ -111,7 +112,9 @@ class MapContainer extends React.Component {
       out.properties.unit = unit;
       return this.validateShape(out);
     });
+    console.log('feats: ', feats);
     const points = map(props.points, convertPoint);
+    console.log('points: ', points)
     this.setState({
       features: feats,
       points,
