@@ -91,7 +91,7 @@ class MapContainer extends React.Component {
     if (
       !isEqual(this.props.features, nextProps.features) ||
       !isEqual(this.props.points, nextProps.points)
-  ) {
+    ) {
       this.mapPropsToStateLite(nextProps);
     }
   }
