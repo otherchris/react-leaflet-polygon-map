@@ -42,3 +42,7 @@ describe('height', () => {
   testPropType(MapContainer, 'height', 'number');
 });
 
+describe('iconHTML', () => {
+  testPropType(MapContainer, 'iconHTML', 'string');
+});
+
