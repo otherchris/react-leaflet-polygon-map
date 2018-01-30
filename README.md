@@ -34,11 +34,6 @@ Initial center of the map. Can be provided as
 Enable the draw layer on the map. Required for creating new polygons/points and
 editing/removing existing polygons/points
 
-### `handleSubmit (func)`
-
-Callback triggered by submit button. If not present, submit button is not
-rendered.
-
 ### `height (number)`
 
 Pixel height of the map.

@@ -1,18 +1,24 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import noop from 'lodash/noop';
 import spyConsole from './spyConsole';
 
+// TODO: How to check a bool propType?
 const testPropType = (Component, propName, type) => {
   let badValue = null;
   let goodValue = null;
   switch (type) {
     case 'string':
       badValue = 1234;
-      goodValue = '1234'
+      goodValue = '1234';
       break;
     case 'number':
       badValue = '1234';
       goodValue = 1234;
+      break;
+    case 'function':
+      badValue = 'func';
+      goodValue = noop;
       break;
     default:
       badValue = null;
