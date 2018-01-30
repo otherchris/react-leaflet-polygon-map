@@ -27,3 +27,15 @@ describe('center', () => {
   });
 });
 
+describe('edit', () => {
+  it('sets the edit state to true', () => {
+    const wrapper = shallow(<MapContainer edit />);
+    expect(wrapper.state().edit).toEqual(true);
+  });
+  it('casts to bool', () => {
+    const wrapper = shallow(<MapContainer edit="false" />);
+    expect(wrapper.state().edit).toEqual(true);
+  });
+});
+
+
