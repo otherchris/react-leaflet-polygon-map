@@ -16,8 +16,8 @@ const testPropType = (Component, propName, type) => {
       badValue = '1234';
       goodValue = 1234;
       break;
-    case 'function':
-      badValue = 'func';
+    case 'func':
+      badValue = 123;
       goodValue = noop;
       break;
     default:
