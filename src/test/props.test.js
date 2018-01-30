@@ -46,3 +46,6 @@ describe('iconHTML', () => {
   testPropType(MapContainer, 'iconHTML', 'string');
 });
 
+describe('legendComponent', () => {
+  testPropType(MapContainer, 'legendComponent', 'func');
+});
