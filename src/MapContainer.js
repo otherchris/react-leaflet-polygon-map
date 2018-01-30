@@ -41,7 +41,8 @@ const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === '
 const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
-export const makeCenter = (c) => {
+export const makePoint = (cee) => {
+  const c = cloneDeep(cee);
   if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
   if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };
   if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
@@ -49,6 +50,8 @@ export const makeCenter = (c) => {
   if (validGeoJSONPointFeature(c)) return c.geometry;
   return { type: 'Point', coordinates: [-85.751528, 38.257222] };
 };
+
+export const makePoints = (arr) => map(arr, makePoint);
 
 // input a geoJSON point geometry
 const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
@@ -58,9 +61,9 @@ class MapContainer extends React.Component {
     super(props);
     this.state = {
       openFeature: false,
-      center: makeCenter(props.center),
+      center: makePoint(props.center),
       features: props.features || [],
-      points: [],
+      points: makePoints(props.points),
       googleAPILoaded: false,
       edit: !!props.edit,
       markerIcon: generateIcon(props.iconHTML),
