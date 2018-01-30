@@ -22,7 +22,7 @@ describe('center', () => {
   });
 
   it('can be supplied as an array', () => {
-    const wrapper = mount(<MapContainer center={[1,-1]} />);
+    const wrapper = shallow(<MapContainer center={[1,-1]} />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 });
