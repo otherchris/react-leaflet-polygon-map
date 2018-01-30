@@ -18,7 +18,7 @@ describe('center', () => {
     const geoJSON = { type: "Point", coordinates: [-1, 1] };
     const geoJSONFeature = { type: "Feature", geometry: geoJSON };
 
-    expect(map([array, geoJSON, geoJSONFeature, latLng])).toEqual(fill(Array(4), geoJSON))
+    expect(map([array, geoJSON, geoJSONFeature, latLng], makeCenter)).toEqual(fill(Array(4), geoJSON))
   });
 
   it('can be supplied as an array', () => {
