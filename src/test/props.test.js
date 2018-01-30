@@ -38,4 +38,7 @@ describe('edit', () => {
   });
 });
 
+describe('height', () => {
+  testPropType(MapContainer, 'height', 'number');
+});
 
