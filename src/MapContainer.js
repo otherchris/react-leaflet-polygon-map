@@ -41,9 +41,9 @@ const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === '
 const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
-const makeCenter = (c) => {
+export const makeCenter = (c) => {
   if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
-  if (validCoordsArray(c)) return { type: 'Point', coordinates: c };
+  if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };
   if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
   if (validGeoJSONPoint(c)) return c;
   if (validGeoJSONPointFeature(c)) return c.geometry;
