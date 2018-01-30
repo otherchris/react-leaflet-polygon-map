@@ -28,14 +28,7 @@ describe('center', () => {
 });
 
 describe('edit', () => {
-  it('sets the edit state to true', () => {
-    const wrapper = shallow(<MapContainer edit />);
-    expect(wrapper.state().edit).toEqual(true);
-  });
-  it('casts to bool', () => {
-    const wrapper = shallow(<MapContainer edit="false" />);
-    expect(wrapper.state().edit).toEqual(true);
-  });
+  testPropType(MapContainer, 'edit', 'bool');
 });
 
 describe('height', () => {
@@ -48,4 +41,16 @@ describe('iconHTML', () => {
 
 describe('legendComponent', () => {
   testPropType(MapContainer, 'legendComponent', 'func');
+});
+
+describe('legendProps', () => {
+  testPropType(MapContainer, 'legendProps', 'object');
+});
+
+describe('maxArea', () => {
+  testPropType(MapContainer, 'maxArea', 'number');
+});
+
+describe('onShapeChange', () => {
+  testPropType(MapContainer, 'onShapeChange', 'func');
 });

@@ -68,7 +68,9 @@ class MapContainer extends React.Component {
       totalArea: 0,
       newCircleRadius: 0.1,
     };
-    this.debouncedOnChange = debounce(this.props.onShapeChange, 100);
+    if (typeof props.onShapeChange === 'function') {
+      this.debouncedOnChange = debounce(props.onShapeChange, 100);
+    }
   }
   getScriptLoaderID() {
     return ReactScriptLoaderMixin.__getScriptLoaderID();
