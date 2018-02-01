@@ -444,7 +444,6 @@ MapContainer.propTypes = {
   ]),
   edit: PropTypes.bool,
   featureValidator: PropTypes.func,
-  heatmap: PropTypes.array,
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   legendComponent: PropTypes.func,
