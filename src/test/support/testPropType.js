@@ -32,6 +32,10 @@ const testPropType = (Component, propName, type) => {
       badValue = '123';
       goodValue = [false];
       break;
+    case 'array.object':
+      badValue = ['123'];
+      goodValue = [{thing: false}];
+      break;
     default:
       badValue = null;
   }

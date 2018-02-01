@@ -78,23 +78,6 @@ describe('onShapeChange', () => {
 });
 
 describe('points', () => {
-  const array = [1, -1];
-  const none = null;
-  const latLng = { lat: 1, lng: -1 };
-  const geoJSON = { type: "Point", coordinates: [-1, 1] };
-  const geoJSONFeature = { type: "Feature", geometry: geoJSON };
-
-  testPropType(MapContainer, 'points', 'array');
-
-  it('makePoints', () => {
-    expect(map([[array], [geoJSON], [geoJSONFeature], [latLng]], makePoints)).toEqual(fill(Array(4), [geoJSON]));
-
-    expect(makePoints([array, geoJSON, geoJSONFeature, latLng])).toEqual(fill(Array(4), geoJSON));
-  });
-
-  it('can be supplied in various formats', () => {
-    const wrapper = shallow(<MapContainer points={[array, latLng, geoJSON, geoJSONFeature]} />);
-    expect(wrapper.state().points).toEqual(fill(Array(4), geoJSON));
-  });
+  testPropType(MapContainer, 'points', 'array.object');
 });
 

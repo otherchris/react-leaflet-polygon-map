@@ -63,7 +63,7 @@ arg should be an (err, res) callback.
 ### `points (array)`
 
 An array of points to be added as markers on the map. Points should be
-provided either as an array like `[ <lat>, <lng> ]` or as a GeoJSON Point
+provided either as a GeoJSON Point
 feature (see [the feature specification](https://macwright.org/2015/03/23/geojson-second-bite.html#features)).
 
 ### `features (array)`
