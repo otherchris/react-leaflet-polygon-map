@@ -66,12 +66,11 @@ class MapContainer extends React.Component {
     super(props);
     this.state = {
       center: defaultCenter,
-      features: props.features || [],
-      points: props.points || [],
+      features: [],
+      points: [],
       googleAPILoaded: false,
       edit: !!props.edit,
       markerIcon: generateIcon(props.iconHTML),
-      zipRadiusCenter: [],
       totalArea: 0,
       newCircleRadius: 0.1,
     };
@@ -92,7 +91,12 @@ class MapContainer extends React.Component {
   onScriptError() {
     this.setState({ googleAPIError: true });
   }
+  componentWillMount() {
+    console.log(this.state)
+    console.log(this.debouncedOnChange)
+  }
   componentDidMount() {
+    console.log('DID MOUNT')
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
@@ -382,6 +386,7 @@ class MapContainer extends React.Component {
     }
   }
   render() {
+    console.log('LETS ROCK')
     const {
       tooltipOptions,
     } = this.props;
@@ -389,7 +394,6 @@ class MapContainer extends React.Component {
       'height',
       'legendComponent',
       'style',
-      'includeZipRadius',
       'tooltipOptions',
       'submitButton',
       'update',
@@ -398,7 +402,7 @@ class MapContainer extends React.Component {
       <MapComponent
         bindPoint={this}
         bounds={this.state.bounds}
-        center={makePoint(this.state.center)}
+        center={this.state.center}
         clickFeature={this.clickFeature.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
