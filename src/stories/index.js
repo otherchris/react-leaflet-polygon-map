@@ -4,15 +4,19 @@ import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import points from './points';
 import dpPoly from './dpPoly';
 import poly from './poly';
-import './layout';
-import './polygons';
-import './convertedPolys';
-import './styling';
-import './tools';
-import './heatmap';
-import './legend';
+//import './layout';
+//import './polygons';
+//import './convertedPolys';
+//import './styling';
+//import './tools';
+//import './heatmap';
+//import './legend';
 import 'bootstrap/dist/css/bootstrap.css';
 
+storiesOf('Default view', module)
+  .add('Default', () => (
+    <MapContainerStoryWithNotes />
+  ));
 storiesOf('real view example', module)
   .add('realview', () => (
     <MapContainerStoryWithNotes

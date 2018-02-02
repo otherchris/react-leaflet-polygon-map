@@ -29,6 +29,7 @@ import getBounds from './getBounds';
 import convertPoint from './convertPoint';
 
 const validCoordsArray = (arr) =>
+  arr &&
   arr.length &&
   arr.length === 2 &&
   arr[0] < 180 &&
@@ -66,7 +67,7 @@ class MapContainer extends React.Component {
     this.state = {
       center: defaultCenter,
       features: props.features || [],
-      points: props.points,
+      points: props.points || [],
       googleAPILoaded: false,
       edit: !!props.edit,
       markerIcon: generateIcon(props.iconHTML),
@@ -127,11 +128,12 @@ class MapContainer extends React.Component {
     this.setState({
       features: feats,
       points,
+      center,
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
     });
   }
   mapPropsToState(props) {
-    const center = props.center ? makeCenterLeaflet(makePoint(props.center)) : this.state.center
+    const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
@@ -447,6 +449,7 @@ MapContainer.propTypes = {
   onShapeChange: PropTypes.func,
   points: PropTypes.array,
   features: PropTypes.arrayOf(PropTypes.object),
+  featureValidator: PropTypes.func,
   rectangles: PropTypes.arrayOf(PropTypes.object),
   remove: PropTypes.bool,
   style: PropTypes.object,
@@ -458,9 +461,8 @@ MapContainer.propTypes = {
 };
 
 MapContainer.defaultProps = {
-  onShapeChange: (a, cb) => { cb(a); },
+  onShapeChange: (a, cb) => { cb(null, a); },
   featureValidator: () => [],
-
 };
 
 export default MapContainer;
