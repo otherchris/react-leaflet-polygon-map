@@ -41,7 +41,6 @@ const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordi
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
 export const makePoint = (cee) => {
-  console.log(cee)
   const c = cloneDeep(cee);
   if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
   if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };

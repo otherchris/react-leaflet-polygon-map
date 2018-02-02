@@ -23,29 +23,29 @@ describe('center', () => {
   });
 
   it('has a default', () => {
-    const wrapper = mount(<MapContainer />);
+    const wrapper = shallow(<MapContainer />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-85.751528, 38.257222] })
   });
   it('can be supplied as an array', () => {
-    const wrapper = mount(<MapContainer center={[1,-1]} />);
+    const wrapper = shallow(<MapContainer center={[1,-1]} />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 
   it('can be supplied as a latLng object', () => {
-    const wrapper = mount(<MapContainer center={{ lat: 1, lng: -1 }} />);
+    const wrapper = shallow(<MapContainer center={{ lat: 1, lng: -1 }} />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 
   it('can be supplied as a geoJSON object', () => {
     const geoJSON = { type: "Point", coordinates: [-1, 1] };
-    const wrapper = mount(<MapContainer center={ geoJSON } />);
+    const wrapper = shallow(<MapContainer center={ geoJSON } />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 
   it('can be supplied as a geoJSON feature', () => {
     const geoJSON = { type: "Point", coordinates: [-1, 1] };
     const geoJSONFeature = { type: "Feature", geometry: geoJSON };
-    const wrapper = mount(<MapContainer center={ geoJSONFeature } />);
+    const wrapper = shallow(<MapContainer center={ geoJSONFeature } />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 });
@@ -82,7 +82,8 @@ describe('maxAreaEach', () => {
   testPropType(MapContainer, 'maxAreaEach', 'number');
 
   it('flags a given polygon as too large', () => {
-    const wrapper = mount(<MapContainer features={[polygons.large]} maxAreaEach={1} />)
+    const wrapper = shallow(<MapContainer features={[polygons.large]} maxAreaEach={1} />)
+    wrapper.instance().componentDidMount();
     console.log(wrapper.state().features)
     expect(wrapper.state().features[0].properties.tooLarge).toEqual(true);
   });
