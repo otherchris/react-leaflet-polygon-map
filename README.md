@@ -5,8 +5,7 @@ for polygons.
 
 ## Supported React versions
 
-???
-
+^15.6.1
 
 ## API
 
@@ -34,11 +33,6 @@ Initial center of the map. Can be provided as
 
 Enable the draw layer on the map. Required for creating new polygons/points and
 editing/removing existing polygons/points
-
-### `handleSubmit (func)`
-
-Callback triggered by submit button. If not present, submit button is not
-rendered.
 
 ### `height (number)`
 
@@ -69,7 +63,7 @@ arg should be an (err, res) callback.
 ### `points (array)`
 
 An array of points to be added as markers on the map. Points should be
-provided either as an array like `[ <lat>, <lng> ]` or as a GeoJSON Point
+provided either as a GeoJSON Point
 feature (see [the feature specification](https://macwright.org/2015/03/23/geojson-second-bite.html#features)).
 
 ### `features (array)`
