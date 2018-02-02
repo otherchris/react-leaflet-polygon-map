@@ -1,9 +1,10 @@
 import React from 'react';
 import { storiesOf, action, linkTo } from '@storybook/react';
 import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
-import points from './points';
-import dpPoly from './dpPoly';
-import poly from './poly';
+import MapContainer from '../MapContainer';
+//import points from './points';
+//import dpPoly from './dpPoly';
+//import poly from './poly';
 //import './layout';
 //import './polygons';
 //import './convertedPolys';
@@ -15,8 +16,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 storiesOf('Default view', module)
   .add('Default', () => (
-    <MapContainerStoryWithNotes />
+    <MapContainer />
   ));
+
+/*
 storiesOf('real view example', module)
   .add('realview', () => (
     <MapContainerStoryWithNotes
@@ -278,3 +281,4 @@ storiesOf('Style tooltip', module)
       `}
     />
   ));
+  */
