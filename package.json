@@ -1,6 +1,6 @@
 {
   "name": "react-leaflet-polygon-map",
-  "version": "0.6.24",
+  "version": "0.6.34",
   "main": "dist/MapContainer.js",
   "dependencies": {
     "autoprefixer": "7.1.2",
@@ -24,14 +24,14 @@
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
     "promise": "8.0.1",
-    "react": "15.6.1",
+    "react": "^15.6.1",
     "react-dev-utils": "3.1.0",
-    "react-dom": "15.6.1",
+    "react-dom": "^16.2.0",
     "react-error-overlay": "1.0.10",
     "react-geosuggest": "2.5.0",
     "react-leaflet": "^1.7.8",
     "react-leaflet-draw": "^0.18.0",
-    "react-leaflet-fullscreen": "0.0.5",
+    "react-leaflet-fullscreen": "^0.0.6",
     "react-script-loader": "0.0.1",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.4",
@@ -87,7 +87,8 @@
     "build": "BABEL_ENV=production babel src -d dist --ignore src/stories,src/test && cp src/*.css dist",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "pre-publish": "npm version patch && git push --tags && npm run build"
   },
   "jest": {
     "collectCoverageFrom": [

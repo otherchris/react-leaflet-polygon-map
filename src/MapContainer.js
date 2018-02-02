@@ -41,14 +41,17 @@ const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === '
 const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
-const makeCenter = (c) => {
+export const makePoint = (cee) => {
+  const c = cloneDeep(cee);
   if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
-  if (validCoordsArray(c)) return { type: 'Point', coordinates: c };
+  if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };
   if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
   if (validGeoJSONPoint(c)) return c;
   if (validGeoJSONPointFeature(c)) return c.geometry;
   return { type: 'Point', coordinates: [-85.751528, 38.257222] };
 };
+
+export const makePoints = (arr) => map(arr, makePoint);
 
 // input a geoJSON point geometry
 const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
@@ -58,17 +61,19 @@ class MapContainer extends React.Component {
     super(props);
     this.state = {
       openFeature: false,
-      center: makeCenter(props.center),
+      center: makePoint(props.center),
       features: props.features || [],
-      points: [],
+      points: props.points,
       googleAPILoaded: false,
-      edit: false,
+      edit: !!props.edit,
       markerIcon: generateIcon(props.iconHTML),
       zipRadiusCenter: [],
       totalArea: 0,
       newCircleRadius: 0.1,
     };
-    this.debouncedOnChange = debounce(this.props.onShapeChange, 100);
+    if (typeof props.onShapeChange === 'function') {
+      this.debouncedOnChange = debounce(props.onShapeChange, 100);
+    }
   }
   getScriptLoaderID() {
     return ReactScriptLoaderMixin.__getScriptLoaderID();
@@ -88,7 +93,10 @@ class MapContainer extends React.Component {
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.features, nextProps.features)) {
+    if (
+      !isEqual(this.props.features, nextProps.features) ||
+      !isEqual(this.props.points, nextProps.points)
+    ) {
       this.mapPropsToStateLite(nextProps);
     }
   }
@@ -111,7 +119,6 @@ class MapContainer extends React.Component {
       out.properties.unit = unit;
       return this.validateShape(out);
     });
-    const points = map(props.points, convertPoint);
     this.setState({
       features: feats,
       points,
@@ -119,6 +126,7 @@ class MapContainer extends React.Component {
     });
   }
   mapPropsToState(props) {
+    console.log('Props supplied to mapPropsToState: ', props)
     const maxArea = props.maxArea || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
@@ -139,9 +147,10 @@ class MapContainer extends React.Component {
       out.properties.unit = unit;
       return this.validateShape(out);
     });
-
+    console.log('feats: ', feats);
     // Convert points to GeoJSON
     const points = map(props.points, convertPoint);
+    console.log('points: ', points)
 
     // Set center of map as L.latLng
     const center = makeCenter(this.props.center);
@@ -435,15 +444,13 @@ MapContainer.propTypes = {
   ]),
   edit: PropTypes.bool,
   featureValidator: PropTypes.func,
-  handleSubmit: PropTypes.func,
-  heatmap: PropTypes.array,
   height: PropTypes.number,
   iconHTML: PropTypes.string,
   legendComponent: PropTypes.func,
   legendProps: PropTypes.object,
   maxArea: PropTypes.number,
   onShapeChange: PropTypes.func,
-  points: PropTypes.arrayOf(PropTypes.object),
+  points: PropTypes.array,
   features: PropTypes.arrayOf(PropTypes.object),
   rectangles: PropTypes.arrayOf(PropTypes.object),
   remove: PropTypes.bool,
