@@ -53,14 +53,18 @@ export const makePoint = (cee) => {
 export const makePoints = (arr) => map(arr, makePoint);
 
 // input a geoJSON point geometry
-const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
+export const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
+
+const defaultCenter = makeCenterLeaflet({
+  type: 'Point',
+  coordinates: [-85.751528, 38.257222]
+});
 
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openFeature: false,
-      center: makePoint(props.center),
+      center: defaultCenter,
       features: props.features || [],
       points: props.points,
       googleAPILoaded: false,
@@ -107,6 +111,7 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToStateLite(props) {
+    const center = props.center ? makeCenterLeaflet(makePoint(props.center)) : this.state.center
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
@@ -126,6 +131,7 @@ class MapContainer extends React.Component {
     });
   }
   mapPropsToState(props) {
+    const center = props.center ? makeCenterLeaflet(makePoint(props.center)) : this.state.center
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
