@@ -9,11 +9,11 @@ import flatten from 'lodash/flatten';
 import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
 import logoDefault from './logoDefault';
-import getArea from './getArea';
+import addArea from './addArea';
 
 export const cleanPoly = (poly) => {
   let p = cloneDeep(poly);
-  p = getArea(p);
+  p = addArea(p);
   if (p.geometry.type === 'Polygon') {
     p.geometry.type = 'MultiPolygon';
     p.geometry.coordinates = [p.geometry.coordinates];
@@ -25,17 +25,6 @@ export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
   html: html || logoDefault,
 });
-
-export const expandFeatures = (obj) => {
-  if (obj && obj.length) return obj;
-  if (obj && obj.map && obj.map.polygons) {
-    return obj.map.polygons;
-  }
-  if (obj && obj.type === 'FeatureCollection') {
-    return obj.features;
-  }
-  return [obj];
-};
 
 export const indexByKey = (arr, key) => {
   let index = -1;

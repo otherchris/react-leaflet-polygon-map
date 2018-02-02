@@ -32,7 +32,7 @@ import EditTools from './EditTools';
 import MapSubmitButton from './MapSubmitButton';
 import CircleApprox from './CircleApprox';
 import './main.css';
-import getArea from './getArea';
+import addArea from './addArea';
 
 const style = {
   color: 'green',

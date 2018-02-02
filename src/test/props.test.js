@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import fill from 'lodash/fill';
 import MapContainer, { makePoint, makePoints } from '../MapContainer';
 import testPropType from './support/testPropType';
+import polygons from './support/fixtures/polygons';
 
 describe('apikey', () => {
   testPropType(MapContainer, 'apikey', 'string');
@@ -22,29 +23,29 @@ describe('center', () => {
   });
 
   it('has a default', () => {
-    const wrapper = shallow(<MapContainer />);
+    const wrapper = mount(<MapContainer />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-85.751528, 38.257222] })
   });
   it('can be supplied as an array', () => {
-    const wrapper = shallow(<MapContainer center={[1,-1]} />);
+    const wrapper = mount(<MapContainer center={[1,-1]} />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 
   it('can be supplied as a latLng object', () => {
-    const wrapper = shallow(<MapContainer center={{ lat: 1, lng: -1 }} />);
+    const wrapper = mount(<MapContainer center={{ lat: 1, lng: -1 }} />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 
   it('can be supplied as a geoJSON object', () => {
     const geoJSON = { type: "Point", coordinates: [-1, 1] };
-    const wrapper = shallow(<MapContainer center={ geoJSON } />);
+    const wrapper = mount(<MapContainer center={ geoJSON } />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 
   it('can be supplied as a geoJSON feature', () => {
     const geoJSON = { type: "Point", coordinates: [-1, 1] };
     const geoJSONFeature = { type: "Feature", geometry: geoJSON };
-    const wrapper = shallow(<MapContainer center={ geoJSONFeature } />);
+    const wrapper = mount(<MapContainer center={ geoJSONFeature } />);
     expect(wrapper.state().center).toEqual({ type: 'Point', coordinates: [-1, 1] })
   });
 });
@@ -69,15 +70,21 @@ describe('legendProps', () => {
   testPropType(MapContainer, 'legendProps', 'object');
 });
 
-describe('maxArea', () => {
-  testPropType(MapContainer, 'maxArea', 'number');
-});
-
 describe('onShapeChange', () => {
   testPropType(MapContainer, 'onShapeChange', 'func');
 });
 
 describe('points', () => {
   testPropType(MapContainer, 'points', 'array.object');
+});
+
+describe('maxAreaEach', () => {
+  testPropType(MapContainer, 'maxAreaEach', 'number');
+
+  it('flags a given polygon as too large', () => {
+    const wrapper = mount(<MapContainer features={[polygons.large]} maxAreaEach={1} />)
+    console.log(wrapper.state().features)
+    expect(wrapper.state().features[0].properties.tooLarge).toEqual(true);
+  });
 });
 
