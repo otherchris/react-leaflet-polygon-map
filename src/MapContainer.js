@@ -14,10 +14,8 @@ import L from 'leaflet';
 import React from 'react';
 import { ReactScriptLoader, ReactScriptLoaderMixin } from 'react-script-loader';
 import MapComponent from './MapComponent';
-import makeGeoJSON from './ConvertPoly';
 import {
   generateIcon,
-  expandFeatures,
   generateCircleApprox,
   indexByKey,
   areaAccumulator,
@@ -25,6 +23,7 @@ import {
   polygonArrayToProp,
   cleanPoly,
 } from './MapHelpers';
+import addArea from './addArea';
 import './main.css';
 import getBounds from './getBounds';
 import convertPoint from './convertPoint';
@@ -42,6 +41,7 @@ const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordi
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
 export const makePoint = (cee) => {
+  console.log(cee)
   const c = cloneDeep(cee);
   if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
   if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };
@@ -108,16 +108,17 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToStateLite(props) {
-    const maxArea = props.maxArea || Number.MAX_VALUE;
+    const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
-    let expandedFeatures = [];
-    map(features, (feat) => { expandedFeatures = expandedFeatures.concat(expandFeatures(feat)); });
-    const feats = map(expandedFeatures, (feat, index) => {
-      const out = makeGeoJSON(feat);
-      out.properties.key = uuid.v4();
-      out.properties.unit = unit;
-      return this.validateShape(out);
+    const feats = map(features, (feat) => {
+      const f = addArea(feat);
+      if(f.properties.area > maxAreaEach) {
+        f.properties.tooLarge = true;
+      }
+      feat.properties.key = uuid.v4();
+      feat.properties.unit = unit;
+      return this.validateShape(feat);
     });
     this.setState({
       features: feats,
@@ -126,34 +127,23 @@ class MapContainer extends React.Component {
     });
   }
   mapPropsToState(props) {
-    console.log('Props supplied to mapPropsToState: ', props)
-    const maxArea = props.maxArea || Number.MAX_VALUE;
+    const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
     const features = props.features || [];
-    //
-    // Set a 'type' property for rectangles and circles
-    // TODO: after data migration, get rid of this
-    //
-    // Expand any poly collections (FeatureCollections or Google map objects
-    // into individual features
-    let expandedFeatures = [];
-    map(features, (feat) => { expandedFeatures = expandedFeatures.concat(expandFeatures(feat)); });
-
     // Convert each polygon into GeoJSON with area, then
-   // add 'tooLarge' if necc. and add unique key
-    const feats = map(expandedFeatures, (feat, index) => {
-      const out = makeGeoJSON(feat);
-      out.properties.key = uuid.v4();
-      out.properties.unit = unit;
-      return this.validateShape(out);
+    // add 'tooLarge' if necc. and add unique key
+    const feats = map(features, (feat) => {
+      const f = addArea(feat);
+      if(f.properties.area > maxAreaEach) {
+        f.properties.tooLarge = true;
+      }
+      feat.properties.key = uuid.v4();
+      feat.properties.unit = unit;
+      return this.validateShape(feat);
     });
-    console.log('feats: ', feats);
     // Convert points to GeoJSON
     const points = map(props.points, convertPoint);
-    console.log('points: ', points)
 
-    // Set center of map as L.latLng
-    const center = makeCenter(this.props.center);
     const zoom = this.props.zoom || null;
 
     // Apply changes to state
@@ -163,7 +153,7 @@ class MapContainer extends React.Component {
         unit,
         legendProps: this.props.legendProps,
         tileLayerProps: this.props.tileLayerProps,
-        maxArea,
+        maxAreaEach,
         features: feats,
         points,
         center,
@@ -172,7 +162,7 @@ class MapContainer extends React.Component {
         totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
       });
       s.legendProps = merge(res, this.state);
-      if (this.props.maxArea && (s.totalArea > s.maxArea)) return;
+      if (this.props.maxAreaEach && (s.totalArea > s.maxAreaEach)) return;
       this.setState(s, this.maybeZoomToShapes);
     });
   }
@@ -181,13 +171,13 @@ class MapContainer extends React.Component {
   // e.layer represents the newly created vector layer
   updateShapes(e) {
     const state = cloneDeep(this.state);
-    const { unit, maxArea } = state;
+    const { unit, maxAreaEach } = state;
     const geoJson = e.layer.toGeoJSON();
     let gJWithArea = {};
     switch (e.layerType) {
     case 'polygon':
       gJWithArea = makeGeoJSON(geoJson);
-      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+      if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
       gJWithArea.properties.unit = unit;
@@ -195,7 +185,7 @@ class MapContainer extends React.Component {
       break;
     case 'rectangle':
       gJWithArea = makeGeoJSON(geoJson);
-      if (area(unit, gJWithArea.properties.area) > maxArea) gJWithArea.properties.tooLarge = true;
+      if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
       gJWithArea.properties.unit = unit;
@@ -216,7 +206,7 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(state, (err, res) => {
       const s = cloneDeep(state);
       s.legendProps = merge(res, state);
-      if (this.props.maxArea && (s.totalArea > s.maxArea)) return;
+      if (this.props.maxAreaEach && (s.totalArea > s.maxAreaEach)) return;
       this.setState(s);
       this.setState({ edit: true });
     });
@@ -310,7 +300,7 @@ class MapContainer extends React.Component {
     ));
     const circApprox = makeGeoJSON(cA);
     circApprox.properties.key = uuid.v4();
-    if (area(this.state.unit, circApprox.properties.area) > this.state.maxArea.max) {
+    if (area(this.state.unit, circApprox.properties.area) > this.state.maxAreaEach.max) {
       circApprox.properties.tooLarge = true;
     }
     features.push(this.validateShape(circApprox));
@@ -349,7 +339,7 @@ class MapContainer extends React.Component {
       const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
     } else {
-      center = makeCenter(this.props.center);
+      center = makePoint(this.props.center);
       this.setState({ center });
     }
   }
@@ -401,7 +391,7 @@ class MapContainer extends React.Component {
       <MapComponent
         bindPoint={this}
         bounds={this.state.bounds}
-        center={makeCenterLeaflet(this.state.center)}
+        center={makePoint(this.state.center)}
         clickFeature={this.clickFeature.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
         edit={this.state.edit}
@@ -410,7 +400,7 @@ class MapContainer extends React.Component {
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
         markerIcon={this.state.markerIcon}
-        maxArea={this.state.maxArea || Number.MAX_VALUE}
+        maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
         onTileSet={this.onTileSet.bind(this)}
@@ -448,7 +438,7 @@ MapContainer.propTypes = {
   iconHTML: PropTypes.string,
   legendComponent: PropTypes.func,
   legendProps: PropTypes.object,
-  maxArea: PropTypes.number,
+  maxAreaEach: PropTypes.number,
   onShapeChange: PropTypes.func,
   points: PropTypes.array,
   features: PropTypes.arrayOf(PropTypes.object),
