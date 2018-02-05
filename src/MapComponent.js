@@ -112,11 +112,13 @@ const MapComponent = (props) => {
   });
   const points = map(props.points, (result, index) => {
     const p = result.properties;
+    const position = cloneDeep(result.geometry.coordinates);
+    reverse(position);
     return (
       <Marker
         key={uuid.v4()}
         uuid={p.key || uuid.v4()}
-        position={result.geometry.coordinates}
+        position={position}
         icon={props.markerIcon}
         onClick={props.clickPoint}
       >

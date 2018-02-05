@@ -8,7 +8,6 @@ import reverse from 'lodash/reverse';
 import flatten from 'lodash/flatten';
 import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
-import logoDefault from './logoDefault';
 import addArea from './addArea';
 
 export const cleanPoly = (poly) => {
@@ -23,7 +22,7 @@ export const cleanPoly = (poly) => {
 
 export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
-  html: html || logoDefault,
+  html: html,
 });
 
 export const indexByKey = (arr, key) => {

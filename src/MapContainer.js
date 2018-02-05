@@ -26,6 +26,7 @@ import {
 import addArea from './addArea';
 import './main.css';
 import getBounds from './getBounds';
+import defaultIcon from './defaultIcon';
 
 const validCoordsArray = (arr) =>
   arr &&
@@ -456,6 +457,7 @@ MapContainer.propTypes = {
 MapContainer.defaultProps = {
   onShapeChange: (a, cb) => { cb(null, a); },
   featureValidator: () => [],
+  iconHTML: defaultIcon,
 };
 
 export default MapContainer;

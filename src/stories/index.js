@@ -23,6 +23,11 @@ storiesOf('Points', module)
   .add('Points', () => (
     <MapContainer center={[35, -83]} points={[points.point_1, points.point_2]} />
   ));
+
+storiesOf('Edit tools', module)
+  .add('Edit tools', () => (
+    <MapContainer edit />
+  ));
 /*
 storiesOf('real view example', module)
   .add('realview', () => (
