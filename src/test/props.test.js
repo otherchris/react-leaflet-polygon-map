@@ -32,33 +32,37 @@ describe('center', () => {
   it('can be supplied as an array', () => {
     const geoPoint = { type: 'Point', coordinates: [-1, 1] };
     const geoCenter = makeCenterLeaflet(geoPoint);
-    const wrapper = shallow(<MapContainer center={[1,-1]} />);
-    wrapper.instance().componentDidMount();
-    expect(wrapper.state().center).toEqual(geoCenter)
+    const wrapper = mount(<MapContainer center={[1,-1]} />);
+    wrapper.instance().componentDidMount(() => {
+      expect(wrapper.state().center).toEqual(geoCenter)
+    });
   });
 
   it('can be supplied as a latLng object', () => {
     const geoPoint = { type: 'Point', coordinates: [-1, 1] };
     const geoCenter = makeCenterLeaflet(geoPoint);
     const wrapper = shallow(<MapContainer center={{ lat: 1, lng: -1 }} />);
-    wrapper.instance().componentDidMount();
-    expect(wrapper.state().center).toEqual(geoCenter)
+    wrapper.instance().componentDidMount(() => {
+      expect(wrapper.state().center).toEqual(geoCenter)
+    });
   });
 
   it('can be supplied as a geoJSON object', () => {
     const geoPoint = { type: 'Point', coordinates: [-1, 1] };
     const geoCenter = makeCenterLeaflet(geoPoint);
     const wrapper = shallow(<MapContainer center={ geoPoint} />);
-    wrapper.instance().componentDidMount();
-    expect(wrapper.state().center).toEqual(geoCenter)
+    wrapper.instance().componentDidMount(() => {
+      expect(wrapper.state().center).toEqual(geoCenter)
+    });
   });
 
   it('can be supplied as a geoJSON feature', () => {
     const geoPoint = { type: 'Point', coordinates: [-1, 1] };
     const geoCenter = makeCenterLeaflet(geoPoint);
     const wrapper = shallow(<MapContainer center={{ type: 'Feature', geometry: geoPoint }} />);
-    wrapper.instance().componentDidMount();
-    expect(wrapper.state().center).toEqual(geoCenter)
+    wrapper.instance().componentDidMount(() => {
+      expect(wrapper.state().center).toEqual(geoCenter)
+    });
   });
 });
 

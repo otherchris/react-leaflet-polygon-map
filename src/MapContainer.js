@@ -26,7 +26,6 @@ import {
 import addArea from './addArea';
 import './main.css';
 import getBounds from './getBounds';
-import convertPoint from './convertPoint';
 
 const validCoordsArray = (arr) =>
   arr &&
@@ -66,8 +65,8 @@ class MapContainer extends React.Component {
     super(props);
     this.state = {
       center: defaultCenter,
-      features: [],
-      points: [],
+      features: props.features || [],
+      points: props.points || [],
       googleAPILoaded: false,
       edit: !!props.edit,
       markerIcon: generateIcon(props.iconHTML),
@@ -91,12 +90,7 @@ class MapContainer extends React.Component {
   onScriptError() {
     this.setState({ googleAPIError: true });
   }
-  componentWillMount() {
-    console.log(this.state)
-    console.log(this.debouncedOnChange)
-  }
   componentDidMount() {
-    console.log('DID MOUNT')
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
@@ -152,9 +146,6 @@ class MapContainer extends React.Component {
       feat.properties.unit = unit;
       return this.validateShape(feat);
     });
-    // Convert points to GeoJSON
-    const points = map(props.points, convertPoint);
-
     const zoom = this.props.zoom || null;
 
     // Apply changes to state
@@ -166,7 +157,6 @@ class MapContainer extends React.Component {
         tileLayerProps: this.props.tileLayerProps,
         maxAreaEach,
         features: feats,
-        points,
         center,
         zoom,
         edit: this.props.edit,
@@ -386,7 +376,6 @@ class MapContainer extends React.Component {
     }
   }
   render() {
-    console.log('LETS ROCK')
     const {
       tooltipOptions,
     } = this.props;
