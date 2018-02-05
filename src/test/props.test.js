@@ -26,7 +26,6 @@ describe('center', () => {
     const geoDefault = { type: 'Point', coordinates:  [-85.751528, 38.257222] };
     const defaultCenter = makeCenterLeaflet(geoDefault);
     const wrapper = shallow(<MapContainer />);
-    wrapper.instance().componentDidMount();
     expect(wrapper.state().center).toEqual(defaultCenter)
   });
   it('can be supplied as an array', () => {
@@ -76,6 +75,17 @@ describe('edit', () => {
   });
 });
 
+describe('features', () => {
+  testPropType(MapContainer, 'features', 'array.object');
+
+  it('passes supplied features to state', () => {
+    const wrapper = shallow(<MapContainer features={[polygons.large]} /> )
+    wrapper.instance().componentDidMount(() => {
+      expect(wrapper.state().features).toHaveLength(1);
+    });
+  });
+});
+
 describe('height', () => {
   testPropType(MapContainer, 'height', 'number');
 });
@@ -92,14 +102,6 @@ describe('legendProps', () => {
   testPropType(MapContainer, 'legendProps', 'object');
 });
 
-describe('onShapeChange', () => {
-  testPropType(MapContainer, 'onShapeChange', 'func');
-});
-
-describe('points', () => {
-  testPropType(MapContainer, 'points', 'array.object');
-});
-
 describe('maxAreaEach', () => {
   testPropType(MapContainer, 'maxAreaEach', 'number');
 
@@ -110,7 +112,22 @@ describe('maxAreaEach', () => {
   });
 });
 
+describe('onShapeChange', () => {
+  testPropType(MapContainer, 'onShapeChange', 'func');
+});
+
+describe('points', () => {
+  testPropType(MapContainer, 'points', 'array.object');
+});
+
+describe('remove', () => {
+  testPropType(MapContainer, 'remove', 'bool');
+});
+
 describe('style', () => {
   testPropType(MapContainer, 'style', 'object');
 });
 
+describe('zoom', () => {
+  testPropType(MapContainer, 'zoom', 'number');
+});

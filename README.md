@@ -34,6 +34,17 @@ Initial center of the map. Can be provided as
 Enable the draw layer on the map. Required for creating new polygons/points and
 editing/removing existing polygons/points
 
+### `features (array)`
+
+An array of polygons to be added to the map. Polygons must be a valid GeoJSON
+Feature with MultiPolygon geometry.
+
+### `featureValidator (function)`
+
+A function that takes a single feature as input and returns an array of error
+descriptions (strings) that are appended to the `properties.errors` property of
+the feature in component state.
+
 ### `height (number)`
 
 Pixel height of the map.
@@ -66,35 +77,14 @@ An array of points to be added as markers on the map. Points should be
 provided either as a GeoJSON Point
 feature (see [the feature specification](https://macwright.org/2015/03/23/geojson-second-bite.html#features)).
 
-### `features (array)`
-
-An array of polygons to be added to the map. Polygons must be a valid GeoJSON
-Feature with MultiPolygon geometry.
-
 ### `remove (bool)`
 
 Sets the initial remove state of the component.
 
 ### `style (object)`
 
-???
-
-### `tileLayerProps (object)`
-
-Specify a non-default tileset.
-
-```
-{
-  url: <url of tileset>
-  attribution: <attribution string for tileset>
-}
-```
-
-URL for tileset (default `http://{s}.tile.osm.org/{z}/{x}/{y}.png`).
-
-### `tootTipOptions (object)`
-
-???
+Style properties to apply to polygon features on the map (see [Leaflet
+docs](http://leafletjs.com/reference-1.3.0.html#geojson-style))
 
 ### `zoom (number)`
 

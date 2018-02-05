@@ -34,7 +34,7 @@ const testPropType = (Component, propName, type) => {
       break;
     case 'array.object':
       badValue = ['123'];
-      goodValue = [{thing: false}];
+      goodValue = [{geometry: {coordinates: [[[false]]]}}];
       break;
     default:
       badValue = null;
@@ -50,7 +50,9 @@ const testPropType = (Component, propName, type) => {
       expect(console.error).not.toHaveBeenCalled();
     });
     it(`must be a ${type}`, () => {
-      const wrapper = shallow(<Component { ...badProps } /> );
+      try {
+        const wrapper = shallow(<Component { ...badProps } /> );
+      } catch (e) {noop}
       expect(console.error).toHaveBeenCalled();
       expect(spy.console.mock.calls[0][0]).toContain('Failed prop type');
     });
