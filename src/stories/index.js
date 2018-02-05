@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf, action, linkTo } from '@storybook/react';
 import MapContainerStoryWithNotes from './MapContainerStoryWithNotes';
 import MapContainer from '../MapContainer';
-//import points from './points';
+import points from '../test/support/fixtures/points';
 //import dpPoly from './dpPoly';
 //import poly from './poly';
 //import './layout';
@@ -19,6 +19,10 @@ storiesOf('Default view', module)
     <MapContainer />
   ));
 
+storiesOf('Points', module)
+  .add('Points', () => (
+    <MapContainer center={[35, -83]} points={[points.point_1, points.point_2]} />
+  ));
 /*
 storiesOf('real view example', module)
   .add('realview', () => (

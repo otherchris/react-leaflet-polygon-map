@@ -116,7 +116,7 @@ const MapComponent = (props) => {
       <Marker
         key={uuid.v4()}
         uuid={p.key || uuid.v4()}
-        position={reverse(cloneDeep(result.geometry.coordinates))}
+        position={result.geometry.coordinates}
         icon={props.markerIcon}
         onClick={props.clickPoint}
       >
