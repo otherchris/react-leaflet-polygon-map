@@ -69,10 +69,10 @@ class MapContainer extends React.Component {
       features: props.features || [],
       points: props.points || [],
       googleAPILoaded: false,
-      edit: !!props.edit,
       markerIcon: generateIcon(props.iconHTML),
       totalArea: 0,
       newCircleRadius: 0.1,
+      zoom: props.zoom || 12,
     };
     if (typeof props.onShapeChange === 'function') {
       this.debouncedOnChange = debounce(props.onShapeChange, 100);
@@ -96,12 +96,7 @@ class MapContainer extends React.Component {
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   componentWillReceiveProps(nextProps) {
-    if (
-      !isEqual(this.props.features, nextProps.features) ||
-      !isEqual(this.props.points, nextProps.points)
-    ) {
-      this.mapPropsToStateLite(nextProps);
-    }
+    this.mapPropsToStateLite(nextProps);
   }
   validateShape(_feature) {
     const feature = cloneDeep(_feature);
@@ -111,6 +106,7 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToStateLite(props) {
+    console.log(props)
     const center = props.center ? makeCenterLeaflet(makePoint(props.center)) : this.state.center
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
@@ -124,13 +120,19 @@ class MapContainer extends React.Component {
       feat.properties.unit = unit;
       return this.validateShape(feat);
     });
+    const zoom = props.zoom || null;
     this.setState({
       features: feats,
       center,
+      zoom,
+      points: props.points || [],
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+      edit: this.props.edit,
     });
   }
   mapPropsToState(props) {
+    console.log(props)
+    console.log(props)
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
@@ -146,7 +148,7 @@ class MapContainer extends React.Component {
       feat.properties.unit = unit;
       return this.validateShape(feat);
     });
-    const zoom = this.props.zoom || null;
+    const zoom = props.zoom || null;
 
     // Apply changes to state
     this.debouncedOnChange(this.state, (err, res) => {
@@ -184,17 +186,8 @@ class MapContainer extends React.Component {
       gJWithArea.properties.unit = unit;
       state.features.push(this.validateShape(gJWithArea));
       break;
-    case 'rectangle':
-      gJWithArea = addArea(geoJson);
-      if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
-      gJWithArea.properties.key = uuid.v4();
-      gJWithArea.properties.editable = false;
-      gJWithArea.properties.unit = unit;
-      state.features.push(this.validateShape(gJWithArea));
-      break;
     case 'marker':
       geoJson.properties.key = uuid.v4();
-      if (!state.points) state.points = [];
       state.points.push(geoJson);
       state.newCircleCenter = reverse(cloneDeep(geoJson.geometry.coordinates));
       state.makeCircleOn = true;
@@ -213,7 +206,7 @@ class MapContainer extends React.Component {
     });
   }
   componentDidUpdate() {
-    if (this.state.edit) {
+    if (this.props.edit) {
       const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
       removeButton.onclick = () => {
         const curr = this.state.remove;
@@ -379,6 +372,7 @@ class MapContainer extends React.Component {
       tooltipOptions,
     } = this.props;
     const passThroughProps = pick(this.props, [
+      'edit',
       'geolocate',
       'height',
       'legendComponent',
@@ -394,7 +388,6 @@ class MapContainer extends React.Component {
         center={this.state.center}
         clickFeature={this.clickFeature.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
-        edit={this.state.edit}
         googleAPILoaded={this.state.googleAPILoaded}
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
