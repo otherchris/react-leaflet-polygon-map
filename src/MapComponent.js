@@ -197,11 +197,9 @@ const MapComponent = (props) => {
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
         minZoom = {3}
-        maxZoom = {18}
+        maxZoom = {22}
         center = {props.center}
         zoom = {props.zoom || 9}
-        onViewportChanged={props.setCenterAndZoom}
-        onMoveend={props.setCenterAndZoom}
       >
         {geosuggest}
         {removePolyBanner}
