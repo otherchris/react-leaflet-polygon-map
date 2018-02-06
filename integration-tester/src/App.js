@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
+import simpleNumberLocalizer from 'react-widgets-simple-number';
 import logo from './logo.svg';
 import './App.css';
 import MapContainer from './MapContainer';
 import testerProps from './testerProps';
+
+simpleNumberLocalizer();
 
 class App extends Component {
   constructor(props) {
