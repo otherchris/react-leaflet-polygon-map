@@ -1,10 +1,10 @@
-const displayArea = (area, unit) => (unit === 'miles' ? area / 2590000 : area);
+const displayArea = (area, unit) => area;
 
 export const tooltipMessage = (polyProps, tooltipOptions = {}) => {
   if (tooltipOptions.tipMessage) return tooltipOptions.tipMessage;
   const area = displayArea(polyProps.area, polyProps.unit) || 0;
   if (tooltipOptions.text && tooltipOptions.includeArea) {
-    const unitName = tooltipOptions.units.name ? `Sq ${tooltipOptions.units.name}` : 'Sq Meters';
+    const unitName = tooltipOptions.units.name ? `sq ${tooltipOptions.units.name}` : 'Sq Meters';
     const areaWithUnit = `${area} ${unitName}`;
     const text = tooltipOptions.text ? tooltipOptions.text : '';
     const tipMessage = `${text} ${areaWithUnit}`;
@@ -20,7 +20,7 @@ export const tooltipMessage = (polyProps, tooltipOptions = {}) => {
     const tipMessage = text;
     return tipMessage;
   }
-  const tipMessage = `${area.toFixed(4)} Sq ${polyProps.unit}`;
+  const tipMessage = `${area.toFixed(4)} sq ${polyProps.unit}`;
   return tipMessage;
 };
 
