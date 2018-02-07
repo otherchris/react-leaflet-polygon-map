@@ -222,7 +222,7 @@ class MapContainer extends React.Component {
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
   // deletes the poly
   clickFeature(e) {
-    if (!this.state.edit) return;
+    if (!this.props.edit) return;
     if (this.state.remove) {
       const key = e.layer.options.uuid;
       const features = filter(this.state.features, (feat) => key !== feat.properties.key);
@@ -236,6 +236,7 @@ class MapContainer extends React.Component {
       });
       return;
     }
+
     const key = e.layer.options.uuid;
     const features = this.state.features;
     const index = indexByKey(features, key);

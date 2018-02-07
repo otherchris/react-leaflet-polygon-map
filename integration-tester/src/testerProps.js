@@ -25,6 +25,10 @@ const testerProps = [
     name: 'tightest-zoom',
     props: { zoom: 22 }
   },
+  {
+    name: 'poly-edit',
+    props: { features: fixtures.features, edit: true }
+  },
 ];
 
 export default testerProps;
