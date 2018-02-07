@@ -32,7 +32,11 @@ const testerProps = [
   {
     name: 'polys-and-points',
     props: { features: fixtures.citygon, points: fixtures.points, edit: true },
-  }
+  },
+  {
+    name: 'poly-with-center',
+    props: fixtures.pwc
+  },
 ];
 
 export default testerProps;
