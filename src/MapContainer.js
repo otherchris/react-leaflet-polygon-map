@@ -128,11 +128,9 @@ class MapContainer extends React.Component {
       points: props.points || [],
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
       edit: this.props.edit,
-    });
+    }, () => { this.maybeZoomToShapes(); });
   }
   mapPropsToState(props) {
-    console.log(props)
-    console.log(props)
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
@@ -149,7 +147,7 @@ class MapContainer extends React.Component {
       return this.validateShape(feat);
     });
     const zoom = props.zoom || null;
-
+    this.maybeZoomToShapes();
     // Apply changes to state
     this.debouncedOnChange(this.state, (err, res) => {
       const old = cloneDeep(this.state);
@@ -326,19 +324,21 @@ class MapContainer extends React.Component {
     }
   }
   zoomToShapes() {
-    let center;
+    console.log('ZOOMIN and forcin', this.state.features)
     const feats = this.state.features;
     const points = this.state.points;
     if (feats.length > 0 || points.length > 1) {
+      console.log('doin')
       const bounds = getBounds(feats, points);
+      console.log('boundin', bounds)
       this.leafletMap.leafletElement.fitBounds(bounds);
+      this.forceUpdate();
     } else {
-      center = makePoint(this.props.center);
-      this.setState({ center });
+      this.setState({ center: defaultCenter });
     }
   }
   maybeZoomToShapes() {
-    if (!this.state.center.lat) this.zoomToShapes();
+    if (!this.props.center) this.zoomToShapes();
   }
   removeAllFeatures() {
     const state = cloneDeep(this.state);
