@@ -33,4 +33,12 @@ describe('Polygons', () => {
       .click(390, 160, {bubbles: true});
     cy.get('.leaflet-container').find('div.leaflet-marker-draggable').should('have.length', 0);
   });
+
+  it('remove polys button', () => {
+    cy.get('#polys-and-points')
+    cy.get('button.btn-danger').contains('Remove all shapes').click();
+    cy.get('body').find('path.leaflet-interactive').should('have.length', 0)
+    cy.get('body').find('').should('have.length', 0)
+
+  });
 });

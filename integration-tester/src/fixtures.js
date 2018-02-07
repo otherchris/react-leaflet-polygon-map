@@ -16,6 +16,40 @@ const point_2 = {
   },
 }
 
+const citygon = {
+  "type": "Feature",
+  "properties": {},
+  "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+      [
+         [
+            [
+              -85.76030731201172,
+              38.24714579565491
+            ],
+            [
+              -85.75627326965332,
+              38.24714579565491
+            ],
+            [
+              -85.75627326965332,
+              38.250583468289534
+            ],
+            [
+              -85.76030731201172,
+              38.250583468289534
+            ],
+            [
+              -85.76030731201172,
+              38.24714579565491
+            ]
+          ]
+       ]
+    ]
+  }
+};
+
 const large = {
   "type": "Feature",
   "properties": {},
@@ -45,7 +79,7 @@ const large = {
             36.07352228885536
             ]
         ]
-        ]
+      ]
     ]
   }
 };
@@ -53,5 +87,6 @@ const large = {
 
 const points = [point_1, point_2];
 const features = [large];
+const citygonFeatures = [citygon];
 
-export default { points, features };
+export default { points, features, citygon: citygonFeatures };
