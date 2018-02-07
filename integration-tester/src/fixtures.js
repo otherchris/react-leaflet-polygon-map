@@ -16,6 +16,15 @@ const point_2 = {
   },
 }
 
+const center = {
+  type: "Feature",
+  properties: {},
+  geometry: {
+    type: 'Point',
+    coordinates: [-83, 35],
+  },
+};
+
 const citygon = {
   "type": "Feature",
   "properties": {},
@@ -88,5 +97,9 @@ const large = {
 const points = [point_1, point_2];
 const features = [large];
 const citygonFeatures = [citygon];
+const pwc = {
+  features: [large],
+  center,
+}
 
-export default { points, features, citygon: citygonFeatures };
+export default { points, features, citygon: citygonFeatures, pwc };
