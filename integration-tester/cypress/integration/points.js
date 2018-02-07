@@ -5,6 +5,7 @@ describe('Points', () => {
     cy.get('#points').click();
 
     cy.get('body').find('circle').should('have.length', 2);
+    cy.get('button.zoom-button');
   });
 
   it('provides tools', () => {
