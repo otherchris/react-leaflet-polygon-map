@@ -29,6 +29,10 @@ const testerProps = [
     name: 'poly-edit',
     props: { features: fixtures.features, edit: true }
   },
+  {
+    name: 'polys-and-points',
+    props: { features: fixtures.citygon, points: fixtures.points, edit: true },
+  }
 ];
 
 export default testerProps;
