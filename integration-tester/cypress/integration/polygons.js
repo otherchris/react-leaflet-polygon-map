@@ -12,6 +12,7 @@ describe('Polygons', () => {
 
     cy.get('path.leaflet-interactive').trigger('mouseover');
     cy.get('.leaflet-tooltip').should('contain', '340.1921 sq miles')
+    cy.get('#default').click();
   });
 
   it('edits polygons', () => {
@@ -23,6 +24,7 @@ describe('Polygons', () => {
       .trigger('mousemove', 90, 160)
       .click(390, 160, {bubbles: true});
     cy.get('.leaflet-container').find('div.leaflet-marker-draggable').should('have.length', 8);
+    cy.get('body').should('contain', 'Click the polygon again to finish editing');
 
     // Draggable points
 
@@ -32,10 +34,11 @@ describe('Polygons', () => {
       .trigger('mousemove', 90, 160)
       .click(390, 160, {bubbles: true});
     cy.get('.leaflet-container').find('div.leaflet-marker-draggable').should('have.length', 0);
+    cy.get('#default').click();
   });
 
   it('remove polys button', () => {
-    cy.get('#polys-and-points')
+    cy.get('#polys-and-points').click();
     cy.get('button.btn-danger').contains('Remove all shapes').click();
     cy.get('body').find('path.leaflet-interactive').should('have.length', 0)
     cy.get('body').find('').should('have.length', 0)
