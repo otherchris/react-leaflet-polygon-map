@@ -128,7 +128,7 @@ class MapContainer extends React.Component {
       points: props.points || [],
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
       edit: this.props.edit,
-    }, () => { this.maybeZoomToShapes(); });
+    }, this.maybeZoomToShapes);
   }
   mapPropsToState(props) {
     const center = makeCenterLeaflet(makePoint(props.center))
@@ -147,7 +147,6 @@ class MapContainer extends React.Component {
       return this.validateShape(feat);
     });
     const zoom = props.zoom || null;
-    this.maybeZoomToShapes();
     // Apply changes to state
     this.debouncedOnChange(this.state, (err, res) => {
       const old = cloneDeep(this.state);
@@ -183,12 +182,14 @@ class MapContainer extends React.Component {
       gJWithArea.properties.editable = false;
       gJWithArea.properties.unit = unit;
       state.features.push(this.validateShape(gJWithArea));
+      this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
     case 'marker':
       geoJson.properties.key = uuid.v4();
       state.points.push(geoJson);
       state.newCircleCenter = reverse(cloneDeep(geoJson.geometry.coordinates));
       state.makeCircleOn = true;
+      this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
     default:
       break;
@@ -328,9 +329,7 @@ class MapContainer extends React.Component {
     const feats = this.state.features;
     const points = this.state.points;
     if (feats.length > 0 || points.length > 1) {
-      console.log('doin')
       const bounds = getBounds(feats, points);
-      console.log('boundin', bounds)
       this.leafletMap.leafletElement.fitBounds(bounds);
       this.forceUpdate();
     } else {
@@ -382,6 +381,19 @@ class MapContainer extends React.Component {
       'submitButton',
       'update',
     ]);
+    /*
+    console.log('doin layers')
+    if (this.leafletMap && this.leafletMap.leafletElement) {
+      this.leafletMap.leafletElement.eachLayer((layer) => {
+        if (layer._bounds && !(layer.options && layer.options.uuid)) {
+          console.log("LAYER REMOVED: ", layer)
+          this.leafletMap.leafletElement.removeLayer(layer);
+        } else {
+          console.log("LAYER NOT REMOVED: ", layer)
+        }
+      });
+    }
+    */
     return (
       <MapComponent
         bindPoint={this}
