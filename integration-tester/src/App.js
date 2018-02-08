@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
+import omit from 'lodash/omit';
 import simpleNumberLocalizer from 'react-widgets-simple-number';
 import logo from './logo.svg';
 import './App.css';
@@ -13,8 +14,14 @@ class App extends Component {
     super(props);
     this.state = {
       mapProps: {},
+      lastMapState: {},
     }
   }
+
+  simpleOnChange(a, cb) {
+    this.setState({ lastMapState: omit(a, 'markerIcon')})
+    cb(a);
+  };
 
   makeTest(test) {
     return (
@@ -35,7 +42,10 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
           {map(testerProps, this.makeTest.bind(this))}
-        <MapContainer {...this.state.mapProps} />
+        <MapContainer {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
+        <div className="lms">
+          {JSON.stringify(this.state.lastMapState, null, '  ')}
+        </div>
       </div>
     );
   }
