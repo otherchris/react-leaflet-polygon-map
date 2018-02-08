@@ -109,4 +109,37 @@ describe('Edit Tools', () => {
     cy.get('path.leaflet-interactive').should('have.length', 0);
     cy.get('#default').click();
   });
+
+  it('can draw a point', () => {
+    cy.visit('http://127.0.0.1:3000');
+
+    cy.get('#edit-tools').click();
+    cy.get('a.leaflet-draw-draw-marker').click();
+
+    cy.get('.leaflet-container')
+      .trigger('mousemove', 90, 160)
+      .trigger('click');
+
+    cy.get('circle').should('have.length', 1);
+  });
+
+  it('can remove a drawn point', () => {
+    cy.visit('http://127.0.0.1:3000');
+
+    cy.get('#edit-tools').click();
+    cy.get('a.leaflet-draw-draw-marker').click();
+
+    cy.get('.leaflet-container')
+      .trigger('mousemove', 90, 160)
+      .trigger('click');
+
+    cy.get('circle').should('have.length', 1);
+
+    cy.get('a.leaflet-draw-edit-remove').click();-
+    cy.get('.leaflet-container')
+      .trigger('mousemove', 90, 160)
+      .trigger('click');
+
+    cy.get('circle').should('have.length', 0);
+  });
 });
