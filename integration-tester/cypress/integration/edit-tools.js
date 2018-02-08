@@ -12,7 +12,8 @@ describe('Edit Tools', () => {
 
   });
 
-  it('can draw a poly', () => {
+  it('can draw a free poly', () => {
+    cy.visit('http://127.0.0.1:3000');
     cy.get('#edit-tools').click();
 
     cy.get('.leaflet-draw-draw-polygon').click();
@@ -27,11 +28,31 @@ describe('Edit Tools', () => {
       .click(90, 160, {bubbles: true});
 
     cy.get('path.leaflet-interactive').should('have.length', 1);
+    cy.get('path.leaflet-interactive[fill=green]').should('have.length', 1);
+    cy.get('#default').click();
+
+  });
+
+  it('can draw a rectangle', () => {
+    cy.visit('http://127.0.0.1:3000');
+    cy.get('#edit-tools').click();
+
+    cy.get('.leaflet-draw-draw-rectangle').click();
+    cy.get('.leaflet-container')
+      .trigger('mousemove', 90, 160)
+      .trigger('mousedown', {which: 1})
+      .trigger('mousemove', 375, 330)
+      .trigger('mouseup', {force: true});
+
+    cy.get('path.leaflet-interactive').should('have.length', 1);
+    cy.get('path.leaflet-interactive[fill=green]').should('have.length', 1);
     cy.get('#default').click();
   });
 
   it('can remove a poly', () => {
-    cy.get('#poly-edit').click();
+    cy.visit('http://127.0.0.1:3000');
+    cy.wait(500)
+    cy.get('#poly-edit').click('center');
 
     cy.get('a.leaflet-draw-edit-remove').click();
 
@@ -47,7 +68,8 @@ describe('Edit Tools', () => {
     cy.get('#default').click();
   });
 
-  it('can remove a drawn poly', () => {
+  it('can remove a drawn free poly', () => {
+    cy.visit('http://127.0.0.1:3000');
     cy.get('#edit-tools').click();
 
     cy.get('.leaflet-draw-draw-polygon').click();
@@ -62,6 +84,26 @@ describe('Edit Tools', () => {
       .click(90, 160, {bubbles: true});
 
     cy.get('path.leaflet-interactive').should('have.length', 1);
+    cy.get('a.leaflet-draw-edit-remove').click();
+    cy.get('path.leaflet-interactive').click();
+    cy.get('path.leaflet-interactive').should('have.length', 0);
+    cy.get('#default').click();
+  });
+
+  it('can remove a drawn rectangle', () => {
+    cy.visit('http://127.0.0.1:3000');
+    cy.get('#edit-tools').click();
+
+    cy.get('.leaflet-draw-draw-rectangle').click();
+    cy.get('.leaflet-container')
+      .trigger('mousemove', 90, 160)
+      .trigger('mousedown', {which: 1})
+      .trigger('mousemove', 375, 330)
+      .trigger('mouseup', {force: true});
+
+    cy.get('path.leaflet-interactive').should('have.length', 1);
+    cy.get('path.leaflet-interactive[fill=green]').should('have.length', 1);
+
     cy.get('a.leaflet-draw-edit-remove').click();
     cy.get('path.leaflet-interactive').click();
     cy.get('path.leaflet-interactive').should('have.length', 0);

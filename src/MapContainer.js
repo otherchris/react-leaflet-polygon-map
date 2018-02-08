@@ -184,6 +184,15 @@ class MapContainer extends React.Component {
       state.features.push(this.validateShape(gJWithArea));
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
+    case 'rectangle':
+      gJWithArea = addArea(geoJson);
+      if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
+      gJWithArea.properties.key = uuid.v4();
+      gJWithArea.properties.editable = false;
+      gJWithArea.properties.unit = unit;
+      state.features.push(this.validateShape(gJWithArea));
+      this.leafletMap.leafletElement.removeLayer(e.layer);
+      break;
     case 'marker':
       geoJson.properties.key = uuid.v4();
       state.points.push(geoJson);
