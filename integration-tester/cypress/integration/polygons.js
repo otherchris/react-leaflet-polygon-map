@@ -5,9 +5,11 @@ describe('Polygons', () => {
     cy.get('#large-poly').click();
 
     cy.get('body').find('path.leaflet-interactive').should('have.length', 1)
+    cy.get('#default').click();
   });
 
   it('shows a tool tip with area', () => {
+    cy.get('#large-poly').click();
     cy.get('button.zoom-button').click();
 
     cy.get('path.leaflet-interactive').trigger('mouseover');
