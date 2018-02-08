@@ -1,12 +1,15 @@
 describe('Zoom', () => {
-  it('starts zoomed to shapes', () => {
+  it('starts zoomed to shapes (poly)', () => {
     // polys
-    cy.get('#default').click('center');
-    cy.get('#large-poly').click('center');
+    cy.visit('127.0.0.1:3000');
+    cy.wait(500);
+    cy.get('#poly-edit').click('center');
     cy.get('img[src*="m&x=192&y=401&z=10"]');
+  });
 
+  it('starts zoomed to shapes (poly and points)', () => {
     // points
-    cy.get('#default').click('center');
+    cy.visit('127.0.0.1:3000');
     cy.get('#points').click('center');
     cy.get('img[src*="m&x=1071&y=1577&z=12"]');
   });

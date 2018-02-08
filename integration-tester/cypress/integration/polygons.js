@@ -40,10 +40,10 @@ describe('Polygons', () => {
   });
 
   it('remove polys button', () => {
+    cy.visit('127.0.0.1:3000');
     cy.get('#polys-and-points').click();
     cy.get('button.btn-danger').contains('Remove all shapes').click();
     cy.get('body').find('path.leaflet-interactive').should('have.length', 0)
-    cy.get('body').find('').should('have.length', 0)
-
+    cy.get('body').find('circle').should('have.length', 0)
   });
 });

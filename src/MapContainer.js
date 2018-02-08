@@ -1,6 +1,7 @@
 import map from 'lodash/map';
 import pick from 'lodash/pick';
 import omit from 'lodash/omit';
+import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 import filter from 'lodash/filter';
 import debounce from 'lodash/debounce';
@@ -106,7 +107,6 @@ class MapContainer extends React.Component {
     return feature;
   }
   mapPropsToStateLite(props) {
-    console.log(props)
     const center = props.center ? makeCenterLeaflet(makePoint(props.center)) : this.state.center
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const unit = props.unit || 'miles';
@@ -121,6 +121,16 @@ class MapContainer extends React.Component {
       return this.validateShape(feat);
     });
     const zoom = props.zoom || null;
+    const old = cloneDeep(this.state);
+    const ess = merge({
+      features: feats,
+      center,
+      zoom,
+      points: props.points || [],
+      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+      edit: this.props.edit,
+    }, old);
+    this.debouncedOnChange(ess, noop);
     this.setState({
       features: feats,
       center,
@@ -148,20 +158,23 @@ class MapContainer extends React.Component {
     });
     const zoom = props.zoom || null;
     // Apply changes to state
-    this.debouncedOnChange(this.state, (err, res) => {
-      const old = cloneDeep(this.state);
-      const s = merge(old, {
-        unit,
-        legendProps: this.props.legendProps,
-        tileLayerProps: this.props.tileLayerProps,
-        maxAreaEach,
-        features: feats,
-        center,
-        zoom,
-        edit: this.props.edit,
-        totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
-      });
-      s.legendProps = merge(res, this.state);
+    //
+    const old = cloneDeep(this.state);
+    console.log("FEATS: ", feats)
+    const s = merge(old, {
+      unit,
+      legendProps: this.props.legendProps,
+      tileLayerProps: this.props.tileLayerProps,
+      maxAreaEach,
+      features: feats,
+      center,
+      zoom,
+      edit: this.props.edit,
+      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+    });
+    const ess = cloneDeep(s);
+    s.legendProps = merge(ess, this.state);
+    this.debouncedOnChange(s, (err, res) => {
       if (this.props.maxAreaEach && (s.totalArea > s.maxAreaEach)) return;
       this.setState(s, this.maybeZoomToShapes);
     });
@@ -353,6 +366,7 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(state, (err, res) => {
       const s = cloneDeep(state);
       s.features = [];
+      s.points = [];
       s.totalArea = 0;
       s.legendProps = {}; // omit(merge(res, s), 'legendProps');
       this.setState(s);

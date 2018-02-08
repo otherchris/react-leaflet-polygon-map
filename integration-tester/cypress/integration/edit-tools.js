@@ -76,16 +76,19 @@ describe('Edit Tools', () => {
     cy.get('.leaflet-container')
       .trigger('mousemove', 90, 160)
       .click(90, 160, {bubbles: true})
-      .trigger('mousemove', 375, 330)
-      .click(375, 330, {bubbles: true})
-      .trigger('mousemove', 300, 320)
-      .click(300, 320, {bubbles: true})
+      .trigger('mousemove', 375, 160)
+      .click(375, 160, {bubbles: true})
+      .trigger('mousemove', 375, 360)
+      .click(375, 360, {bubbles: true})
+      .trigger('mousemove', 90, 360)
+      .click(90, 360, {bubbles: true})
       .trigger('mousemove', 90, 160)
       .click(90, 160, {bubbles: true});
 
     cy.get('path.leaflet-interactive').should('have.length', 1);
     cy.get('a.leaflet-draw-edit-remove').click();
-    cy.get('path.leaflet-interactive').click();
+    cy.wait(500);
+    cy.get('path.leaflet-interactive').click('center');
     cy.get('path.leaflet-interactive').should('have.length', 0);
     cy.get('#default').click();
   });
@@ -105,6 +108,7 @@ describe('Edit Tools', () => {
     cy.get('path.leaflet-interactive[fill=green]').should('have.length', 1);
 
     cy.get('a.leaflet-draw-edit-remove').click();
+    cy.wait(500);
     cy.get('path.leaflet-interactive').click();
     cy.get('path.leaflet-interactive').should('have.length', 0);
     cy.get('#default').click();

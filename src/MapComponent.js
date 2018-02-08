@@ -168,7 +168,7 @@ const MapComponent = (props) => {
       Zoom to shapes
     </button>
   ) : '';
-  const removeAllButton = (props.features.length > 0 && props.edit) ? (
+  const removeAllButton = ((props.features.length > 0 || props.points.length > 0) && props.edit) ? (
     <button type="button" className="btn btn-danger btn-sm" onClick={props.removeAllFeatures}>
       Remove all shapes
     </button>
