@@ -18,6 +18,10 @@ const testerProps = [
     props: { points: fixtures.points }
   },
   {
+    name: 'points-edit',
+    props: { points: fixtures.points, edit: true }
+  },
+  {
     name: 'large-poly',
     props: { features: fixtures.features }
   },
@@ -37,6 +41,10 @@ const testerProps = [
     name: 'poly-with-center',
     props: fixtures.pwc
   },
+  {
+    name: 'single-point',
+    props: { points: fixtures.singlePoint },
+  }
 ];
 
 export default testerProps;
