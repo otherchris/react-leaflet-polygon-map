@@ -22,8 +22,8 @@ import {
   areaAccumulator,
   area,
   polygonArrayToProp,
-  cleanPoly,
 } from './MapHelpers';
+import cleanPoly from './cleanPoly';
 import addArea from './addArea';
 import './main.css';
 import getBounds from './getBounds';
@@ -70,7 +70,6 @@ class MapContainer extends React.Component {
       features: props.features || [],
       points: props.points || [],
       googleAPILoaded: false,
-      markerIcon: generateIcon(props.iconHTML),
       totalArea: 0,
       newCircleRadius: 0.1,
       zoom: props.zoom || 12,
@@ -79,19 +78,7 @@ class MapContainer extends React.Component {
       this.debouncedOnChange = debounce(props.onShapeChange, 100);
     }
   }
-  getScriptLoaderID() {
-    return ReactScriptLoaderMixin.__getScriptLoaderID();
-  }
-  getScriptUrl() {
-    const keyparam = this.props.apikey ? `key=${this.props.apikey}` : '';
-    return `https://maps.googleapis.com/maps/api/js?${keyparam}&libraries=places`;
-  }
-  onScriptLoaded() {
-    this.setState({ googleAPILoaded: true });
-  }
-  onScriptError() {
-    this.setState({ googleAPIError: true });
-  }
+
   componentDidMount() {
     this.mapPropsToState(this.props);
     ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
@@ -106,198 +93,89 @@ class MapContainer extends React.Component {
     else delete feature.properties.errors;
     return feature;
   }
-  mapPropsToStateLite(props) {
-    const center = props.center ? makeCenterLeaflet(makePoint(props.center)) : this.state.center
-    const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
-    const unit = props.unit || 'miles';
-    const features = props.features || [];
-    const feats = map(features, (feat) => {
-      const f = addArea(feat);
-      if(f.properties.area > maxAreaEach) {
-        f.properties.tooLarge = true;
-      }
-      feat.properties.key = uuid.v4();
-      feat.properties.unit = unit;
-      return this.validateShape(feat);
-    });
-    const zoom = props.zoom || null;
-    const old = cloneDeep(this.state);
-    const ess = merge({
-      features: feats,
-      center,
-      zoom,
-      points: props.points || [],
-      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
-      edit: this.props.edit,
-    }, old);
-    this.debouncedOnChange(ess, noop);
-    this.setState({
-      features: feats,
-      center,
-      zoom,
-      points: props.points || [],
-      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
-      edit: this.props.edit,
-    }, this.maybeZoomToShapes);
-  }
-  mapPropsToState(props) {
+  cleanProps(props, cb) {
+    const p = cloneDeep(p);
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
-    const unit = props.unit || 'miles';
     const features = props.features || [];
-    // Convert each polygon into GeoJSON with area, then
-    // add 'tooLarge' if necc. and add unique key
-    const feats = map(features, (feat) => {
-      const f = addArea(feat);
-      if(f.properties.area > maxAreaEach) {
-        f.properties.tooLarge = true;
-      }
-      feat.properties.key = uuid.v4();
-      feat.properties.unit = unit;
-      return this.validateShape(feat);
-    });
-    const zoom = props.zoom || null;
-    // Apply changes to state
-    //
-    const old = cloneDeep(this.state);
-    console.log("FEATS: ", feats)
-    const s = merge(old, {
-      unit,
-      legendProps: this.props.legendProps,
-      tileLayerProps: this.props.tileLayerProps,
-      maxAreaEach,
+    const feats = map(features, cleanPoly);
+    const ess = merge(p, {
       features: feats,
       center,
       zoom,
-      edit: this.props.edit,
+      points: props.points || [],
       totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+      edit: this.props.edit,
     });
-    const ess = cloneDeep(s);
-    s.legendProps = merge(ess, this.state);
-    this.debouncedOnChange(s, (err, res) => {
-      if (this.props.maxAreaEach && (s.totalArea > s.maxAreaEach)) return;
-      this.setState(s, this.maybeZoomToShapes);
-    });
+    this.debouncedOnChange(ess, cb);
+    this.maybeZoomToShapes();
   }
 
   // updateShapes called by onCreated callback in Leaflet map
   // e.layer represents the newly created vector layer
   updateShapes(e) {
-    const state = cloneDeep(this.state);
-    const { unit, maxAreaEach } = state;
-    const geoJson = e.layer.toGeoJSON();
-    let gJWithArea = {};
-    console.log(e.layer.type);
+    const p = cloneDeep(this.props)
+    const geoJSON = e.layer.toGeoJSON();
     switch (e.layerType) {
     case 'polygon':
-      gJWithArea = addArea(geoJson);
-      gJWithArea.geometry.type = "MultiPolygon";
-      gJWithArea.geometry.coordinates = [cloneDeep(gJWithArea.geometry.coordinates)];
-      if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
-      gJWithArea.properties.key = uuid.v4();
-      gJWithArea.properties.editable = false;
-      gJWithArea.properties.unit = unit;
-      state.features.push(this.validateShape(gJWithArea));
+      p.features.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
     case 'rectangle':
-      gJWithArea = addArea(geoJson);
-      gJWithArea.geometry.type = "MultiPolygon";
-      gJWithArea.geometry.coordinates = [cloneDeep(gJWithArea.geometry.coordinates)];
-      if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
-      gJWithArea.properties.key = uuid.v4();
-      gJWithArea.properties.editable = false;
-      gJWithArea.properties.unit = unit;
-      state.features.push(this.validateShape(gJWithArea));
+      p.features.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
     case 'marker':
-      geoJson.properties.key = uuid.v4();
-      state.points.push(geoJson);
-      state.newCircleCenter = reverse(cloneDeep(geoJson.geometry.coordinates));
-      state.makeCircleOn = true;
+      p.points.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
     default:
       break;
     }
-    state.totalArea = area(this.state.unit, reduce(state.features, areaAccumulator, 0));
-    state.edit = false;
-    this.debouncedOnChange(state, (err, res) => {
-      const s = cloneDeep(state);
-      s.legendProps = merge(res, state);
-      if (this.props.maxAreaEach && (s.totalArea > s.maxAreaEach)) return;
-      this.setState(s);
-      this.setState({ edit: true });
+    p.edit = false;
+    this.cleanProps(p, (err, res) =>
+      const s = cloneDeep(p);
+      s.legendProps = merge(res, p);
     });
-  }
-  componentDidUpdate() {
-    if (this.props.edit) {
-      const removeButton = document.getElementsByClassName('leaflet-draw-edit-remove')[0];
-      removeButton.onclick = () => {
-        const curr = this.state.remove;
-        this.setState({ remove: !curr });
-      };
-      removeButton.className = ('leaflet-draw-edit-remove');
-    }
-    // Call the debounced version of the onChange prop
-    // Actually, don't. onChange will be called when features/points are added
-    // or removed
   }
 
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
   // deletes the poly
   clickFeature(e) {
     if (!this.props.edit) return;
-    if (this.state.remove) {
+    if (this.props.remove) {
       const key = e.layer.options.uuid;
-      const features = filter(this.state.features, (feat) => key !== feat.properties.key);
-      const s = cloneDeep(this.state);
+      const features = filter(this.props.features, (feat) => key !== feat.properties.key);
+      const s = cloneDeep(this.props);
       s.features = features;
-      this.debouncedOnChange(s, (err, res) => {
-        s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
-        s.legendProps = omit(merge(res, s), 'legendProps');
-        s.remove = false;
-        this.setState(s);
-      });
-      return;
+      this.cleanProps(s, noop);
     }
 
     const key = e.layer.options.uuid;
-    const features = this.state.features;
+    const features = this.props.features;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
-    if (editable) features[index] = addArea(this.validateShape(cleanPoly(e.layer.toGeoJSON())));
+    if (editable) features[index] = cleanPoly(e.layer.toGeoJSON());
     features[index].properties.editable = !editable;
-    const s = cloneDeep(this.state)
-    this.debouncedOnChange(this.state, (err, res) => {
-      s.openFeature = !editable;
-      s.features = cloneDeep(features);
-      s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
-      s.legendProps = omit(merge(res, s), 'legendProps');
-      this.setState(s);
-    });
+    const s = cloneDeep(this.props);
+    s.openFeature = !editable;
+    s.features = cloneDeep(features);
+    s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
+    s.legendProps = omit(merge(res, s), 'legendProps');
+    this.cleanProps(s, noop)
   }
+
   clickPoint(e) {
     if (!this.state.edit) return;
     if (this.state.remove) {
       const key = e.target.options.uuid;
-      const points = filter(this.state.points, (point) => key !== point.properties.key);
-      this.debouncedOnChange(this.state, (err, res) => {
-        const s = cloneDeep(this.state);
-        s.points = points;
-        s.legendProps = omit(merge(res, s), 'legendProps');
-        s.remove = false;
-        this.setState(s);
-      });
+      const points = filter(this.props.points, (point) => key !== point.properties.key);
+      const s = cloneDeep(this.props);
+      s.points = points;
+      s.legendProps = omit(merge(res, s), 'legendProps');
+      s.remove = false;
+      this.cleanProps(s, noop);
     } else {
-      const makeCircle = !!this.state.makeCircleOn;
-      if (!makeCircle) {
-        const geoJSON = e.target.toGeoJSON();
-        const newCircleCenter = reverse(cloneDeep(geoJSON.geometry.coordinates));
-        this.setState({ makeCircleOn: !makeCircle, newCircleCenter });
-      }
-      this.setState({ makeCircleOn: !makeCircle });
     }
   }
   onLocationSelect(loc) {
@@ -432,7 +310,7 @@ class MapContainer extends React.Component {
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
         makeCircleOn={this.state.makeCircleOn}
-        markerIcon={this.state.markerIcon}
+        markerIcon={generateIcon(defaultIcon)}
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
@@ -470,7 +348,6 @@ MapContainer.propTypes = {
   featureValidator: PropTypes.func,
   geolocate: PropTypes.bool,
   height: PropTypes.number,
-  iconHTML: PropTypes.string,
   legendComponent: PropTypes.func,
   legendProps: PropTypes.object,
   maxAreaEach: PropTypes.number,
@@ -486,9 +363,10 @@ MapContainer.propTypes = {
 };
 
 MapContainer.defaultProps = {
+  center: defaultCenter,
   onShapeChange: (a, cb) => { cb(null, a); },
   featureValidator: () => [],
-  iconHTML: defaultIcon,
+  zoom: 9,
 };
 
 export default MapContainer;
