@@ -162,7 +162,7 @@ const MapComponent = (props) => {
       turnOff={props.turnOffCircleApprox}
     />
   ) : '';
-  const zoomButton = props.features.length > 0 || props.points.length > 1 ? (
+  const zoomButton = props.features.length > 0 || props.points.length > 0 ? (
     <button type="button" className="zoom-button btn btn-secondary btn-sm"
       onClick={props.zoomToShapes}>
       Zoom to shapes
@@ -197,7 +197,7 @@ const MapComponent = (props) => {
         ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
         minZoom = {3}
-        maxZoom = {22}
+        maxZoom = {18}
         center = {props.center}
         zoom = {props.zoom || 9}
       >

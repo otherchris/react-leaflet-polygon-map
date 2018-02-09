@@ -26,4 +26,13 @@ dist
 *~
 *.un~
 *.swp
+*.swo
+
+/integration-tester/src/MapContainer.js
+/integration-tester/src/MapComponent.js
+/integration-tester/src/tooltipHelpers.js
+/integration-tester/src/convertPoint.js
+/integration-tester/src/leaflet*
+/integration-tester/src/addArea.js
+
 

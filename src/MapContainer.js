@@ -262,12 +262,12 @@ class MapContainer extends React.Component {
     const features = this.state.features;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
-    if (editable) features[index] = this.validateShape(cleanPoly(e.layer.toGeoJSON()));
+    if (editable) features[index] = addArea(this.validateShape(cleanPoly(e.layer.toGeoJSON())));
     features[index].properties.editable = !editable;
+    const s = cloneDeep(this.state)
     this.debouncedOnChange(this.state, (err, res) => {
-      const s = cloneDeep(this.state);
       s.openFeature = !editable;
-      s.features = features;
+      s.features = cloneDeep(features);
       s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
       s.legendProps = omit(merge(res, s), 'legendProps');
       this.setState(s);
@@ -347,10 +347,9 @@ class MapContainer extends React.Component {
     }
   }
   zoomToShapes() {
-    console.log('ZOOMIN and forcin', this.state.features)
     const feats = this.state.features;
     const points = this.state.points;
-    if (feats.length > 0 || points.length > 1) {
+    if (feats.length > 0 || points.length > 0) {
       const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
       this.forceUpdate();

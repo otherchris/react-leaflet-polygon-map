@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
+import isEqual from 'lodash/isEqual';
 import omit from 'lodash/omit';
 import simpleNumberLocalizer from 'react-widgets-simple-number';
 import logo from './logo.svg';
@@ -19,7 +20,11 @@ class App extends Component {
   }
 
   simpleOnChange(a, cb) {
-    this.setState({ lastMapState: omit(a, 'markerIcon')})
+    const { points, features } = omit(a, 'markerIcon');
+    console.log(points, this.state.lastMapState.points)
+    if (!(isEqual(points, this.state.lastMapState.points) && isEqual(features, this.state.lastMapState.features))) {
+      this.setState({ lastMapState: omit(a, 'markerIcon')});
+    }
     cb(a);
   };
 
