@@ -18,7 +18,8 @@ describe('onShapeChange', () => {
       .click(300, 320, {bubbles: true})
       .trigger('mousemove', 90, 160)
       .click(90, 160, {bubbles: true});
-    cy.get('div.lms').should('contain', '"area": 110')
+    cy.get('div.lms').should('contain', 'MultiPolygon');
+    cy.get('div.lms').should('contain', '"area": 110');
   });
   it('reports the current state adding a point by edit', () => {
     cy.visit('127.0.0.1:3000');
@@ -43,6 +44,7 @@ describe('onShapeChange', () => {
       .trigger('mousedown', {which: 1})
       .trigger('mousemove', 375, 330)
       .trigger('mouseup', {force: true});
+    cy.get('div.lms').should('contain', 'MultiPolygon');
     cy.get('div.lms').should('contain', '"area": 339')
   });
   it('reports the current state adding a poly by props', () => {
@@ -51,6 +53,7 @@ describe('onShapeChange', () => {
 
     cy.wait(500)
     cy.get('#large-poly').click('center');
+    cy.get('div.lms').should('contain', 'MultiPolygon');
     cy.get('div.lms').should('contain', '"area": 340')
   });
   it('reports the current state adding a point by props', () => {
