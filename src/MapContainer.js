@@ -187,9 +187,12 @@ class MapContainer extends React.Component {
     const { unit, maxAreaEach } = state;
     const geoJson = e.layer.toGeoJSON();
     let gJWithArea = {};
+    console.log(e.layer.type);
     switch (e.layerType) {
     case 'polygon':
       gJWithArea = addArea(geoJson);
+      gJWithArea.geometry.type = "MultiPolygon";
+      gJWithArea.geometry.coordinates = [cloneDeep(gJWithArea.geometry.coordinates)];
       if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
@@ -199,6 +202,8 @@ class MapContainer extends React.Component {
       break;
     case 'rectangle':
       gJWithArea = addArea(geoJson);
+      gJWithArea.geometry.type = "MultiPolygon";
+      gJWithArea.geometry.coordinates = [cloneDeep(gJWithArea.geometry.coordinates)];
       if (area(unit, gJWithArea.properties.area) > maxAreaEach) gJWithArea.properties.tooLarge = true;
       gJWithArea.properties.key = uuid.v4();
       gJWithArea.properties.editable = false;
