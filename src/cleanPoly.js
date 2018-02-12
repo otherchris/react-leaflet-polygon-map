@@ -1,7 +1,9 @@
 import cloneDeep from 'lodash/cloneDeep';
+import addArea from './addArea';
+import validateShape from './validateShape';
 import uuid from 'uuid';
 
-const cleanPoly (poly) => {
+const cleanPoly = (poly, maxAreaEach, validateShape) => {
   let p = cloneDeep(poly);
 
   // Add area
