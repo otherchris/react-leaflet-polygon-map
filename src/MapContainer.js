@@ -80,12 +80,14 @@ class MapContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.mapPropsToState(this.props);
-    ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
+    this.cleanProps(this.props, noop);
+    //ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
+  /*
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps, this.props)) this.mapPropsToStateLite(nextProps);
+    if (!isEqual(nextProps, this.props)) this.cleanProps(nextProps);
   }
+  */
   validateShape(_feature) {
     const feature = cloneDeep(_feature);
     const newErrors = this.props.featureValidator(feature);
@@ -98,13 +100,12 @@ class MapContainer extends React.Component {
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const features = props.features || [];
-    const feats = map(features, cleanPoly);
+    const feats = map(features, (x) => cleanPoly(x, this.props.maxArea, this.props.featureValidator));
     const ess = merge(p, {
       features: feats,
       center,
-      zoom,
       points: props.points || [],
-      totalArea: area(unit, reduce(feats, areaAccumulator, 0)),
+      totalArea: area('unit', reduce(feats, areaAccumulator, 0)),
       edit: this.props.edit,
     });
     this.debouncedOnChange(ess, cb);
@@ -133,7 +134,7 @@ class MapContainer extends React.Component {
       break;
     }
     p.edit = false;
-    this.cleanProps(p, (err, res) =>
+    this.cleanProps(p, (err, res) => {
       const s = cloneDeep(p);
       s.legendProps = merge(res, p);
     });
@@ -155,13 +156,13 @@ class MapContainer extends React.Component {
     const features = this.props.features;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
-    if (editable) features[index] = cleanPoly(e.layer.toGeoJSON());
+    if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), this.props.maxAreaEach, this.props.featureValidator);
     features[index].properties.editable = !editable;
     const s = cloneDeep(this.props);
     s.openFeature = !editable;
     s.features = cloneDeep(features);
     s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
-    s.legendProps = omit(merge(res, s), 'legendProps');
+    s.legendProps = omit(s, 'legendProps');
     this.cleanProps(s, noop)
   }
 
@@ -172,7 +173,7 @@ class MapContainer extends React.Component {
       const points = filter(this.props.points, (point) => key !== point.properties.key);
       const s = cloneDeep(this.props);
       s.points = points;
-      s.legendProps = omit(merge(res, s), 'legendProps');
+      s.legendProps = omit(s, 'legendProps');
       s.remove = false;
       this.cleanProps(s, noop);
     } else {
@@ -365,6 +366,7 @@ MapContainer.propTypes = {
 MapContainer.defaultProps = {
   center: defaultCenter,
   onShapeChange: (a, cb) => { cb(null, a); },
+  features: [],
   featureValidator: () => [],
   zoom: 9,
 };
