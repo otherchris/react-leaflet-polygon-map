@@ -20,8 +20,13 @@ class App extends Component {
   }
 
   simpleOnChange(a, cb) {
-    const { points, features } = omit(a, 'markerIcon');
-    if (!(isEqual(points, this.state.lastMapState.points) && isEqual(features, this.state.lastMapState.features))) {
+    console.log('update', a)
+    const { points, features, remove } = omit(a, 'markerIcon');
+    if (!(
+      isEqual(points, this.state.lastMapState.points) &&
+      isEqual(features, this.state.lastMapState.features) &&
+      isEqual(remove, this.state.lastMapState.remove)
+    )) {
       this.setState({ mapProps: a, lastMapState: omit(a, 'markerIcon')});
     }
     cb(null, a);

@@ -82,8 +82,7 @@ class MapContainer extends React.Component {
   removeListener() {
     alert('wired in correct')
     const p = cloneDeep(this.props)
-    p.remove = !!!p.remove
-    console.log(p)
+    p.remove = !p.remove
     this.cleanProps(p, noop)
   }
   componentDidMount() {
@@ -107,10 +106,7 @@ class MapContainer extends React.Component {
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const features = props.features || [];
-    console.log('CLEANPROPS CLEAN')
-    console.log('PROPS BEFORE CLEAN', p)
     const feats = map(features, (x) => cleanPoly(x, this.props.maxAreaEach, this.props.featureValidator));
-    console.log('FEATS AFTER CLEAN', feats)
     const ess = merge(p, {
       center,
       points: props.points || [],
@@ -118,7 +114,6 @@ class MapContainer extends React.Component {
       edit: this.props.edit,
     });
     ess.features = feats;
-    console.log('ESS: ', ess)
     this.debouncedOnChange(ess, cb);
     //this.maybeZoomToShapes();
   }
@@ -126,15 +121,12 @@ class MapContainer extends React.Component {
   // updateShapes called by onCreated callback in Leaflet map
   // e.layer represents the newly created vector layer
   updateShapes(e) {
-    console.log('updateShapes with: ', e.layer)
     const p = cloneDeep(this.props)
     const geoJSON = e.layer.toGeoJSON();
     switch (geoJSON.geometry.type) {
     case 'Polygon':
-      console.log("the polygon: ", geoJSON)
       p.features.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
-      console.log('SAFELY REMOVED')
       break;
     case 'Point':
       p.points.push(geoJSON)
@@ -144,7 +136,6 @@ class MapContainer extends React.Component {
       break;
     }
     p.edit = false;
-    console.log('cleaning these props: ', p);
     this.cleanProps(p, noop);
   }
 
@@ -153,31 +144,31 @@ class MapContainer extends React.Component {
   clickFeature(e) {
     if (!this.props.edit) return;
     if (this.props.remove) {
-      const key = e.layer.options.uuid;
-      const features = filter(this.props.features, (feat) => key !== feat.properties.key);
       const s = cloneDeep(this.props);
+      const key = e.layer.options.uuid;
+      const features = filter(s.features, (feat) => key !== feat.properties.key);
       s.features = features;
+      console.log('click feature s', s)
       this.cleanProps(s, noop);
+    } else {
+      const key = e.layer.options.uuid;
+      const features = this.props.features;
+      const index = indexByKey(features, key);
+      const editable = features[index].properties.editable || false;
+      if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), this.props.maxAreaEach, this.props.featureValidator);
+      features[index].properties.editable = !editable;
+      const s = cloneDeep(this.props);
+      s.openFeature = !editable;
+      s.features = cloneDeep(features);
+      s.totalArea = reduce(features, areaAccumulator, 0);
+      s.legendProps = omit(s, 'legendProps');
+      this.cleanProps(s, noop)
     }
-
-    const key = e.layer.options.uuid;
-    const features = this.props.features;
-    const index = indexByKey(features, key);
-    const editable = features[index].properties.editable || false;
-    console.log('CLICKFEATURE CLEAN')
-    if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), this.props.maxAreaEach, this.props.featureValidator);
-    features[index].properties.editable = !editable;
-    const s = cloneDeep(this.props);
-    s.openFeature = !editable;
-    s.features = cloneDeep(features);
-    s.totalArea = reduce(features, areaAccumulator, 0);
-    s.legendProps = omit(s, 'legendProps');
-    this.cleanProps(s, noop)
   }
 
   clickPoint(e) {
-    if (!this.state.edit) return;
-    if (this.state.remove) {
+    if (!this.props.edit) return;
+    if (this.props.remove) {
       const key = e.target.options.uuid;
       const points = filter(this.props.points, (point) => key !== point.properties.key);
       const s = cloneDeep(this.props);
@@ -283,9 +274,7 @@ class MapContainer extends React.Component {
     }
   }
   render() {
-    console.log('RENDERING THIS: ', this.props)
     this.cleanProps(this.props, noop);
-    console.log('RENDERING THIS AFTER CLEAN: ', this.props)
     const {
       tooltipOptions,
     } = this.props;
@@ -333,7 +322,7 @@ class MapContainer extends React.Component {
         features={polygonArrayToProp(this.props.features)}
         radiusChange={this.radiusChange.bind(this)}
         refresh={this.state.refresh}
-        remove={this.state.remove}
+        remove={this.props.remove}
         removeAllFeatures={this.removeAllFeatures.bind(this)}
         removeListener={this.removeListener.bind(this)}
         showLocationSelect={this.state.googleAPILoaded}
