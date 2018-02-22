@@ -8,7 +8,6 @@ const cleanPoly = (poly, maxAreaEach, validateFunc) => {
 
   // Add area
   if (!p.properties.area) p = addArea(p);
-  console.log('with area: ', p)
 
   // Check max area
   if(p.properties.area > maxAreaEach) p.properties.tooLarge = true;
@@ -19,13 +18,10 @@ const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   // Fix if 'Polygon' type
   if (p.geometry.type === 'Polygon') {
     p.geometry.type = 'MultiPolygon';
-    console.log('BEFORE', p)
     p.geometry.coordinates = [poly.geometry.coordinates];
-    console.log('AFTER', p)
   }
 
   // Add errors if needed
-  console.log("VALIDATE: ", validateShape(p, validateFunc));
   return validateShape(p, validateFunc)
 };
 

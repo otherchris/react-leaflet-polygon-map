@@ -9,9 +9,10 @@ const EditTools = (p) => {
         <EditControl
           onMounted={() => {
             const el = document.querySelector('a.leaflet-draw-edit-remove')
-            el.addEventListener('click', (e) => {
+            el.onclick = (e) => {
               p.removeListener();
-            })}}
+            }
+          }}
           position='topright'
           draw={{
             polyline: false,
