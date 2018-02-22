@@ -71,13 +71,14 @@ const Legend = (LegendComponent, props) => (
 );
 
 const MapComponent = (props) => {
+  console.log('COMP PROPS', props)
   const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions, onTileSet = {} } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
 
   // Create Leaflet GeoJSON components from features in container state
   const features = map(props.features, (result, index) => {
-    const p = result.properties;
+    const p = cloneDeep(result.properties);
     const thisStyle = cloneDeep(style);
     const thisTooltipOptions = cloneDeep(tooltipOptions);
     if (p.errors && p.errors.length && p.errors.length > 0) {
@@ -260,6 +261,7 @@ MapComponent.propTypes = {
   refresh: PropTypes.string,
   remove: PropTypes.bool,
   removeAllFeatures: PropTypes.func,
+  removeListener: PropTypes.func,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   setCenterAndZoom: PropTypes.func,
   style: PropTypes.object,

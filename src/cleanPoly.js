@@ -19,7 +19,9 @@ const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   // Fix if 'Polygon' type
   if (p.geometry.type === 'Polygon') {
     p.geometry.type = 'MultiPolygon';
-    p.geometry.coordinates = [p.geometry.coordinates];
+    console.log('BEFORE', p)
+    p.geometry.coordinates = [poly.geometry.coordinates];
+    console.log('AFTER', p)
   }
 
   // Add errors if needed
