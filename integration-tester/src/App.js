@@ -24,7 +24,7 @@ class App extends Component {
     if (!(isEqual(points, this.state.lastMapState.points) && isEqual(features, this.state.lastMapState.features))) {
       this.setState({ mapProps: a, lastMapState: omit(a, 'markerIcon')});
     }
-    cb(a);
+    cb(null, a);
   };
 
   makeTest(test) {

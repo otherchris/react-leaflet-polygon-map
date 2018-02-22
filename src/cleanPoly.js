@@ -3,11 +3,12 @@ import addArea from './addArea';
 import validateShape from './validateShape';
 import uuid from 'uuid';
 
-const cleanPoly = (poly, maxAreaEach, validateShape) => {
+const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   let p = cloneDeep(poly);
 
   // Add area
   if (!p.properties.area) p = addArea(p);
+  console.log('with area: ', p)
 
   // Check max area
   if(p.properties.area > maxAreaEach) p.properties.tooLarge = true;
@@ -22,7 +23,8 @@ const cleanPoly = (poly, maxAreaEach, validateShape) => {
   }
 
   // Add errors if needed
-  return validateShape(p)
+  console.log("VALIDATE: ", validateShape(p, validateFunc));
+  return validateShape(p, validateFunc)
 };
 
 export default cleanPoly;
