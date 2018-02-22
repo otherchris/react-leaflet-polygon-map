@@ -79,6 +79,13 @@ class MapContainer extends React.Component {
     }
   }
 
+  removeListener() {
+    alert('wired in correct')
+    const p = cloneDeep(this.props)
+    p.remove = !!!p.remove
+    console.log(p)
+    this.cleanProps(p, noop)
+  }
   componentDidMount() {
     //this.cleanProps(this.props, noop);
     //ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
@@ -96,20 +103,24 @@ class MapContainer extends React.Component {
     return feature;
   }
   cleanProps(props, cb) {
-    const p = cloneDeep(p);
+    const p = cloneDeep(props);
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const features = props.features || [];
+    console.log('CLEANPROPS CLEAN')
+    console.log('PROPS BEFORE CLEAN', p)
     const feats = map(features, (x) => cleanPoly(x, this.props.maxAreaEach, this.props.featureValidator));
+    console.log('FEATS AFTER CLEAN', feats)
     const ess = merge(p, {
-      features: feats,
       center,
       points: props.points || [],
       totalArea: reduce(feats, areaAccumulator, 0),
       edit: this.props.edit,
     });
+    ess.features = feats;
+    console.log('ESS: ', ess)
     this.debouncedOnChange(ess, cb);
-    this.maybeZoomToShapes();
+    //this.maybeZoomToShapes();
   }
 
   // updateShapes called by onCreated callback in Leaflet map
@@ -123,6 +134,7 @@ class MapContainer extends React.Component {
       console.log("the polygon: ", geoJSON)
       p.features.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
+      console.log('SAFELY REMOVED')
       break;
     case 'Point':
       p.points.push(geoJSON)
@@ -152,6 +164,7 @@ class MapContainer extends React.Component {
     const features = this.props.features;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
+    console.log('CLICKFEATURE CLEAN')
     if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), this.props.maxAreaEach, this.props.featureValidator);
     features[index].properties.editable = !editable;
     const s = cloneDeep(this.props);
@@ -227,8 +240,8 @@ class MapContainer extends React.Component {
     }
   }
   zoomToShapes() {
-    const feats = this.state.features;
-    const points = this.state.points;
+    const feats = this.props.features;
+    const points = this.props.points;
     if (feats.length > 0 || points.length > 0) {
       const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
@@ -270,7 +283,9 @@ class MapContainer extends React.Component {
     }
   }
   render() {
+    console.log('RENDERING THIS: ', this.props)
     this.cleanProps(this.props, noop);
+    console.log('RENDERING THIS AFTER CLEAN: ', this.props)
     const {
       tooltipOptions,
     } = this.props;
@@ -320,6 +335,7 @@ class MapContainer extends React.Component {
         refresh={this.state.refresh}
         remove={this.state.remove}
         removeAllFeatures={this.removeAllFeatures.bind(this)}
+        removeListener={this.removeListener.bind(this)}
         showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         viewport={this.state.viewport}
@@ -367,6 +383,7 @@ MapContainer.defaultProps = {
   points: [],
   featureValidator: () => [],
   zoom: 9,
+  remove: false,
 };
 
 export default MapContainer;
