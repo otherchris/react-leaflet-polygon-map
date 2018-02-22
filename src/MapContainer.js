@@ -80,7 +80,7 @@ class MapContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.cleanProps(this.props, noop);
+    //this.cleanProps(this.props, noop);
     //ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   /*
@@ -100,12 +100,12 @@ class MapContainer extends React.Component {
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const features = props.features || [];
-    const feats = map(features, (x) => cleanPoly(x, this.props.maxArea, this.props.featureValidator));
+    const feats = map(features, (x) => cleanPoly(x, this.props.maxAreaEach, this.props.featureValidator));
     const ess = merge(p, {
       features: feats,
       center,
       points: props.points || [],
-      totalArea: area('unit', reduce(feats, areaAccumulator, 0)),
+      totalArea: reduce(feats, areaAccumulator, 0),
       edit: this.props.edit,
     });
     this.debouncedOnChange(ess, cb);
@@ -115,18 +115,16 @@ class MapContainer extends React.Component {
   // updateShapes called by onCreated callback in Leaflet map
   // e.layer represents the newly created vector layer
   updateShapes(e) {
+    console.log('updateShapes with: ', e.layer)
     const p = cloneDeep(this.props)
     const geoJSON = e.layer.toGeoJSON();
-    switch (e.layerType) {
-    case 'polygon':
+    switch (geoJSON.geometry.type) {
+    case 'Polygon':
+      console.log("the polygon: ", geoJSON)
       p.features.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
-    case 'rectangle':
-      p.features.push(geoJSON)
-      this.leafletMap.leafletElement.removeLayer(e.layer);
-      break;
-    case 'marker':
+    case 'Point':
       p.points.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
@@ -134,10 +132,8 @@ class MapContainer extends React.Component {
       break;
     }
     p.edit = false;
-    this.cleanProps(p, (err, res) => {
-      const s = cloneDeep(p);
-      s.legendProps = merge(res, p);
-    });
+    console.log('cleaning these props: ', p);
+    this.cleanProps(p, noop);
   }
 
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
@@ -161,7 +157,7 @@ class MapContainer extends React.Component {
     const s = cloneDeep(this.props);
     s.openFeature = !editable;
     s.features = cloneDeep(features);
-    s.totalArea = area(this.state.unit, reduce(features, areaAccumulator, 0));
+    s.totalArea = reduce(features, areaAccumulator, 0);
     s.legendProps = omit(s, 'legendProps');
     this.cleanProps(s, noop)
   }
@@ -199,7 +195,7 @@ class MapContainer extends React.Component {
       24,
     ));
     circApprox.properties.key = uuid.v4();
-    if (area(this.state.unit, circApprox.properties.area) > this.state.maxAreaEach.max) {
+    if (circApprox.properties.area > this.state.maxAreaEach.max) {
       circApprox.properties.tooLarge = true;
     }
     features.push(this.validateShape(circApprox));
@@ -208,7 +204,7 @@ class MapContainer extends React.Component {
     this.debouncedOnChange(state, (err, res) => {
       const s = cloneDeep(state);
       s.features = features;
-      s.totalArea = area(state.unit, reduce(features, areaAccumulator, 0));
+      s.totalArea = state.unit, reduce(features, areaAccumulator, 0);
       s.makeCircleOn = false;
       s.legendProps = omit(merge(res, s), 'legendProps');
       s.newCircleRadius = 0.1;
@@ -274,6 +270,7 @@ class MapContainer extends React.Component {
     }
   }
   render() {
+    this.cleanProps(this.props, noop);
     const {
       tooltipOptions,
     } = this.props;
@@ -317,8 +314,8 @@ class MapContainer extends React.Component {
         onLocationSelect={this.onLocationSelect.bind(this)}
         onTileSet={this.onTileSet.bind(this)}
         openFeature={this.state.openFeature}
-        points={this.state.points}
-        features={polygonArrayToProp(this.state.features)}
+        points={this.props.points}
+        features={polygonArrayToProp(this.props.features)}
         radiusChange={this.radiusChange.bind(this)}
         refresh={this.state.refresh}
         remove={this.state.remove}
@@ -367,6 +364,7 @@ MapContainer.defaultProps = {
   center: defaultCenter,
   onShapeChange: (a, cb) => { cb(null, a); },
   features: [],
+  points: [],
   featureValidator: () => [],
   zoom: 9,
 };

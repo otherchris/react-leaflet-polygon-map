@@ -34,10 +34,6 @@ export const indexByKey = (arr, key) => {
 };
 
 export const areaAccumulator = (sum, val) => sum + val.properties.area;
-export const area = (unit, _area) => {
-  const result = _area;
-  return result;
-};
 
 const radians = (deg) => (deg / 360) * 2 * Math.PI;
 
