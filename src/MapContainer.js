@@ -80,7 +80,6 @@ class MapContainer extends React.Component {
   }
 
   removeListener() {
-    alert('wired in correct')
     const p = cloneDeep(this.props)
     p.remove = !p.remove
     this.cleanProps(p, noop)
@@ -148,7 +147,6 @@ class MapContainer extends React.Component {
       const key = e.layer.options.uuid;
       const features = filter(s.features, (feat) => key !== feat.properties.key);
       s.features = features;
-      console.log('click feature s', s)
       this.cleanProps(s, noop);
     } else {
       const key = e.layer.options.uuid;
@@ -175,10 +173,12 @@ class MapContainer extends React.Component {
       s.points = points;
       s.legendProps = omit(s, 'legendProps');
       s.remove = false;
+      console.log(s)
       this.cleanProps(s, noop);
     } else {
     }
   }
+
   onLocationSelect(loc) {
     const { b, f } = loc.gmaps.geometry.viewport;
     this.setState({ center: { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] } });

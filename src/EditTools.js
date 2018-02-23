@@ -12,6 +12,7 @@ const EditTools = (p) => {
             el.onclick = (e) => {
               p.removeListener();
             }
+            el.classname = 'leaflet-draw-edit-remove';
           }}
           position='topright'
           draw={{
