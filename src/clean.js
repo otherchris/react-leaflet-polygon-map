@@ -3,7 +3,7 @@ import addArea from './addArea';
 import validateShape from './validateShape';
 import uuid from 'uuid';
 
-const cleanPoly = (poly, maxAreaEach, validateFunc) => {
+export const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   let p = cloneDeep(poly);
 
   // Add area
@@ -25,4 +25,11 @@ const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   return validateShape(p, validateFunc)
 };
 
-export default cleanPoly;
+export const cleanPoint = (point) => {
+  let p = cloneDeep(point);
+
+  // Tag with id if not already tagged
+  if (!p.properties.key) p.properties.key = uuid.v4();
+
+  return p;
+};

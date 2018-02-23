@@ -23,7 +23,7 @@ import {
   area,
   polygonArrayToProp,
 } from './MapHelpers';
-import cleanPoly from './cleanPoly';
+import { cleanPoly, cleanPoint } from './clean';
 import addArea from './addArea';
 import './main.css';
 import getBounds from './getBounds';
@@ -105,14 +105,16 @@ class MapContainer extends React.Component {
     const center = makeCenterLeaflet(makePoint(props.center))
     const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
     const features = props.features || [];
+    const points = props.points || [];
     const feats = map(features, (x) => cleanPoly(x, this.props.maxAreaEach, this.props.featureValidator));
+    const pnts = map(points, (x) => cleanPoint(x));
     const ess = merge(p, {
       center,
-      points: props.points || [],
       totalArea: reduce(feats, areaAccumulator, 0),
       edit: this.props.edit,
     });
     ess.features = feats;
+    ess.points = pnts;
     this.debouncedOnChange(ess, cb);
     //this.maybeZoomToShapes();
   }
@@ -173,7 +175,6 @@ class MapContainer extends React.Component {
       s.points = points;
       s.legendProps = omit(s, 'legendProps');
       s.remove = false;
-      console.log(s)
       this.cleanProps(s, noop);
     } else {
     }
