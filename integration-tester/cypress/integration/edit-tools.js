@@ -52,17 +52,20 @@ describe('Edit Tools', () => {
   it('can remove a poly', () => {
     cy.visit('http://127.0.0.1:3000');
     cy.wait(500)
-    cy.get('#poly-edit').click('center');
+    cy.get('#edit-tools').click('center');
 
-    cy.get('a.leaflet-draw-edit-remove').click();
-
-    cy.get('.leaflet-container')
-      .trigger('mouseover', 'center');
-
-    cy.get('.leaflet-tooltip').should('contain', 'CLICK TO DELETE');
+    cy.get('.leaflet-draw-draw-rectangle').click();
     cy.get('.leaflet-container')
       .trigger('mousemove', 90, 160)
-      .click(390, 160, {bubbles: true});
+      .trigger('mousedown', {which: 1})
+      .trigger('mousemove', 375, 330)
+      .trigger('mouseup', {force: true});
+
+    cy.get('a.leaflet-draw-edit-remove').click();
+    cy.wait(500)
+
+    cy.get('.leaflet-container')
+      .trigger('click')
 
     cy.get('path.leaflet-interactive').should('have.length', 0);
     cy.get('#default').click();
@@ -140,8 +143,8 @@ describe('Edit Tools', () => {
     cy.get('circle').should('have.length', 1);
 
     cy.get('a.leaflet-draw-edit-remove').click();-
-    cy.get('.leaflet-container')
-      .trigger('mousemove', 90, 160)
+    cy.wait(500);
+    cy.get('circle')
       .trigger('click');
 
     cy.get('circle').should('have.length', 0);
