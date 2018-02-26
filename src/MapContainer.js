@@ -187,14 +187,14 @@ class MapContainer extends React.Component {
   }
   setCenterAndZoom() {
     if (this.leafletMap) {
+      console.log('leafletmap', this.leafletMap)
       const ctr = cloneDeep(this.leafletMap.leafletElement.getCenter());
-      this.setState({
-        center: {
+      const p = cloneDeep(this.props);
+      p.center = {
           type: 'Point',
           coordinates: [ctr.lng, ctr.lat],
-        },
-        zoom: this.leafletMap.leafletElement.getZoom(),
-      });
+      };
+      p.zoom = this.leafletMap.leafletElement.getZoom();
     }
   }
   zoomToShapes() {
@@ -204,7 +204,6 @@ class MapContainer extends React.Component {
     if (feats.length > 0 || points.length > 0) {
       const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
-      //this.forceUpdate();
     }
   }
   maybeZoomToShapes() {
@@ -272,8 +271,8 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        bounds={this.state.bounds}
-        center={this.state.center}
+        bounds={this.props.bounds}
+        center={makeCenterLeaflet(this.props.center)}
         clickFeature={this.clickFeature.bind(this)}
         clickPoint={this.clickPoint.bind(this)}
         googleAPILoaded={this.state.googleAPILoaded}
@@ -300,7 +299,7 @@ class MapContainer extends React.Component {
         totalArea={this.state.totalArea}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}
-        zoom={this.state.zoom}
+        zoom={this.props.zoom}
         zoomToShapes={this.maybeZoomToShapes.bind(this)}
         {...passThroughProps}
       />

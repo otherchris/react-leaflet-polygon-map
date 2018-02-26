@@ -195,7 +195,7 @@ const MapComponent = (props) => {
     <div>
       {openFeatureMessage}
       <Map
-        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 500)}}
+        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 100)}}
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}

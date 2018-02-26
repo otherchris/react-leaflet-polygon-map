@@ -26,7 +26,12 @@ const validCoordsArray = (arr) =>
 export const makePoints = (arr) => map(arr, makePoint);
 
 // input a geoJSON point geometry
-export const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
+export const makeCenterLeaflet = (c) => {
+  console.log('ceee', c)
+  if (c.lat && c.lng) return c;
+  if (validGeoJSONPointFeature(c)) return L.latLng(c.geometry.coordinates[1], c.geometry.coordinates[0]);
+  if (validGeoJSONPoint(c)) return L.latLng(c.coordinates[1], c.coordinates[0]);
+};
 
 export const makePoint = (cee) => {
   const c = cloneDeep(cee);
