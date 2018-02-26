@@ -21,6 +21,7 @@ import {
   indexByKey,
   areaAccumulator,
   area,
+  makeCenterLeaflet,
   polygonArrayToProp,
 } from './MapHelpers';
 import { cleanPoly, cleanPoint } from './clean';
@@ -28,34 +29,7 @@ import addArea from './addArea';
 import './main.css';
 import getBounds from './getBounds';
 import defaultIcon from './defaultIcon';
-
-const validCoordsArray = (arr) =>
-  arr &&
-  arr.length &&
-  arr.length === 2 &&
-  arr[0] < 180 &&
-  arr[0] > -180 &&
-  arr[1] < 90 &&
-  arr[1] > -90;
-
-const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === 'number';
-const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
-const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
-
-export const makePoint = (cee) => {
-  const c = cloneDeep(cee);
-  if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
-  if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };
-  if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
-  if (validGeoJSONPoint(c)) return c;
-  if (validGeoJSONPointFeature(c)) return c.geometry;
-  return { type: 'Point', coordinates: [-85.751528, 38.257222] };
-};
-
-export const makePoints = (arr) => map(arr, makePoint);
-
-// input a geoJSON point geometry
-export const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
+import cleanProps from './cleanProps';
 
 const defaultCenter = makeCenterLeaflet({
   type: 'Point',
@@ -82,15 +56,15 @@ class MapContainer extends React.Component {
   removeListener() {
     const p = cloneDeep(this.props)
     p.remove = !p.remove
-    this.cleanProps(p, noop)
+    cleanProps(p, this.debouncedOnChange, noop)
   }
   componentDidMount() {
-    //this.cleanProps(this.props, noop);
+    //cleanProps(this.props, noop);
     //ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
   }
   /*
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps, this.props)) this.cleanProps(nextProps);
+    if (!isEqual(nextProps, this.props)) cleanProps(nextProps);
   }
   */
   validateShape(_feature) {
@@ -100,28 +74,11 @@ class MapContainer extends React.Component {
     else delete feature.properties.errors;
     return feature;
   }
-  cleanProps(props, cb) {
-    const p = cloneDeep(props);
-    const center = makeCenterLeaflet(makePoint(props.center))
-    const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
-    const features = props.features || [];
-    const points = props.points || [];
-    const feats = map(features, (x) => cleanPoly(x, this.props.maxAreaEach, this.props.featureValidator));
-    const pnts = map(points, (x) => cleanPoint(x));
-    const ess = merge(p, {
-      center,
-      totalArea: reduce(feats, areaAccumulator, 0),
-      edit: this.props.edit,
-    });
-    ess.features = feats;
-    ess.points = pnts;
-    this.debouncedOnChange(ess, cb);
-    //this.maybeZoomToShapes();
-  }
-
   // updateShapes called by onCreated callback in Leaflet map
+  //
   // e.layer represents the newly created vector layer
   updateShapes(e) {
+    console.log("updating shapes", e)
     const p = cloneDeep(this.props)
     const geoJSON = e.layer.toGeoJSON();
     switch (geoJSON.geometry.type) {
@@ -136,8 +93,7 @@ class MapContainer extends React.Component {
     default:
       break;
     }
-    p.edit = false;
-    this.cleanProps(p, noop);
+    cleanProps(p, this.debouncedOnChange, noop);
   }
 
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
@@ -149,7 +105,7 @@ class MapContainer extends React.Component {
       const key = e.layer.options.uuid;
       const features = filter(s.features, (feat) => key !== feat.properties.key);
       s.features = features;
-      this.cleanProps(s, noop);
+      cleanProps(s, this.debouncedOnChange, noop);
     } else {
       const key = e.layer.options.uuid;
       const features = this.props.features;
@@ -162,11 +118,12 @@ class MapContainer extends React.Component {
       s.features = cloneDeep(features);
       s.totalArea = reduce(features, areaAccumulator, 0);
       s.legendProps = omit(s, 'legendProps');
-      this.cleanProps(s, noop)
+      cleanProps(s, this.debouncedOnChange, noop)
     }
   }
 
   clickPoint(e) {
+    const props = cloneDeep(this.props);
     if (!this.props.edit) return;
     if (this.props.remove) {
       const key = e.target.options.uuid;
@@ -175,8 +132,17 @@ class MapContainer extends React.Component {
       s.points = points;
       s.legendProps = omit(s, 'legendProps');
       s.remove = false;
-      this.cleanProps(s, noop);
+      cleanProps(s, this.debouncedOnChange, noop);
     } else {
+      const makeCircle = !!this.props.makeCircleOn;
+      if (!makeCircle) {
+        const newCircleCenter = e.target.toGeoJSON();
+        props.makeCircleOn = !makeCircle
+        props.newCircleCenter = newCircleCenter
+        cleanProps(props, this.debouncedOnChange, noop)
+        props.makeCircleOn = !!makeCircle
+        cleanProps(props, this.debouncedOnChange, noop)
+      }
     }
   }
 
@@ -232,18 +198,19 @@ class MapContainer extends React.Component {
     }
   }
   zoomToShapes() {
+    console.log('zoomin')
     const feats = this.props.features;
     const points = this.props.points;
     if (feats.length > 0 || points.length > 0) {
       const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
-      this.forceUpdate();
-    } else {
-      this.setState({ center: defaultCenter });
+      //this.forceUpdate();
     }
   }
   maybeZoomToShapes() {
-    if (!this.props.center) this.zoomToShapes();
+    console.log(this.props.center)
+    console.log(defaultCenter)
+    if (isEqual(this.props.center, defaultCenter)) this.zoomToShapes();
   }
   removeAllFeatures() {
     const state = cloneDeep(this.state);
@@ -275,7 +242,7 @@ class MapContainer extends React.Component {
     }
   }
   render() {
-    this.cleanProps(this.props, noop);
+    cleanProps(this.props, this.debouncedOnChange, noop);
     const {
       tooltipOptions,
     } = this.props;
@@ -334,7 +301,7 @@ class MapContainer extends React.Component {
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}
         zoom={this.state.zoom}
-        zoomToShapes={this.zoomToShapes.bind(this)}
+        zoomToShapes={this.maybeZoomToShapes.bind(this)}
         {...passThroughProps}
       />
     );
@@ -354,6 +321,7 @@ MapContainer.propTypes = {
   height: PropTypes.number,
   legendComponent: PropTypes.func,
   legendProps: PropTypes.object,
+  makeCircleOn: PropTypes.bool,
   maxAreaEach: PropTypes.number,
   onShapeChange: PropTypes.func,
   points: PropTypes.array,
@@ -372,6 +340,7 @@ MapContainer.defaultProps = {
   features: [],
   points: [],
   featureValidator: () => [],
+  makeCircleOn: false,
   zoom: 9,
   remove: false,
 };

@@ -20,14 +20,16 @@ class App extends Component {
   }
 
   simpleOnChange(a, cb) {
-    console.log('update', a)
+    console.log('INCOMING: ', a)
+    console.log('LAST: ', this.state.lastMapState)
     const { points, features, remove } = omit(a, 'markerIcon');
     if (!(
-      isEqual(points, this.state.lastMapState.points) &&
-      isEqual(features, this.state.lastMapState.features) &&
-      isEqual(remove, this.state.lastMapState.remove)
+      //isEqual(points, this.state.lastMapState.points) &&
+      //isEqual(features, this.state.lastMapState.features) &&
+      //isEqual(remove, this.state.lastMapState.remove)
+      isEqual(a, this.state.lastMapState)
     )) {
-      this.setState({ mapProps: a, lastMapState: omit(a, 'markerIcon')});
+      this.setState({ mapProps: a, lastMapState: a});
     }
     cb(null, a);
   };
