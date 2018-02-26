@@ -89,6 +89,9 @@ class MapContainer extends React.Component {
     case 'Point':
       p.points.push(geoJSON)
       this.leafletMap.leafletElement.removeLayer(e.layer);
+      p.newCircleCenter = geoJSON;
+      p.newCircleRadius = 0.1;
+      p.makeCircleOn = true;
       break;
     default:
       break;
@@ -140,8 +143,6 @@ class MapContainer extends React.Component {
         props.makeCircleOn = !makeCircle
         props.newCircleCenter = newCircleCenter
         cleanProps(props, this.debouncedOnChange, noop)
-        props.makeCircleOn = !!makeCircle
-        cleanProps(props, this.debouncedOnChange, noop)
       }
     }
   }
@@ -157,33 +158,29 @@ class MapContainer extends React.Component {
     this.setState({ newCircleRadius: e });
   }
   makeCircle() {
-    if (!this.state.newCircleRadius || !this.state.newCircleCenter) return;
-    const features = this.state.features;
+    if (!this.props.newCircleRadius || !this.props.newCircleCenter) return;
+    const features = cloneDeep(this.props.features);
     const circApprox = (generateCircleApprox(
-      this.state.newCircleRadius,
-      this.state.unit,
-      this.state.newCircleCenter,
+      this.props.newCircleRadius,
+      this.props.unit,
+      this.props.newCircleCenter,
       24,
     ));
-    circApprox.properties.key = uuid.v4();
-    if (circApprox.properties.area > this.state.maxAreaEach.max) {
+    if (circApprox.properties.area > this.props.maxAreaEach) {
       circApprox.properties.tooLarge = true;
     }
-    features.push(this.validateShape(circApprox));
-    const state = cloneDeep(this.state);
-    state.features = features;
-    this.debouncedOnChange(state, (err, res) => {
-      const s = cloneDeep(state);
-      s.features = features;
-      s.totalArea = state.unit, reduce(features, areaAccumulator, 0);
-      s.makeCircleOn = false;
-      s.legendProps = omit(merge(res, s), 'legendProps');
-      s.newCircleRadius = 0.1;
-      this.setState(s);
-    });
+    const props = cloneDeep(this.props);
+    props.features.push(circApprox);
+    props.totalArea = reduce(features, areaAccumulator, 0);
+    props.makeCircleOn = false;
+    props.newCircleRadius = 0.1;
+    console.log('with cricle props', props)
+    cleanProps(props, this.debouncedOnChange, noop);
   }
   turnOffCircleApprox() {
-    this.setState({ makeCircleOn: false });
+    const p = cloneDeep(this.props)
+    p.makeCircleOn = false;
+    cleanProps(p, this.debouncedOnChange, noop);
   }
   setCenterAndZoom() {
     if (this.leafletMap) {
@@ -278,7 +275,7 @@ class MapContainer extends React.Component {
         googleAPILoaded={this.state.googleAPILoaded}
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
-        makeCircleOn={this.state.makeCircleOn}
+        makeCircleOn={this.props.makeCircleOn}
         markerIcon={generateIcon(defaultIcon)}
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
         onCreated={this.updateShapes.bind(this)}

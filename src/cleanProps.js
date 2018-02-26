@@ -31,7 +31,9 @@ export const cleanPropsFunc = (props) => {
     'points',
     'remove',
     'tileLayerProps',
-    'zoom'
+    'zoom',
+    'newCircleCenter',
+    'newCircleRadius',
   ]);
   //this.maybeZoomToShapes();
 }
