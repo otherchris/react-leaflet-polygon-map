@@ -70,9 +70,9 @@ const rotatedPointsOrigin = (radius, sides) => {
   });
 };
 
-const translatePoints = (points, center) => map(
+const translatePoints = (points, c) => map(
   points,
-  (point) => [point[0] + center[0], point[1] + center[1]],
+  (point) => [point[0] + c.lat, point[1] + c.lng]
 );
 
 const scalePoints = (points, lat) => {
@@ -81,10 +81,10 @@ const scalePoints = (points, lat) => {
 };
 
 export const generateCircleApprox = (radius, unit, center, sides) => {
-  if (unit !== 'miles') radius /= 1609.34;
+  const c = makeCenterLeaflet(center)
   const points = rotatedPointsOrigin(radius, sides);
-  const scaledPoints = scalePoints(points, center[0]);
-  const translatedPoints = translatePoints(scaledPoints, center);
+  const scaledPoints = scalePoints(points, c.lat);
+  const translatedPoints = translatePoints(scaledPoints, c);
   const reversedPoints = map(translatedPoints, (x) => reverse(x));
   return {
     type: 'Feature',
