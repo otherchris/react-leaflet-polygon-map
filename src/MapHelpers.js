@@ -10,14 +10,32 @@ import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
 import addArea from './addArea';
 
-export const cleanPoly = (poly) => {
-  let p = cloneDeep(poly);
-  p = addArea(p);
-  if (p.geometry.type === 'Polygon') {
-    p.geometry.type = 'MultiPolygon';
-    p.geometry.coordinates = [p.geometry.coordinates];
-  }
-  return p;
+const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === 'number';
+const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
+const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
+
+const validCoordsArray = (arr) =>
+  arr &&
+  arr.length &&
+  arr.length === 2 &&
+  arr[0] < 180 &&
+  arr[0] > -180 &&
+  arr[1] < 90 &&
+  arr[1] > -90;
+
+export const makePoints = (arr) => map(arr, makePoint);
+
+// input a geoJSON point geometry
+export const makeCenterLeaflet = (c) => L.latLng(c.coordinates[1], c.coordinates[0]);
+
+export const makePoint = (cee) => {
+  const c = cloneDeep(cee);
+  if (!c) return { type: 'Point', coordinates: [-85.751528, 38.257222] };
+  if (validCoordsArray(c)) return { type: 'Point', coordinates: reverse(c) };
+  if (validLatlngObject(c)) return { type: 'Point', coordinates: [c.lng, c.lat] };
+  if (validGeoJSONPoint(c)) return c;
+  if (validGeoJSONPointFeature(c)) return c.geometry;
+  return { type: 'Point', coordinates: [-85.751528, 38.257222] };
 };
 
 export const generateIcon = (html) => new L.divIcon({

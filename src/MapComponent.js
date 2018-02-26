@@ -195,12 +195,13 @@ const MapComponent = (props) => {
     <div>
       {openFeatureMessage}
       <Map
-        ref={m => { props.bindPoint.leafletMap = m; }}
+        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 500)}}
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}
         center = {props.center}
         zoom = {props.zoom || 9}
+        onLoad= {() => {console.log('meownted')}}
       >
         {geosuggest}
         {removePolyBanner}
