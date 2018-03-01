@@ -111,17 +111,17 @@ class MapContainer extends React.Component {
       cleanProps(s, this.debouncedOnChange, noop);
     } else {
       const key = e.layer.options.uuid;
-      const features = this.props.features;
+      const props = cloneDeep(this.props)
+      const features = props.features;
       const index = indexByKey(features, key);
       const editable = features[index].properties.editable || false;
       if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), this.props.maxAreaEach, this.props.featureValidator);
       features[index].properties.editable = !editable;
-      const s = cloneDeep(this.props);
-      s.openFeature = !editable;
-      s.features = cloneDeep(features);
-      s.totalArea = reduce(features, areaAccumulator, 0);
-      s.legendProps = omit(s, 'legendProps');
-      cleanProps(s, this.debouncedOnChange, noop)
+      props.openFeature = !editable;
+      props.features = features;
+      props.totalArea = reduce(features, areaAccumulator, 0);
+      props.legendProps = omit(props, 'legendProps');
+      cleanProps(props, this.debouncedOnChange, noop)
     }
   }
 
