@@ -58,22 +58,6 @@ class MapContainer extends React.Component {
     p.remove = !p.remove
     cleanProps(p, this.debouncedOnChange, noop)
   }
-  componentDidMount() {
-    //cleanProps(this.props, noop);
-    //ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
-  }
-  /*
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps, this.props)) cleanProps(nextProps);
-  }
-  */
-  validateShape(_feature) {
-    const feature = cloneDeep(_feature);
-    const newErrors = this.props.featureValidator(feature);
-    if (newErrors.length > 0) feature.properties.errors = newErrors;
-    else delete feature.properties.errors;
-    return feature;
-  }
   // updateShapes called by onCreated callback in Leaflet map
   //
   // e.layer represents the newly created vector layer
