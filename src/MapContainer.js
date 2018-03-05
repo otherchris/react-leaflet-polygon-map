@@ -1,4 +1,3 @@
-import map from 'lodash/map';
 import pick from 'lodash/pick';
 import omit from 'lodash/omit';
 import noop from 'lodash/noop';
@@ -7,25 +6,19 @@ import filter from 'lodash/filter';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
-import reverse from 'lodash/reverse';
-import merge from 'lodash/merge';
 import PropTypes from 'prop-types';
-import uuid from 'uuid';
 import L from 'leaflet';
 import React from 'react';
-import { ReactScriptLoader, ReactScriptLoaderMixin } from 'react-script-loader';
 import MapComponent from './MapComponent';
 import {
   generateIcon,
   generateCircleApprox,
   indexByKey,
   areaAccumulator,
-  area,
   makeCenterLeaflet,
   polygonArrayToProp,
 } from './MapHelpers';
-import { cleanPoly, cleanPoint } from './clean';
-import addArea from './addArea';
+import { cleanPoly } from './clean';
 import './main.css';
 import getBounds from './getBounds';
 import defaultIcon from './defaultIcon';
@@ -33,7 +26,7 @@ import cleanProps from './cleanProps';
 
 const defaultCenter = makeCenterLeaflet({
   type: 'Point',
-  coordinates: [-85.751528, 38.257222]
+  coordinates: [-85.751528, 38.257222],
 });
 
 class MapContainer extends React.Component {
@@ -54,24 +47,23 @@ class MapContainer extends React.Component {
   }
 
   removeListener() {
-    const p = cloneDeep(this.props)
-    p.remove = !p.remove
-    cleanProps(p, this.debouncedOnChange, noop)
+    const p = cloneDeep(this.props);
+    p.remove = !p.remove;
+    cleanProps(p, this.debouncedOnChange, noop);
   }
   // updateShapes called by onCreated callback in Leaflet map
   //
   // e.layer represents the newly created vector layer
   updateShapes(e) {
-    console.log("updating shapes", e)
-    const p = cloneDeep(this.props)
+    const p = cloneDeep(this.props);
     const geoJSON = e.layer.toGeoJSON();
     switch (geoJSON.geometry.type) {
     case 'Polygon':
-      p.features.push(geoJSON)
+      p.features.push(geoJSON);
       this.leafletMap.leafletElement.removeLayer(e.layer);
       break;
     case 'Point':
-      p.points.push(geoJSON)
+      p.points.push(geoJSON);
       this.leafletMap.leafletElement.removeLayer(e.layer);
       p.newCircleCenter = geoJSON;
       p.newCircleRadius = 0.1;
@@ -95,17 +87,18 @@ class MapContainer extends React.Component {
       cleanProps(s, this.debouncedOnChange, noop);
     } else {
       const key = e.layer.options.uuid;
-      const props = cloneDeep(this.props)
-      const features = props.features;
+      const props = cloneDeep(this.props);
+      const { features } = props;
       const index = indexByKey(features, key);
       const editable = features[index].properties.editable || false;
-      if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), this.props.maxAreaEach, this.props.featureValidator);
+      const { maxAreaEach, featureValidator } = this.props;
+      if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), maxAreaEach, featureValidator);
       features[index].properties.editable = !editable;
       props.openFeature = !editable;
       props.features = features;
       props.totalArea = reduce(features, areaAccumulator, 0);
       props.legendProps = omit(props, 'legendProps');
-      cleanProps(props, this.debouncedOnChange, noop)
+      cleanProps(props, this.debouncedOnChange, noop);
     }
   }
 
@@ -124,9 +117,9 @@ class MapContainer extends React.Component {
       const makeCircle = !!this.props.makeCircleOn;
       if (!makeCircle) {
         const newCircleCenter = e.target.toGeoJSON();
-        props.makeCircleOn = !makeCircle
-        props.newCircleCenter = newCircleCenter
-        cleanProps(props, this.debouncedOnChange, noop)
+        props.makeCircleOn = !makeCircle;
+        props.newCircleCenter = newCircleCenter;
+        cleanProps(props, this.debouncedOnChange, noop);
       }
     }
   }
@@ -158,74 +151,65 @@ class MapContainer extends React.Component {
     props.totalArea = reduce(features, areaAccumulator, 0);
     props.makeCircleOn = false;
     props.newCircleRadius = 0.1;
-    console.log('with cricle props', props)
     cleanProps(props, this.debouncedOnChange, noop);
   }
   turnOffCircleApprox() {
-    const p = cloneDeep(this.props)
+    const p = cloneDeep(this.props);
     p.makeCircleOn = false;
     cleanProps(p, this.debouncedOnChange, noop);
   }
   setCenterAndZoom() {
     if (this.leafletMap) {
-      console.log('leafletmap', this.leafletMap)
       const ctr = cloneDeep(this.leafletMap.leafletElement.getCenter());
       const p = cloneDeep(this.props);
       p.center = {
-          type: 'Point',
-          coordinates: [ctr.lng, ctr.lat],
+        type: 'Point',
+        coordinates: [ctr.lng, ctr.lat],
       };
       p.zoom = this.leafletMap.leafletElement.getZoom();
     }
   }
   zoomToShapes() {
-    console.log('zoomin')
-    const feats = this.props.features;
-    const points = this.props.points;
+    const { feats, points } = this.props;
     if (feats.length > 0 || points.length > 0) {
       const bounds = getBounds(feats, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
     }
   }
   maybeZoomToShapes() {
-    console.log(this.props.center)
-    console.log(defaultCenter)
     if (isEqual(this.props.center, defaultCenter)) this.zoomToShapes();
   }
   removeAllFeatures() {
     const state = cloneDeep(this.state);
-    this.debouncedOnChange(state, (err, res) => {
+    this.debouncedOnChange(state, () => {
       const s = cloneDeep(state);
       s.features = [];
       s.points = [];
       s.totalArea = 0;
       s.legendProps = {}; // omit(merge(res, s), 'legendProps');
-      this.setState(s);
+      cleanProps(s, this.debouncedOnChange, noop);
     });
   }
   onTileSet(e) {
     const tiles = e.target.id;
-    if (tiles === 'street')
+    if (tiles === 'street') {
       this.setState({
         tileLayerProps: {
           url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }
+        },
       });
-    else {
+    } else {
       this.setState({
         tileLayerProps: {
           url: 'https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }
+        },
       });
     }
   }
   render() {
     cleanProps(this.props, this.debouncedOnChange, noop);
-    const {
-      tooltipOptions,
-    } = this.props;
     const passThroughProps = pick(this.props, [
       'edit',
       'geolocate',

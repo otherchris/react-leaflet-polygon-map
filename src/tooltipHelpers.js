@@ -1,7 +1,5 @@
-const displayArea = (area, unit) => area;
-
-export const tooltipMessage = (polyProps, tooltipOptions = {}) => {
-  const area = polyProps.area;
+export const tooltipMessage = (polyProps) => {
+  const { area } = polyProps;
   if (area) return `${area.toFixed(4)} sq miles`;
   return '';
 };

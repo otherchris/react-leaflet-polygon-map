@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import L from 'leaflet';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
@@ -7,18 +7,13 @@ import merge from 'lodash/merge';
 import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
-import { EditControl } from 'react-leaflet-draw';
 import 'react-leaflet-fullscreen/dist/styles.css';
 import FullscreenControl from 'react-leaflet-fullscreen';
 import {
   Map,
   Marker,
-  Popup,
   TileLayer,
   GeoJSON,
-  FeatureGroup,
-  Circle,
-  Rectangle,
   Tooltip,
 } from 'react-leaflet';
 import './leaflet.css';
@@ -29,10 +24,8 @@ import {
   tooltipClass,
 } from './tooltipHelpers';
 import EditTools from './EditTools';
-import MapSubmitButton from './MapSubmitButton';
 import CircleApprox from './CircleApprox';
 import './main.css';
-import addArea from './addArea';
 
 const style = {
   color: 'green',
@@ -71,13 +64,15 @@ const Legend = (LegendComponent, props) => (
 );
 
 const MapComponent = (props) => {
-  console.log('COMP PROPS', props)
-  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions, onTileSet = {} } = props;
+  console.log('COMP PROPS', props);
+  const {
+    tileLayerProps, height, tooltipOptions = {},
+  } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
 
   // Create Leaflet GeoJSON components from features in container state
-  const features = map(props.features, (result, index) => {
+  const features = map(props.features, (result) => {
     const p = cloneDeep(result.properties);
     const thisStyle = cloneDeep(style);
     const thisTooltipOptions = cloneDeep(tooltipOptions);
@@ -111,7 +106,7 @@ const MapComponent = (props) => {
       </GeoJSON>
     );
   });
-  const points = map(props.points, (result, index) => {
+  const points = map(props.points, (result) => {
     const p = result.properties;
     const position = cloneDeep(result.geometry.coordinates);
     reverse(position);
@@ -165,7 +160,8 @@ const MapComponent = (props) => {
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 0 ? (
     <button type="button" className="zoom-button btn btn-secondary btn-sm"
-      onClick={props.zoomToShapes}>
+      onClick={props.zoomToShapes}
+    >
       Zoom to shapes
     </button>
   ) : '';
@@ -176,13 +172,15 @@ const MapComponent = (props) => {
   ) : '';
   const satButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="sat" onClick={props.onTileSet}>
+      id="sat" onClick={props.onTileSet}
+    >
      Satellite View
     </button>
   );
   const streetButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="street" onClick={props.onTileSet}>
+      id="street" onClick={props.onTileSet}
+    >
      Street View
     </button>
   );
@@ -195,13 +193,13 @@ const MapComponent = (props) => {
     <div>
       {openFeatureMessage}
       <Map
-        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 100)}}
+        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 100); }}
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}
         center = {props.center}
         zoom = {props.zoom || 9}
-        onLoad= {() => {console.log('meownted')}}
+        onLoad= {() => { console.log('meownted'); }}
       >
         {geosuggest}
         {removePolyBanner}
@@ -217,7 +215,7 @@ const MapComponent = (props) => {
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}
-          {props.tileLayerProps.url === "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" ?
+          {props.tileLayerProps.url === 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}' ?
             satButton :
             streetButton
           }

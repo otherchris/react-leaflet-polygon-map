@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
+import uuid from 'uuid';
 import addArea from './addArea';
 import validateShape from './validateShape';
-import uuid from 'uuid';
 
 export const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   let p = cloneDeep(poly);
@@ -10,7 +10,7 @@ export const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   if (!p.properties.area) p = addArea(p);
 
   // Check max area
-  if(p.properties.area > maxAreaEach) p.properties.tooLarge = true;
+  if (p.properties.area > maxAreaEach) p.properties.tooLarge = true;
 
   // Tag with id if not already tagged
   if (!p.properties.key) p.properties.key = uuid.v4();
@@ -22,11 +22,11 @@ export const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   }
 
   // Add errors if needed
-  return validateShape(p, validateFunc)
+  return validateShape(p, validateFunc);
 };
 
 export const cleanPoint = (point) => {
-  let p = cloneDeep(point);
+  const p = cloneDeep(point);
 
   // Tag with id if not already tagged
   if (!p.properties.key) p.properties.key = uuid.v4();
