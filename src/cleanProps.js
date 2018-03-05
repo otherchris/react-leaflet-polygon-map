@@ -10,8 +10,7 @@ import { cleanPoly, cleanPoint } from './clean';
 // Pass in all props every time
 export const cleanPropsFunc = (props) => {
   const p = cloneDeep(props);
-  const center = makeCenterLeaflet(makePoint(props.center))
-  const maxAreaEach = props.maxAreaEach || Number.MAX_VALUE;
+  const center = makeCenterLeaflet(makePoint(props.center));
   const features = props.features || [];
   const points = props.points || [];
   const feats = map(features, (x) => cleanPoly(x, props.maxAreaEach, props.featureValidator));
@@ -35,8 +34,8 @@ export const cleanPropsFunc = (props) => {
     'newCircleCenter',
     'newCircleRadius',
   ]);
-  //this.maybeZoomToShapes();
-}
+  // this.maybeZoomToShapes();
+};
 
 const cleanProps = (props, update, cb) => update(cleanPropsFunc(props), cb);
 

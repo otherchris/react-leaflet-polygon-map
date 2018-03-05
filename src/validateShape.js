@@ -6,6 +6,6 @@ const validateShape = (_feature, validateFunc) => {
   if (newErrors.length > 0) feature.properties.errors = newErrors;
   else delete feature.properties.errors;
   return feature;
-}
+};
 
 export default validateShape;

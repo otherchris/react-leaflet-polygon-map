@@ -1,16 +1,10 @@
 import L from 'leaflet';
-import hasIn from 'lodash/hasIn';
-import includes from 'lodash/includes';
 import map from 'lodash/map';
 import range from 'lodash/range';
 import reverse from 'lodash/reverse';
 import flatten from 'lodash/flatten';
 import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
-
-const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === 'number';
-const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
-const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
 const validCoordsArray = (arr) =>
   arr &&
@@ -21,14 +15,17 @@ const validCoordsArray = (arr) =>
   arr[1] < 90 &&
   arr[1] > -90;
 
-export const makePoints = (arr) => map(arr, makePoint);
+const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === 'number';
+const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
+const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
 // input a geoJSON point geometry
 export const makeCenterLeaflet = (c) => {
-  console.log('ceee', c)
+  const coords = c.geometry.coordinates;
   if (c.lat && c.lng) return c;
-  if (validGeoJSONPointFeature(c)) return L.latLng(c.geometry.coordinates[1], c.geometry.coordinates[0]);
+  if (validGeoJSONPointFeature(c)) return L.latLng(coords[1], coords[0]);
   if (validGeoJSONPoint(c)) return L.latLng(c.coordinates[1], c.coordinates[0]);
+  return 0;
 };
 
 export const makePoint = (cee) => {
@@ -43,7 +40,7 @@ export const makePoint = (cee) => {
 
 export const generateIcon = (html) => new L.divIcon({
   className: 'my-div-icon',
-  html: html,
+  html,
 });
 
 export const indexByKey = (arr, key) => {
@@ -62,7 +59,6 @@ const rotatedPointsOrigin = (radius, sides) => {
   const z = new math.complex({ phi: 0, r: radius });
   const angle = (2 * Math.PI) / sides;
   return map(range(sides), (x) => {
-    const i = math.complex(0, 1);
     const point = math.multiply(z, math.exp(math.multiply(x, angle, math.complex(0, 1))));
     return [math.re(point), math.im(point)];
   });
@@ -70,7 +66,7 @@ const rotatedPointsOrigin = (radius, sides) => {
 
 const translatePoints = (points, c) => map(
   points,
-  (point) => [point[0] + c.lat, point[1] + c.lng]
+  (point) => [point[0] + c.lat, point[1] + c.lng],
 );
 
 const scalePoints = (points, lat) => {
@@ -79,7 +75,7 @@ const scalePoints = (points, lat) => {
 };
 
 export const generateCircleApprox = (radius, unit, center, sides) => {
-  const c = makeCenterLeaflet(center)
+  const c = makeCenterLeaflet(center);
   const points = rotatedPointsOrigin(radius, sides);
   const scaledPoints = scalePoints(points, c.lat);
   const translatedPoints = translatePoints(scaledPoints, c);
@@ -126,3 +122,5 @@ export const polygonArrayToProp = (polys) => map(polys, (poly) => {
     properties: poly.properties,
   };
 });
+
+export const makePoints = (arr) => map(arr, makePoint);

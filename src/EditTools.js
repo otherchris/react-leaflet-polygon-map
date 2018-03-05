@@ -8,10 +8,10 @@ const EditTools = (p) => {
       <FeatureGroup>
         <EditControl
           onMounted={() => {
-            const el = document.querySelector('a.leaflet-draw-edit-remove')
-            el.onclick = (e) => {
+            const el = document.querySelector('a.leaflet-draw-edit-remove');
+            el.onclick = () => {
               p.removeListener();
-            }
+            };
             el.classname = 'leaflet-draw-edit-remove';
           }}
           position='topright'

@@ -6,7 +6,7 @@ const addArea = featObj => {
   const f = cloneDeep(featObj);
   const { geometry } = featObj;
   const area = geojsonArea.geometry(geometry);
-  f.properties.area = area / 2590000 ;
+  f.properties.area = area / 2590000;
   return f;
 };
 
