@@ -1,5 +1,4 @@
 import L from 'leaflet';
-import polyline from 'polyline';
 import hasIn from 'lodash/hasIn';
 import includes from 'lodash/includes';
 import map from 'lodash/map';
@@ -8,7 +7,6 @@ import reverse from 'lodash/reverse';
 import flatten from 'lodash/flatten';
 import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
-import addArea from './addArea';
 
 const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === 'number';
 const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);

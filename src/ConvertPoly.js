@@ -8,7 +8,6 @@ import map from 'lodash/map';
 import size from 'lodash/size';
 import flatten from 'lodash/flatten';
 import isEqual from 'lodash/isEqual';
-import polyline from 'polyline';
 import rewind from 'geojson-rewind';
 import getArea from './getArea';
 import { generateCircleApprox } from './MapHelpers';
