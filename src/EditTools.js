@@ -1,8 +1,11 @@
 import React from 'react';
 import { FeatureGroup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
+import { removeListener } from './MapHelpers';
 
 const EditTools = (p) => {
+  console.log("I AM RERENDERING EDIT TOOLS")
+  console.log(p.remove)
   if (p.edit) {
     return (
       <FeatureGroup>
@@ -10,7 +13,7 @@ const EditTools = (p) => {
           onMounted={() => {
             const el = document.querySelector('a.leaflet-draw-edit-remove');
             el.onclick = () => {
-              p.removeListener();
+              removeListener(p);
             };
             el.classname = 'leaflet-draw-edit-remove';
           }}

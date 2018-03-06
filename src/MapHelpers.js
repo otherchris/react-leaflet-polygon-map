@@ -1,10 +1,12 @@
 import L from 'leaflet';
+import noop from 'lodash/noop';
 import map from 'lodash/map';
 import range from 'lodash/range';
 import reverse from 'lodash/reverse';
 import flatten from 'lodash/flatten';
 import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
+import cleanProps from './cleanProps';
 
 const validCoordsArray = (arr) =>
   arr &&
@@ -21,11 +23,13 @@ const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoin
 
 // input a geoJSON point geometry
 export const makeCenterLeaflet = (c) => {
-  const coords = c.geometry.coordinates;
   if (c.lat && c.lng) return c;
-  if (validGeoJSONPointFeature(c)) return L.latLng(coords[1], coords[0]);
+  if (validGeoJSONPointFeature(c)) {
+    const coords = c.geometry.coordinates;
+    return L.latLng(coords[1], coords[0]);
+  }
   if (validGeoJSONPoint(c)) return L.latLng(c.coordinates[1], c.coordinates[0]);
-  return 0;
+  return {};
 };
 
 export const makePoint = (cee) => {
@@ -59,6 +63,7 @@ const rotatedPointsOrigin = (radius, sides) => {
   const z = new math.complex({ phi: 0, r: radius });
   const angle = (2 * Math.PI) / sides;
   return map(range(sides), (x) => {
+    const i = math.complex(0, 1);
     const point = math.multiply(z, math.exp(math.multiply(x, angle, math.complex(0, 1))));
     return [math.re(point), math.im(point)];
   });
@@ -122,5 +127,13 @@ export const polygonArrayToProp = (polys) => map(polys, (poly) => {
     properties: poly.properties,
   };
 });
+
+export const removeListener = (props) => {
+  console.log("RL props", props)
+  const p = cloneDeep(props);
+  p.remove = !props.remove;
+  console.log(p.remove)
+  cleanProps(p, props.onShapeChange, noop);
+};
 
 export const makePoints = (arr) => map(arr, makePoint);
