@@ -189,6 +189,7 @@ const MapComponent = (props) => {
       Click the polygon again to finish editing
     </div>
   ) : '';
+  console.log("RERENDERING MAPCOMPONENT")
   return (
     <div>
       {openFeatureMessage}

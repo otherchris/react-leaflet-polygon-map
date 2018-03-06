@@ -128,11 +128,9 @@ export const polygonArrayToProp = (polys) => map(polys, (poly) => {
   };
 });
 
-export const removeListener = (props) => {
-  console.log("RL props", props)
+export const removeListener = (props, next) => {
   const p = cloneDeep(props);
-  p.remove = !props.remove;
-  console.log(p.remove)
+  p.remove = next;
   cleanProps(p, props.onShapeChange, noop);
 };
 
