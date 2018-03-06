@@ -260,7 +260,6 @@ MapComponent.propTypes = {
   refresh: PropTypes.string,
   remove: PropTypes.bool,
   removeAllFeatures: PropTypes.func,
-  removeListener: PropTypes.func,
   setCenter: PropTypes.arrayOf(PropTypes.number),
   setCenterAndZoom: PropTypes.func,
   style: PropTypes.object,

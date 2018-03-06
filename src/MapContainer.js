@@ -29,6 +29,7 @@ const defaultCenter = makeCenterLeaflet({
   coordinates: [-85.751528, 38.257222],
 });
 
+
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -46,11 +47,6 @@ class MapContainer extends React.Component {
     }
   }
 
-  removeListener() {
-    const p = cloneDeep(this.props);
-    p.remove = !p.remove;
-    cleanProps(p, this.debouncedOnChange, noop);
-  }
   // updateShapes called by onCreated callback in Leaflet map
   //
   // e.layer represents the newly created vector layer
@@ -170,9 +166,9 @@ class MapContainer extends React.Component {
     }
   }
   zoomToShapes() {
-    const { feats, points } = this.props;
-    if (feats.length > 0 || points.length > 0) {
-      const bounds = getBounds(feats, points);
+    const { features, points } = this.props;
+    if (features.length > 0 || points.length > 0) {
+      const bounds = getBounds(features, points);
       this.leafletMap.leafletElement.fitBounds(bounds);
     }
   }
@@ -220,19 +216,7 @@ class MapContainer extends React.Component {
       'submitButton',
       'update',
     ]);
-    /*
-    console.log('doin layers')
-    if (this.leafletMap && this.leafletMap.leafletElement) {
-      this.leafletMap.leafletElement.eachLayer((layer) => {
-        if (layer._bounds && !(layer.options && layer.options.uuid)) {
-          console.log("LAYER REMOVED: ", layer)
-          this.leafletMap.leafletElement.removeLayer(layer);
-        } else {
-          console.log("LAYER NOT REMOVED: ", layer)
-        }
-      });
-    }
-    */
+    console.log("outer", this.props.remove)
     return (
       <MapComponent
         bindPoint={this}
@@ -248,6 +232,7 @@ class MapContainer extends React.Component {
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
         onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
+        onShapeChange={this.props.onShapeChange}
         onTileSet={this.onTileSet.bind(this)}
         openFeature={this.state.openFeature}
         points={this.props.points}
@@ -256,7 +241,6 @@ class MapContainer extends React.Component {
         refresh={this.state.refresh}
         remove={this.props.remove}
         removeAllFeatures={this.removeAllFeatures.bind(this)}
-        removeListener={this.removeListener.bind(this)}
         showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         viewport={this.state.viewport}
