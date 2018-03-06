@@ -47,30 +47,6 @@ class MapContainer extends React.Component {
     }
   }
 
-  // updateShapes called by onCreated callback in Leaflet map
-  //
-  // e.layer represents the newly created vector layer
-  updateShapes(e) {
-    const p = cloneDeep(this.props);
-    const geoJSON = e.layer.toGeoJSON();
-    switch (geoJSON.geometry.type) {
-    case 'Polygon':
-      p.features.push(geoJSON);
-      this.leafletMap.leafletElement.removeLayer(e.layer);
-      break;
-    case 'Point':
-      p.points.push(geoJSON);
-      this.leafletMap.leafletElement.removeLayer(e.layer);
-      p.newCircleCenter = geoJSON;
-      p.newCircleRadius = 0.1;
-      p.makeCircleOn = true;
-      break;
-    default:
-      break;
-    }
-    cleanProps(p, this.debouncedOnChange, noop);
-  }
-
   // Sometimes clicking a polygon opens/closes for editing, sometimes it
   // deletes the poly
   clickFeature(e) {
@@ -208,13 +184,13 @@ class MapContainer extends React.Component {
     cleanProps(this.props, this.debouncedOnChange, noop);
     const passThroughProps = pick(this.props, [
       'edit',
+      'featureValidator',
       'geolocate',
       'height',
       'legendComponent',
       'style',
       'tooltipOptions',
       'submitButton',
-      'update',
     ]);
     return (
       <MapComponent
@@ -229,7 +205,6 @@ class MapContainer extends React.Component {
         makeCircleOn={this.props.makeCircleOn}
         markerIcon={generateIcon(defaultIcon)}
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
-        onCreated={this.updateShapes.bind(this)}
         onLocationSelect={this.onLocationSelect.bind(this)}
         onShapeChange={this.props.onShapeChange}
         onTileSet={this.onTileSet.bind(this)}

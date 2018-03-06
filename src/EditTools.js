@@ -1,10 +1,7 @@
 import React from 'react';
 import { FeatureGroup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
-import noop from 'lodash/noop';
-import cloneDeep from 'lodash/cloneDeep';
-import { removeListener } from './MapHelpers';
-import cleanProps from './cleanProps';
+import updateShapes from './updateShapes';
 
 const EditTools = (p) => {
   if (p.edit) {
@@ -28,7 +25,7 @@ const EditTools = (p) => {
           edit={{
             edit: false,
           }}
-          onCreated={p.onCreated}
+          onCreated={updateShapes.bind(this, p, p.bindPoint.leafletMap.leafletElement)}
         />
       </FeatureGroup>
     );

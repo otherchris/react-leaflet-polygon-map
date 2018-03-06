@@ -189,7 +189,6 @@ const MapComponent = (props) => {
       Click the polygon again to finish editing
     </div>
   ) : '';
-  console.log("RERENDERING MAPCOMPONENT")
   return (
     <div>
       {openFeatureMessage}
@@ -200,7 +199,6 @@ const MapComponent = (props) => {
         maxZoom = {18}
         center = {props.center}
         zoom = {props.zoom || 9}
-        onLoad= {() => { console.log('meownted'); }}
       >
         {geosuggest}
         {removePolyBanner}

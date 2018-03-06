@@ -13,6 +13,7 @@ export const cleanPropsFunc = (props) => {
   const center = makeCenterLeaflet(makePoint(props.center));
   const features = props.features || [];
   const points = props.points || [];
+  console.log("CHECK THIS", props)
   const feats = map(features, (x) => cleanPoly(x, props.maxAreaEach, props.featureValidator));
   const pnts = map(points, (x) => cleanPoint(x));
   const ess = merge(p, {
