@@ -1,20 +1,19 @@
 import React from 'react';
 import { FeatureGroup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
+import noop from 'lodash/noop';
+import cloneDeep from 'lodash/cloneDeep';
 import { removeListener } from './MapHelpers';
+import cleanProps from './cleanProps';
 
 const EditTools = (p) => {
-  console.log("I AM RERENDERING EDIT TOOLS")
-  console.log(p.remove)
   if (p.edit) {
     return (
       <FeatureGroup>
         <EditControl
           onMounted={() => {
             const el = document.querySelector('a.leaflet-draw-edit-remove');
-            el.onclick = () => {
-              removeListener(p);
-            };
+            el.onclick = p.removeHandler;
             el.classname = 'leaflet-draw-edit-remove';
           }}
           position='topright'

@@ -216,7 +216,6 @@ class MapContainer extends React.Component {
       'submitButton',
       'update',
     ]);
-    console.log("outer", this.props.remove)
     return (
       <MapComponent
         bindPoint={this}
@@ -240,6 +239,11 @@ class MapContainer extends React.Component {
         radiusChange={this.radiusChange.bind(this)}
         refresh={this.state.refresh}
         remove={this.props.remove}
+        removeHandler={() => {
+          const p = cloneDeep(this.props);
+          p.remove = !this.props.remove;
+          cleanProps(p, this.props.onShapeChange, noop);
+        }}
         removeAllFeatures={this.removeAllFeatures.bind(this)}
         showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}

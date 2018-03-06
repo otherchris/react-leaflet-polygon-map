@@ -37,6 +37,9 @@ export const cleanPropsFunc = (props) => {
   // this.maybeZoomToShapes();
 };
 
-const cleanProps = (props, update, cb) => update(cleanPropsFunc(props), cb);
+const cleanProps = (props, update, cb) => {
+  console.log("cleaning props with ", props)
+  update(cleanPropsFunc(props), cb);
+}
 
 export default cleanProps;
