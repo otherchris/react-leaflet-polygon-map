@@ -40,9 +40,6 @@ class MapContainer extends React.Component {
       this.debouncedOnChange = debounce(props.onShapeChange, 100);
     }
   }
-  radiusChange(e) {
-    this.setState({ newCircleRadius: e });
-  }
   turnOffCircleApprox() {
     const p = cloneDeep(this.props);
     p.makeCircleOn = false;
@@ -69,30 +66,13 @@ class MapContainer extends React.Component {
   maybeZoomToShapes() {
     if (isEqual(this.props.center, defaultCenter)) this.zoomToShapes();
   }
-  onTileSet(e) {
-    const tiles = e.target.id;
-    if (tiles === 'street') {
-      this.setState({
-        tileLayerProps: {
-          url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        },
-      });
-    } else {
-      this.setState({
-        tileLayerProps: {
-          url: 'https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        },
-      });
-    }
-  }
   render() {
     cleanProps(this.props, this.debouncedOnChange, noop);
     const passThroughProps = pick(this.props, [
       'bounds',
       'center',
       'edit',
+      'features',
       'featureValidator',
       'force',
       'geolocate',
@@ -115,10 +95,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        onTileSet={this.onTileSet.bind(this)}
-        openFeature={this.state.openFeature}
-        features={polygonArrayToProp(this.props.features)}
-        radiusChange={this.radiusChange.bind(this)}
         removeHandler={() => {
           const p = cloneDeep(this.props);
           p.remove = !this.props.remove;

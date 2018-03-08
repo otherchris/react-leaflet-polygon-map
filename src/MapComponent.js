@@ -31,6 +31,7 @@ import {
   makeCenterLeaflet,
   removeAllFeatures,
   generateIcon,
+  polygonArrayToProp,
 } from './MapHelpers';
 import defaultIcon from './defaultIcon';
 import makeCircle from './makeCircle';
@@ -80,7 +81,7 @@ const MapComponent = (props) => {
   merge(hoveredStyle, props.hoveredStyle);
 
   // Create Leaflet GeoJSON components from features in container state
-  const features = map(props.features, (result) => {
+  const features = map(polygonArrayToProp(props.features), (result) => {
     const p = cloneDeep(result.properties);
     const thisStyle = cloneDeep(style);
     const thisTooltipOptions = cloneDeep(tooltipOptions);
@@ -161,9 +162,8 @@ const MapComponent = (props) => {
     : '';
   const makeCircleApprox = props.makeCircleOn ? (
     <CircleApprox
-      radiusChange={props.radiusChange}
       makeCircle={makeCircle.bind(this, props)}
-      turnOff={props.turnOffCircleApprox}
+      {...props}
     />
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 0 ? (

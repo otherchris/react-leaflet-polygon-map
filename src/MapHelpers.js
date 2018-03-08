@@ -162,3 +162,9 @@ export const onLocationSelect = (props, _map, loc) => {
   const b2 = L.latLng(f.f, b.f);
   _map.leafletElement.fitBounds(L.latLngBounds(b1, b2));
 };
+
+export const radiusChange = (props, e) => {
+  const p = cloneDeep(props);
+  p.newCircleRadius = e;
+  cleanProps(p, props.onShapeChange, noop);
+};
