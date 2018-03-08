@@ -26,6 +26,7 @@ import {
 import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
 import { clickFeature, clickPoint } from './clickShape';
+import onTileSet from './onTileSet';
 import './main.css';
 
 const style = {
@@ -172,14 +173,14 @@ const MapComponent = (props) => {
   ) : '';
   const satButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="sat" onClick={props.onTileSet}
+      id="sat" onClick={onTileSet.bind(this, props)}
     >
      Satellite View
     </button>
   );
   const streetButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="street" onClick={props.onTileSet}
+      id="street" onClick={onTileSet.bind(this, props)}
     >
      Street View
     </button>

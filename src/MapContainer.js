@@ -1,8 +1,6 @@
 import pick from 'lodash/pick';
-import omit from 'lodash/omit';
 import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
-import filter from 'lodash/filter';
 import debounce from 'lodash/debounce';
 import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
@@ -13,12 +11,10 @@ import MapComponent from './MapComponent';
 import {
   generateIcon,
   generateCircleApprox,
-  indexByKey,
   areaAccumulator,
   makeCenterLeaflet,
   polygonArrayToProp,
 } from './MapHelpers';
-import { cleanPoly } from './clean';
 import './main.css';
 import getBounds from './getBounds';
 import defaultIcon from './defaultIcon';
@@ -134,36 +130,38 @@ class MapContainer extends React.Component {
   render() {
     cleanProps(this.props, this.debouncedOnChange, noop);
     const passThroughProps = pick(this.props, [
+      'bounds',
       'edit',
       'featureValidator',
+      'force',
       'geolocate',
       'height',
       'legendComponent',
+      'makeCircleOn',
+      'onShapeChange',
+      'points',
+      'remove',
       'style',
+      'tileLayerProps',
       'tooltipOptions',
       'submitButton',
+      'zoom',
     ]);
     return (
       <MapComponent
         bindPoint={this}
-        bounds={this.props.bounds}
         center={makeCenterLeaflet(this.props.center)}
-        force={this.props.force}
         googleAPILoaded={this.state.googleAPILoaded}
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
-        makeCircleOn={this.props.makeCircleOn}
         markerIcon={generateIcon(defaultIcon)}
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
         onLocationSelect={this.onLocationSelect.bind(this)}
-        onShapeChange={this.props.onShapeChange}
         onTileSet={this.onTileSet.bind(this)}
         openFeature={this.state.openFeature}
-        points={this.props.points}
         features={polygonArrayToProp(this.props.features)}
         radiusChange={this.radiusChange.bind(this)}
         refresh={this.state.refresh}
-        remove={this.props.remove}
         removeHandler={() => {
           const p = cloneDeep(this.props);
           p.remove = !this.props.remove;
@@ -173,7 +171,6 @@ class MapContainer extends React.Component {
         showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         viewport={this.state.viewport}
-        tileLayerProps={this.state.tileLayerProps}
         totalArea={this.state.totalArea}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         unit={this.state.unit}
