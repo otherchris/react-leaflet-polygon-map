@@ -152,3 +152,13 @@ export const removeAllFeatures = (props) => {
   p.points = [];
   cleanProps(p, props.onShapeChange, noop);
 };
+
+export const onLocationSelect = (props, _map, loc) => {
+  const { b, f } = loc.gmaps.geometry.viewport;
+  const p = cloneDeep(props);
+  p.center = { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] };
+  cleanProps(p, props.onShapeChange, noop);
+  const b1 = L.latLng(f.b, b.b);
+  const b2 = L.latLng(f.f, b.f);
+  _map.leafletElement.fitBounds(L.latLngBounds(b1, b2));
+};
