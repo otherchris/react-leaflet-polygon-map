@@ -38,17 +38,6 @@ class MapContainer extends React.Component {
     p.makeCircleOn = false;
     cleanProps(p, this.debouncedOnChange, noop);
   }
-  setCenterAndZoom() {
-    if (this.leafletMap) {
-      const ctr = cloneDeep(this.leafletMap.leafletElement.getCenter());
-      const p = cloneDeep(this.props);
-      p.center = {
-        type: 'Point',
-        coordinates: [ctr.lng, ctr.lat],
-      };
-      p.zoom = this.leafletMap.leafletElement.getZoom();
-    }
-  }
   zoomToShapes() {
     const { features, points } = this.props;
     if (features.length > 0 || points.length > 0) {
@@ -88,7 +77,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
         zoomToShapes={this.maybeZoomToShapes.bind(this)}
         {...passThroughProps}
