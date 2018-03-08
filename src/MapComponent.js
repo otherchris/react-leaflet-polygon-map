@@ -27,7 +27,7 @@ import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
 import { clickFeature, clickPoint } from './clickShape';
 import onTileSet from './onTileSet';
-import { makeCenterLeaflet } from './MapHelpers';
+import { makeCenterLeaflet, removeAllFeatures } from './MapHelpers';
 import './main.css';
 
 const style = {
@@ -168,7 +168,7 @@ const MapComponent = (props) => {
     </button>
   ) : '';
   const removeAllButton = ((props.features.length > 0 || props.points.length > 0) && props.edit) ? (
-    <button type="button" className="btn btn-danger btn-sm" onClick={props.removeAllFeatures}>
+    <button type="button" className="btn btn-danger btn-sm" onClick={removeAllFeatures.bind(this, props)}>
       Remove all shapes
     </button>
   ) : '';
