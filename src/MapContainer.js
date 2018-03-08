@@ -2,18 +2,11 @@ import pick from 'lodash/pick';
 import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 import debounce from 'lodash/debounce';
-import reduce from 'lodash/reduce';
 import cloneDeep from 'lodash/cloneDeep';
 import PropTypes from 'prop-types';
-import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
-import {
-  generateCircleApprox,
-  areaAccumulator,
-  makeCenterLeaflet,
-  polygonArrayToProp,
-} from './MapHelpers';
+import { makeCenterLeaflet } from './MapHelpers';
 import './main.css';
 import getBounds from './getBounds';
 import cleanProps from './cleanProps';
@@ -96,11 +89,7 @@ class MapContainer extends React.Component {
       <MapComponent
         bindPoint={this}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
-        viewport={this.state.viewport}
-        totalArea={this.state.totalArea}
         turnOffCircleApprox={this.turnOffCircleApprox.bind(this)}
-        unit={this.state.unit}
-        zoom={this.props.zoom}
         zoomToShapes={this.maybeZoomToShapes.bind(this)}
         {...passThroughProps}
       />
