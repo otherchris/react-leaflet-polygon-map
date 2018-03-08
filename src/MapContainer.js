@@ -129,6 +129,8 @@ class MapContainer extends React.Component {
       'legendComponent',
       'legendProps',
       'makeCircleOn',
+      'newCircleCenter',
+      'newCircleRadius',
       'onShapeChange',
       'points',
       'remove',

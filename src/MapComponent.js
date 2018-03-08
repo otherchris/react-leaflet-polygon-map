@@ -28,6 +28,7 @@ import CircleApprox from './CircleApprox';
 import { clickFeature, clickPoint } from './clickShape';
 import onTileSet from './onTileSet';
 import { makeCenterLeaflet, removeAllFeatures } from './MapHelpers';
+import makeCircle from './makeCircle';
 import './main.css';
 
 const style = {
@@ -156,7 +157,7 @@ const MapComponent = (props) => {
   const makeCircleApprox = props.makeCircleOn ? (
     <CircleApprox
       radiusChange={props.radiusChange}
-      makeCircle={props.makeCircle}
+      makeCircle={makeCircle.bind(this, props)}
       turnOff={props.turnOffCircleApprox}
     />
   ) : '';
