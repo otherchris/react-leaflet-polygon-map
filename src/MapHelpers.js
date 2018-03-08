@@ -135,3 +135,13 @@ export const removeListener = (props, next) => {
 };
 
 export const makePoints = (arr) => map(arr, makePoint);
+
+export const incForce = (obj) => {
+  const o = cloneDeep(obj);
+  if (obj.force) {
+    o.force = obj.force + 1;
+    return o;
+  }
+  o.force = 1;
+  return o;
+};
