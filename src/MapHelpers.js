@@ -134,6 +134,12 @@ export const removeListener = (props, next) => {
   cleanProps(p, props.onShapeChange, noop);
 };
 
+export const removeHandler = (props) => {
+  const p = cloneDeep(props);
+  p.remove = !props.remove;
+  cleanProps(p, props.onShapeChange, noop);
+}
+
 export const makePoints = (arr) => map(arr, makePoint);
 
 export const incForce = (obj) => {
