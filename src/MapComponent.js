@@ -25,6 +25,7 @@ import {
 } from './tooltipHelpers';
 import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
+import { clickFeature, clickPoint } from './clickShape';
 import './main.css';
 
 const style = {
@@ -64,7 +65,6 @@ const Legend = (LegendComponent, props) => (
 );
 
 const MapComponent = (props) => {
-  console.log('COMP PROPS', props);
   const {
     tileLayerProps, height, tooltipOptions = {},
   } = props;
@@ -92,7 +92,7 @@ const MapComponent = (props) => {
         key={uuid.v4()}
         uuid={p.key || uuid.v4()}
         editable={p.editable}
-        onClick={props.clickFeature}
+        onClick={clickFeature.bind(this, props)}
         onMouseOut={(e) => { e.layer.setStyle(thisStyle); }}
         onMouseOver={(e) => { e.layer.setStyle(hoveredStyle); }}
       >
@@ -116,7 +116,7 @@ const MapComponent = (props) => {
         uuid={p.key || uuid.v4()}
         position={position}
         icon={props.markerIcon}
-        onClick={props.clickPoint}
+        onClick={clickPoint.bind(this, props)}
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>

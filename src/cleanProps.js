@@ -11,9 +11,8 @@ import { cleanPoly, cleanPoint } from './clean';
 export const cleanPropsFunc = (props) => {
   const p = cloneDeep(props);
   const center = makeCenterLeaflet(makePoint(props.center));
-  const features = props.features || [];
-  const points = props.points || [];
-  console.log("CHECK THIS", props)
+  const features = p.features || [];
+  const points = p.points || [];
   const feats = map(features, (x) => cleanPoly(x, props.maxAreaEach, props.featureValidator));
   const pnts = map(points, (x) => cleanPoint(x));
   const ess = merge(p, {
@@ -27,6 +26,7 @@ export const cleanPropsFunc = (props) => {
     'center',
     'edit',
     'features',
+    'force',
     'makeCircleOn',
     'points',
     'remove',

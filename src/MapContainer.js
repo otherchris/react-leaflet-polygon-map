@@ -47,55 +47,6 @@ class MapContainer extends React.Component {
     }
   }
 
-  // Sometimes clicking a polygon opens/closes for editing, sometimes it
-  // deletes the poly
-  clickFeature(e) {
-    if (!this.props.edit) return;
-    if (this.props.remove) {
-      const s = cloneDeep(this.props);
-      const key = e.layer.options.uuid;
-      const features = filter(s.features, (feat) => key !== feat.properties.key);
-      s.features = features;
-      cleanProps(s, this.debouncedOnChange, noop);
-    } else {
-      const key = e.layer.options.uuid;
-      const props = cloneDeep(this.props);
-      const { features } = props;
-      const index = indexByKey(features, key);
-      const editable = features[index].properties.editable || false;
-      const { maxAreaEach, featureValidator } = this.props;
-      if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), maxAreaEach, featureValidator);
-      features[index].properties.editable = !editable;
-      props.openFeature = !editable;
-      props.features = features;
-      props.totalArea = reduce(features, areaAccumulator, 0);
-      props.legendProps = omit(props, 'legendProps');
-      cleanProps(props, this.debouncedOnChange, noop);
-    }
-  }
-
-  clickPoint(e) {
-    const props = cloneDeep(this.props);
-    if (!this.props.edit) return;
-    if (this.props.remove) {
-      const key = e.target.options.uuid;
-      const points = filter(this.props.points, (point) => key !== point.properties.key);
-      const s = cloneDeep(this.props);
-      s.points = points;
-      s.legendProps = omit(s, 'legendProps');
-      s.remove = false;
-      cleanProps(s, this.debouncedOnChange, noop);
-    } else {
-      const makeCircle = !!this.props.makeCircleOn;
-      if (!makeCircle) {
-        const newCircleCenter = e.target.toGeoJSON();
-        props.makeCircleOn = !makeCircle;
-        props.newCircleCenter = newCircleCenter;
-        cleanProps(props, this.debouncedOnChange, noop);
-      }
-    }
-  }
-
   onLocationSelect(loc) {
     const { b, f } = loc.gmaps.geometry.viewport;
     this.setState({ center: { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] } });
@@ -197,8 +148,7 @@ class MapContainer extends React.Component {
         bindPoint={this}
         bounds={this.props.bounds}
         center={makeCenterLeaflet(this.props.center)}
-        clickFeature={this.clickFeature.bind(this)}
-        clickPoint={this.clickPoint.bind(this)}
+        force={this.props.force}
         googleAPILoaded={this.state.googleAPILoaded}
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
