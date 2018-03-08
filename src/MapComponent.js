@@ -32,6 +32,7 @@ import {
   removeAllFeatures,
   generateIcon,
   polygonArrayToProp,
+  removeHandler,
 } from './MapHelpers';
 import defaultIcon from './defaultIcon';
 import makeCircle from './makeCircle';

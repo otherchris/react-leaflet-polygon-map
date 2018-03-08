@@ -95,12 +95,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        removeHandler={() => {
-          const p = cloneDeep(this.props);
-          p.remove = !this.props.remove;
-          cleanProps(p, this.props.onShapeChange, noop);
-        }}
-        showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         viewport={this.state.viewport}
         totalArea={this.state.totalArea}
