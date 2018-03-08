@@ -131,6 +131,7 @@ class MapContainer extends React.Component {
     cleanProps(this.props, this.debouncedOnChange, noop);
     const passThroughProps = pick(this.props, [
       'bounds',
+      'center',
       'edit',
       'featureValidator',
       'force',
@@ -150,7 +151,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        center={makeCenterLeaflet(this.props.center)}
         googleAPILoaded={this.state.googleAPILoaded}
         legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
