@@ -40,35 +40,8 @@ class MapContainer extends React.Component {
       this.debouncedOnChange = debounce(props.onShapeChange, 100);
     }
   }
-
-  onLocationSelect(loc) {
-    const { b, f } = loc.gmaps.geometry.viewport;
-    this.setState({ center: { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] } });
-    const b1 = L.latLng(f.b, b.b);
-    const b2 = L.latLng(f.f, b.f);
-    this.leafletMap.leafletElement.fitBounds(L.latLngBounds(b1, b2));
-  }
   radiusChange(e) {
     this.setState({ newCircleRadius: e });
-  }
-  makeCircle() {
-    if (!this.props.newCircleRadius || !this.props.newCircleCenter) return;
-    const features = cloneDeep(this.props.features);
-    const circApprox = (generateCircleApprox(
-      this.props.newCircleRadius,
-      this.props.unit,
-      this.props.newCircleCenter,
-      24,
-    ));
-    if (circApprox.properties.area > this.props.maxAreaEach) {
-      circApprox.properties.tooLarge = true;
-    }
-    const props = cloneDeep(this.props);
-    props.features.push(circApprox);
-    props.totalArea = reduce(features, areaAccumulator, 0);
-    props.makeCircleOn = false;
-    props.newCircleRadius = 0.1;
-    cleanProps(props, this.debouncedOnChange, noop);
   }
   turnOffCircleApprox() {
     const p = cloneDeep(this.props);
@@ -127,6 +100,7 @@ class MapContainer extends React.Component {
       'legendComponent',
       'legendProps',
       'makeCircleOn',
+      'maxAreaEach',
       'newCircleCenter',
       'newCircleRadius',
       'onShapeChange',
@@ -141,8 +115,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
-        onLocationSelect={this.onLocationSelect.bind(this)}
         onTileSet={this.onTileSet.bind(this)}
         openFeature={this.state.openFeature}
         features={polygonArrayToProp(this.props.features)}
