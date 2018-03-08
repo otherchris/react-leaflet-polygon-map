@@ -27,7 +27,12 @@ import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
 import { clickFeature, clickPoint } from './clickShape';
 import onTileSet from './onTileSet';
-import { makeCenterLeaflet, removeAllFeatures } from './MapHelpers';
+import {
+  makeCenterLeaflet,
+  removeAllFeatures,
+  generateIcon,
+} from './MapHelpers';
+import defaultIcon from './defaultIcon';
 import makeCircle from './makeCircle';
 import './main.css';
 
@@ -284,5 +289,6 @@ MapComponent.defaultProps = {
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   },
   center: L.latLng([33, -85]),
+  markerIcon: generateIcon(defaultIcon),
 };
 export default MapComponent;

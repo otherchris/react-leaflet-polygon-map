@@ -9,7 +9,6 @@ import L from 'leaflet';
 import React from 'react';
 import MapComponent from './MapComponent';
 import {
-  generateIcon,
   generateCircleApprox,
   areaAccumulator,
   makeCenterLeaflet,
@@ -17,7 +16,6 @@ import {
 } from './MapHelpers';
 import './main.css';
 import getBounds from './getBounds';
-import defaultIcon from './defaultIcon';
 import cleanProps from './cleanProps';
 
 const defaultCenter = makeCenterLeaflet({
@@ -143,8 +141,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        makeCircle={this.makeCircle.bind(this)}
-        markerIcon={generateIcon(defaultIcon)}
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
         onLocationSelect={this.onLocationSelect.bind(this)}
         onTileSet={this.onTileSet.bind(this)}
