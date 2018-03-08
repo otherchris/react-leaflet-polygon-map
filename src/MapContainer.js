@@ -98,17 +98,6 @@ class MapContainer extends React.Component {
   maybeZoomToShapes() {
     if (isEqual(this.props.center, defaultCenter)) this.zoomToShapes();
   }
-  removeAllFeatures() {
-    const state = cloneDeep(this.state);
-    this.debouncedOnChange(state, () => {
-      const s = cloneDeep(state);
-      s.features = [];
-      s.points = [];
-      s.totalArea = 0;
-      s.legendProps = {}; // omit(merge(res, s), 'legendProps');
-      cleanProps(s, this.debouncedOnChange, noop);
-    });
-  }
   onTileSet(e) {
     const tiles = e.target.id;
     if (tiles === 'street') {
@@ -138,6 +127,7 @@ class MapContainer extends React.Component {
       'geolocate',
       'height',
       'legendComponent',
+      'legendProps',
       'makeCircleOn',
       'onShapeChange',
       'points',
@@ -151,8 +141,6 @@ class MapContainer extends React.Component {
     return (
       <MapComponent
         bindPoint={this}
-        googleAPILoaded={this.state.googleAPILoaded}
-        legendProps={this.state.legendProps}
         makeCircle={this.makeCircle.bind(this)}
         markerIcon={generateIcon(defaultIcon)}
         maxAreaEach={this.state.maxAreaEach || Number.MAX_VALUE}
@@ -161,13 +149,11 @@ class MapContainer extends React.Component {
         openFeature={this.state.openFeature}
         features={polygonArrayToProp(this.props.features)}
         radiusChange={this.radiusChange.bind(this)}
-        refresh={this.state.refresh}
         removeHandler={() => {
           const p = cloneDeep(this.props);
           p.remove = !this.props.remove;
           cleanProps(p, this.props.onShapeChange, noop);
         }}
-        removeAllFeatures={this.removeAllFeatures.bind(this)}
         showLocationSelect={this.state.googleAPILoaded}
         setCenterAndZoom={this.setCenterAndZoom.bind(this)}
         viewport={this.state.viewport}

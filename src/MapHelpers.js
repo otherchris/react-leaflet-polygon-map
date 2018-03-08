@@ -145,3 +145,10 @@ export const incForce = (obj) => {
   o.force = 1;
   return o;
 };
+
+export const removeAllFeatures = (props) => {
+  const p = cloneDeep(props);
+  p.features = [];
+  p.points = [];
+  cleanProps(p, props.onShapeChange, noop);
+};
