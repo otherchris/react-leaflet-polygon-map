@@ -27,6 +27,7 @@ import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
 import { clickFeature, clickPoint } from './clickShape';
 import onTileSet from './onTileSet';
+import { makeCenterLeaflet } from './MapHelpers';
 import './main.css';
 
 const style = {
@@ -198,7 +199,7 @@ const MapComponent = (props) => {
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}
-        center = {props.center}
+        center = {makeCenterLeaflet(props.center)}
         zoom = {props.zoom || 9}
       >
         {geosuggest}
