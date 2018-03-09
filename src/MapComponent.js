@@ -7,6 +7,7 @@ import merge from 'lodash/merge';
 import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import 'react-leaflet-fullscreen/dist/styles.css';
 import FullscreenControl from 'react-leaflet-fullscreen';
 import {
@@ -30,9 +31,10 @@ import onTileSet from './onTileSet';
 import {
   makeCenterLeaflet,
   removeAllFeatures,
+  removeHandler,
   generateIcon,
   polygonArrayToProp,
-  removeHandler,
+  zoomToShapes,
 } from './MapHelpers';
 import defaultIcon from './defaultIcon';
 import makeCircle from './makeCircle';
@@ -169,7 +171,7 @@ const MapComponent = (props) => {
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 0 ? (
     <button type="button" className="zoom-button btn btn-secondary btn-sm"
-      onClick={props.zoomToShapes}
+      onClick={zoomToShapes.bind(this, props)}
     >
       Zoom to shapes
     </button>
@@ -198,6 +200,8 @@ const MapComponent = (props) => {
       Click the polygon again to finish editing
     </div>
   ) : '';
+  alert(props.features)
+  const rH = () => { removeHandler(props) };
   return (
     <div>
       {openFeatureMessage}
@@ -217,7 +221,7 @@ const MapComponent = (props) => {
           subdomains= {tileLayerProps.subdomains}
         />
         <FullscreenControl position="topright" />
-        <EditTools {...props} />
+        <EditTools {...props} removeHandler={rH}/>
         {features}
         {points}
         <div className="map-btn-group btn-group">
@@ -275,7 +279,6 @@ MapComponent.propTypes = {
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
   totalArea: PropTypes.number,
-  turnOffCircleApprox: PropTypes.func,
   unit: PropTypes.string,
   update: PropTypes.string,
   zipRadiusChange: PropTypes.func,
@@ -289,7 +292,10 @@ MapComponent.defaultProps = {
     url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   },
-  center: L.latLng([33, -85]),
+  center: {
+    type: 'Point',
+    coordinates: [-85.751528, 38.257222],
+  },
   markerIcon: generateIcon(defaultIcon),
 };
 export default MapComponent;

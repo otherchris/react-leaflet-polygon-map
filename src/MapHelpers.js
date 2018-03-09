@@ -7,6 +7,7 @@ import flatten from 'lodash/flatten';
 import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
 import cleanProps from './cleanProps';
+import getBounds from './getBounds';
 
 const validCoordsArray = (arr) =>
   arr &&
@@ -135,10 +136,11 @@ export const removeListener = (props, next) => {
 };
 
 export const removeHandler = (props) => {
+  console.log("REMOVE THING THINKS FEATS ARE: ", props)
   const p = cloneDeep(props);
   p.remove = !props.remove;
   cleanProps(p, props.onShapeChange, noop);
-}
+};
 
 export const makePoints = (arr) => map(arr, makePoint);
 
@@ -173,4 +175,12 @@ export const radiusChange = (props, e) => {
   const p = cloneDeep(props);
   p.newCircleRadius = e;
   cleanProps(p, props.onShapeChange, noop);
+};
+
+export const zoomToShapes = (props) => {
+  const { features, points } = props;
+  if (features.length > 0 || points.length > 0) {
+    const bounds = getBounds(features, points);
+    props.bindPoint.leafletElement.fitBounds(bounds);
+  }
 };
