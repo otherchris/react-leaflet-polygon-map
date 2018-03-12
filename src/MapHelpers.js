@@ -136,7 +136,6 @@ export const removeListener = (props, next) => {
 };
 
 export const removeHandler = (props) => {
-  console.log("REMOVE THING THINKS FEATS ARE: ", props)
   const p = cloneDeep(props);
   p.remove = !props.remove;
   cleanProps(p, props.onShapeChange, noop);
@@ -177,10 +176,10 @@ export const radiusChange = (props, e) => {
   cleanProps(p, props.onShapeChange, noop);
 };
 
-export const zoomToShapes = (props) => {
+export const zoomToShapes = (props, _map) => {
   const { features, points } = props;
   if (features.length > 0 || points.length > 0) {
     const bounds = getBounds(features, points);
-    props.bindPoint.leafletElement.fitBounds(bounds);
+    _map.leafletElement.fitBounds(bounds);
   }
 };
