@@ -40,6 +40,11 @@ import defaultIcon from './defaultIcon';
 import makeCircle from './makeCircle';
 import './main.css';
 
+const defaultCenter ={
+  type: 'Point',
+  coordinates: [-85.751528, 38.257222],
+};
+
 const style = {
   color: 'green',
   fill: true,
@@ -171,7 +176,7 @@ const MapComponent = (props) => {
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 0 ? (
     <button type="button" className="zoom-button btn btn-secondary btn-sm"
-      onClick={zoomToShapes.bind(this, props)}
+      onClick={zoomToShapes.bind(this, props, props.bindPoint.leafletMap)}
     >
       Zoom to shapes
     </button>
@@ -200,8 +205,10 @@ const MapComponent = (props) => {
       Click the polygon again to finish editing
     </div>
   ) : '';
-  alert(props.features)
-  const rH = () => { removeHandler(props) };
+  const rH = () => { removeHandler(props); };
+  if (props.bindPoint.leafletMap && isEqual(props.center, defaultCenter)) {
+    zoomToShapes(props, props.bindPoint.leafletMap);
+  }
   return (
     <div>
       {openFeatureMessage}
@@ -292,10 +299,7 @@ MapComponent.defaultProps = {
     url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   },
-  center: {
-    type: 'Point',
-    coordinates: [-85.751528, 38.257222],
-  },
+  center: defaultCenter,
   markerIcon: generateIcon(defaultIcon),
 };
 export default MapComponent;
