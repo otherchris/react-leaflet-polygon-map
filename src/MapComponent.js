@@ -1,5 +1,4 @@
 import React from 'react';
-import L from 'leaflet';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
@@ -42,7 +41,7 @@ import cleanProps from './cleanProps';
 import makeCircle from './makeCircle';
 import './main.css';
 
-const defaultCenter ={
+const defaultCenter = {
   type: 'Point',
   coordinates: [-85.751528, 38.257222],
 };
@@ -184,7 +183,11 @@ const MapComponent = (props) => {
     </button>
   ) : '';
   const removeAllButton = ((props.features.length > 0 || props.points.length > 0) && props.edit) ? (
-    <button type="button" className="btn btn-danger btn-sm" onClick={removeAllFeatures.bind(this, props)}>
+    <button
+      type="button"
+      className="btn btn-danger btn-sm"
+      onClick={removeAllFeatures.bind(this, props)}
+    >
       Remove all shapes
     </button>
   ) : '';

@@ -64,7 +64,6 @@ const rotatedPointsOrigin = (radius, sides) => {
   const z = new math.complex({ phi: 0, r: radius });
   const angle = (2 * Math.PI) / sides;
   return map(range(sides), (x) => {
-    const i = math.complex(0, 1);
     const point = math.multiply(z, math.exp(math.multiply(x, angle, math.complex(0, 1))));
     return [math.re(point), math.im(point)];
   });

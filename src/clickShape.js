@@ -5,7 +5,6 @@ import reduce from 'lodash/reduce';
 import omit from 'lodash/omit';
 import cleanProps from './cleanProps';
 import { indexByKey, areaAccumulator, incForce } from './MapHelpers';
-import { cleanPoly, cleanPoint } from './clean';
 
 // Sometimes clicking a polygon opens/closes for editing, sometimes it
 // deletes the poly
@@ -20,7 +19,7 @@ export const clickFeature = (props, e) => {
   } else {
     const key = e.layer.options.uuid;
     const p = cloneDeep(props);
-    const { features, maxAreaEach, featureValidator } = p;
+    const { features } = p;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
     if (editable) features[index] = e.layer.toGeoJSON();
