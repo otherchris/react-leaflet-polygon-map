@@ -206,7 +206,9 @@ const MapComponent = (props) => {
     </div>
   ) : '';
   const rH = () => { removeHandler(props); };
-  if (props.bindPoint.leafletMap && isEqual(props.center, defaultCenter)) {
+  if (props.bindPoint &&
+    props.bindPoint.leafletMap &&
+    isEqual(props.center, defaultCenter)) {
     zoomToShapes(props, props.bindPoint.leafletMap);
   }
   return (
@@ -294,12 +296,20 @@ MapComponent.propTypes = {
 };
 
 MapComponent.defaultProps = {
+  bindPoint: {},
+  center: defaultCenter,
+  features: [],
+  featureValidator: () => [],
   height: 400,
+  makeCircleOn: false,
+  markerIcon: generateIcon(defaultIcon),
+  onShapeChange: (a, cb) => { cb(null, a); },
+  points: [],
+  remove: false,
   tileLayerProps: {
     url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   },
-  center: defaultCenter,
-  markerIcon: generateIcon(defaultIcon),
+  zoom: 9,
 };
 export default MapComponent;

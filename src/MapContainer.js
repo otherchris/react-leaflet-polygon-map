@@ -8,7 +8,6 @@ import cleanProps from './cleanProps';
 
 class MapContainer extends React.Component {
   render() {
-    cleanProps(this.props, this.props.onShapeChange, noop);
     const passThroughProps = pick(this.props, [
       'bounds',
       'center',
@@ -35,7 +34,6 @@ class MapContainer extends React.Component {
     ]);
     return (
       <MapComponent
-        bindPoint={this}
         {...passThroughProps}
       />
     );
@@ -68,15 +66,6 @@ MapContainer.propTypes = {
   zoom: PropTypes.number,
 };
 
-MapContainer.defaultProps = {
-  onShapeChange: (a, cb) => { cb(null, a); },
-  features: [],
-  points: [],
-  featureValidator: () => [],
-  makeCircleOn: false,
-  zoom: 9,
-  remove: false,
-};
 
 export default MapContainer;
 
