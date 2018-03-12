@@ -8,6 +8,7 @@ import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
+import noop from 'lodash/noop';
 import 'react-leaflet-fullscreen/dist/styles.css';
 import FullscreenControl from 'react-leaflet-fullscreen';
 import {
@@ -37,6 +38,7 @@ import {
   zoomToShapes,
 } from './MapHelpers';
 import defaultIcon from './defaultIcon';
+import cleanProps from './cleanProps';
 import makeCircle from './makeCircle';
 import './main.css';
 
@@ -211,6 +213,7 @@ const MapComponent = (props) => {
     isEqual(props.center, defaultCenter)) {
     zoomToShapes(props, props.bindPoint.leafletMap);
   }
+  cleanProps(props, props.onShapeChange, noop);
   return (
     <div>
       {openFeatureMessage}
