@@ -48,7 +48,7 @@ export const clickPoint = (props, e) => {
     if (!makeCircle) {
       const s = cloneDeep(props);
       const newCircleCenter = e.target.toGeoJSON();
-      s.makeCircleOn = !makeCircle;
+      s.makeCircleOn = true;
       s.newCircleCenter = newCircleCenter;
       cleanProps(s, props.onShapeChange, noop);
     }
