@@ -34,5 +34,8 @@ dist
 /integration-tester/src/convertPoint.js
 /integration-tester/src/leaflet*
 /integration-tester/src/addArea.js
+/integration-tester/src/clean.js
+/integration-tester/src/cleanProps.js
+/integration-tester/src/validateShape.js
 
 

@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import NumberPicker from 'react-widgets/lib/NumberPicker';
+import cloneDeep from 'lodash/cloneDeep';
+import noop from 'lodash/noop';
+import cleanProps from './cleanProps';
+import { radiusChange } from './MapHelpers';
 
 const CircleApprox = (props) => (
   <div className="map-circle-approx">
     Radius (in miles)
     <NumberPicker
-      onChange={props.radiusChange}
+      onChange={radiusChange.bind(this, props)}
       step={0.1}
       max={10}
       defaultValue={0.100}
@@ -24,7 +28,11 @@ const CircleApprox = (props) => (
     <button
       type="button"
       className="btn-primary save btn map-toggle-x"
-      onClick={props.turnOff}
+      onClick={() => {
+        const p = cloneDeep(props);
+        p.makeCircleOn = false;
+        cleanProps(p, props.onShapeChange, noop);
+      }}
     >
       x
     </button>

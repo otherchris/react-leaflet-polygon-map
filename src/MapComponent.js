@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import L from 'leaflet';
+import React from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
@@ -7,18 +6,15 @@ import merge from 'lodash/merge';
 import map from 'lodash/map';
 import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
-import { EditControl } from 'react-leaflet-draw';
+import isEqual from 'lodash/isEqual';
+import noop from 'lodash/noop';
 import 'react-leaflet-fullscreen/dist/styles.css';
 import FullscreenControl from 'react-leaflet-fullscreen';
 import {
   Map,
   Marker,
-  Popup,
   TileLayer,
   GeoJSON,
-  FeatureGroup,
-  Circle,
-  Rectangle,
   Tooltip,
 } from 'react-leaflet';
 import './leaflet.css';
@@ -29,10 +25,26 @@ import {
   tooltipClass,
 } from './tooltipHelpers';
 import EditTools from './EditTools';
-import MapSubmitButton from './MapSubmitButton';
 import CircleApprox from './CircleApprox';
+import { clickFeature, clickPoint } from './clickShape';
+import onTileSet from './onTileSet';
+import {
+  makeCenterLeaflet,
+  removeAllFeatures,
+  removeHandler,
+  generateIcon,
+  polygonArrayToProp,
+  zoomToShapes,
+} from './MapHelpers';
+import defaultIcon from './defaultIcon';
+import cleanProps from './cleanProps';
+import makeCircle from './makeCircle';
 import './main.css';
-import addArea from './addArea';
+
+const defaultCenter = {
+  type: 'Point',
+  coordinates: [-85.751528, 38.257222],
+};
 
 const style = {
   color: 'green',
@@ -71,13 +83,15 @@ const Legend = (LegendComponent, props) => (
 );
 
 const MapComponent = (props) => {
-  const { zoom, tileLayerProps, center, height, includeZipRadius, tooltipOptions, onTileSet = {} } = props;
+  const {
+    tileLayerProps, height, tooltipOptions = {},
+  } = props;
   merge(style, props.style);
   merge(hoveredStyle, props.hoveredStyle);
 
   // Create Leaflet GeoJSON components from features in container state
-  const features = map(props.features, (result, index) => {
-    const p = result.properties;
+  const features = map(polygonArrayToProp(props.features), (result) => {
+    const p = cloneDeep(result.properties);
     const thisStyle = cloneDeep(style);
     const thisTooltipOptions = cloneDeep(tooltipOptions);
     if (p.errors && p.errors.length && p.errors.length > 0) {
@@ -96,7 +110,7 @@ const MapComponent = (props) => {
         key={uuid.v4()}
         uuid={p.key || uuid.v4()}
         editable={p.editable}
-        onClick={props.clickFeature}
+        onClick={clickFeature.bind(this, props)}
         onMouseOut={(e) => { e.layer.setStyle(thisStyle); }}
         onMouseOver={(e) => { e.layer.setStyle(hoveredStyle); }}
       >
@@ -110,7 +124,7 @@ const MapComponent = (props) => {
       </GeoJSON>
     );
   });
-  const points = map(props.points, (result, index) => {
+  const points = map(props.points, (result) => {
     const p = result.properties;
     const position = cloneDeep(result.geometry.coordinates);
     reverse(position);
@@ -120,7 +134,7 @@ const MapComponent = (props) => {
         uuid={p.key || uuid.v4()}
         position={position}
         icon={props.markerIcon}
-        onClick={props.clickPoint}
+        onClick={clickPoint.bind(this, props)}
       >
         <Tooltip className={tooltipClass(tooltipOptions)}>
           <span>
@@ -157,31 +171,37 @@ const MapComponent = (props) => {
     : '';
   const makeCircleApprox = props.makeCircleOn ? (
     <CircleApprox
-      radiusChange={props.radiusChange}
-      makeCircle={props.makeCircle}
-      turnOff={props.turnOffCircleApprox}
+      makeCircle={makeCircle.bind(this, props)}
+      {...props}
     />
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 0 ? (
     <button type="button" className="zoom-button btn btn-secondary btn-sm"
-      onClick={props.zoomToShapes}>
+      onClick={zoomToShapes.bind(this, props, props.bindPoint.leafletMap)}
+    >
       Zoom to shapes
     </button>
   ) : '';
   const removeAllButton = ((props.features.length > 0 || props.points.length > 0) && props.edit) ? (
-    <button type="button" className="btn btn-danger btn-sm" onClick={props.removeAllFeatures}>
+    <button
+      type="button"
+      className="btn btn-danger btn-sm"
+      onClick={removeAllFeatures.bind(this, props)}
+    >
       Remove all shapes
     </button>
   ) : '';
   const satButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="sat" onClick={props.onTileSet}>
+      id="sat" onClick={onTileSet.bind(this, props)}
+    >
      Satellite View
     </button>
   );
   const streetButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="street" onClick={props.onTileSet}>
+      id="street" onClick={onTileSet.bind(this, props)}
+    >
      Street View
     </button>
   );
@@ -190,15 +210,22 @@ const MapComponent = (props) => {
       Click the polygon again to finish editing
     </div>
   ) : '';
+  const rH = () => { removeHandler(props); };
+  if (props.bindPoint &&
+    props.bindPoint.leafletMap &&
+    isEqual(props.center, defaultCenter)) {
+    zoomToShapes(props, props.bindPoint.leafletMap);
+  }
+  cleanProps(props, props.onShapeChange, noop);
   return (
     <div>
       {openFeatureMessage}
       <Map
-        ref={m => { props.bindPoint.leafletMap = m; }}
+        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 100); }}
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}
-        center = {props.center}
+        center = {makeCenterLeaflet(props.center)}
         zoom = {props.zoom || 9}
       >
         {geosuggest}
@@ -209,13 +236,13 @@ const MapComponent = (props) => {
           subdomains= {tileLayerProps.subdomains}
         />
         <FullscreenControl position="topright" />
-        <EditTools {...props} />
+        <EditTools {...props} removeHandler={rH}/>
         {features}
         {points}
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}
-          {props.tileLayerProps.url === "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" ?
+          {props.tileLayerProps.url === 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}' ?
             satButton :
             streetButton
           }
@@ -267,7 +294,6 @@ MapComponent.propTypes = {
   tileLayerProps: PropTypes.object,
   tooltipOptions: PropTypes.object,
   totalArea: PropTypes.number,
-  turnOffCircleApprox: PropTypes.func,
   unit: PropTypes.string,
   update: PropTypes.string,
   zipRadiusChange: PropTypes.func,
@@ -276,11 +302,20 @@ MapComponent.propTypes = {
 };
 
 MapComponent.defaultProps = {
+  bindPoint: {},
+  center: defaultCenter,
+  features: [],
+  featureValidator: () => [],
   height: 400,
+  makeCircleOn: false,
+  markerIcon: generateIcon(defaultIcon),
+  onShapeChange: (a, cb) => { cb(null, a); },
+  points: [],
+  remove: false,
   tileLayerProps: {
     url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   },
-  center: L.latLng([33, -85]),
+  zoom: 9,
 };
 export default MapComponent;

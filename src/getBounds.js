@@ -1,4 +1,3 @@
-import reduce from 'lodash/reduce';
 import map from 'lodash/map';
 import min from 'lodash/min';
 import max from 'lodash/max';

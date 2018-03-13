@@ -1,3 +1,10 @@
+.leaflet-draw-actions {
+  display: none !important;
+}
+
+.leaflet-draw-tooltip {
+  display: none !important;
+}
 .leaflet-container: {
   position: absolute;
   height: 600px;
