@@ -5,7 +5,7 @@ import omit from 'lodash/omit';
 import simpleNumberLocalizer from 'react-widgets-simple-number';
 import logo from './logo.svg';
 import './App.css';
-import MapContainer from './MapContainer';
+import MapComponent from './MapComponent';
 import testerProps from './testerProps';
 
 simpleNumberLocalizer();
@@ -20,12 +20,17 @@ class App extends Component {
   }
 
   simpleOnChange(a, cb) {
-    const { points, features } = omit(a, 'markerIcon');
-    console.log(points, this.state.lastMapState.points)
-    if (!(isEqual(points, this.state.lastMapState.points) && isEqual(features, this.state.lastMapState.features))) {
-      this.setState({ lastMapState: omit(a, 'markerIcon')});
+    const { points, features, remove } = omit(a, 'markerIcon');
+    if (!(
+      //isEqual(points, this.state.lastMapState.points) &&
+      //isEqual(features, this.state.lastMapState.features) &&
+      //isEqual(remove, this.state.lastMapState.remove)
+      isEqual(a, this.state.lastMapState)
+    )) {
+  console.log(JSON.stringify(a, null, '  '))
+      this.setState({ mapProps: a, lastMapState: a});
     }
-    cb(a);
+    cb(null, a);
   };
 
   makeTest(test) {
@@ -47,7 +52,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
           {map(testerProps, this.makeTest.bind(this))}
-        <MapContainer {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
+        <MapComponent {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
         <div className="lms">
           {JSON.stringify(this.state.lastMapState, null, '  ')}
         </div>
