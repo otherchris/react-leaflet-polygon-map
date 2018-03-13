@@ -64,7 +64,9 @@ describe('onShapeChange', () => {
 
     cy.get('div.lms').should('contain', 'coordinates');
   });
-  it('reports the current state removing a poly', () => {
+  it(`Given a map with one polygon,
+    when that polygon is removed,
+    then onShapeChange should be called with an empty features array`, () => {
     cy.visit('127.0.0.1:3000');
 
     cy.wait(500);
