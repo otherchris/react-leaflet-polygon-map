@@ -1,6 +1,6 @@
 import map from 'lodash/map';
 
-const many_points = () => {
+const manyPointsFunc = () => {
   const points = new Array(1000);
   return map(points, () => { return {
     type: "Feature",
@@ -11,6 +11,8 @@ const many_points = () => {
     },
   }});
 };
+
+const manyPoints = manyPointsFunc();
 
 const point_1 = {
   type: "Feature",
@@ -126,4 +128,4 @@ const pwc = {
   center,
 }
 
-export default { many_points, singlePoint, points, features, citygon: citygonFeatures, pwc };
+export default { manyPoints, singlePoint, points, features, citygon: citygonFeatures, pwc };

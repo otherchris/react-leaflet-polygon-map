@@ -47,7 +47,7 @@ const testerProps = [
   },
   {
     name: 'many-points',
-    props: { points: fixtures.many_points }
+    props: { points: fixtures.manyPoints }
   },
 ];
 
