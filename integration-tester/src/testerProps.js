@@ -47,7 +47,7 @@ const testerProps = [
   },
   {
     name: 'many-points',
-    props: { points: fixtures.manyPoints }
+    props: { points: fixtures.manyPoints, cluster: true }
   },
 ];
 
