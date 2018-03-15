@@ -4,17 +4,14 @@ import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
-import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import noop from 'lodash/noop';
 import 'react-leaflet-fullscreen/dist/styles.css';
 import 'react-leaflet-markercluster/dist/styles.min.css';
 import FullscreenControl from 'react-leaflet-fullscreen';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
 import {
   Map,
-  Marker,
   TileLayer,
   GeoJSON,
   Tooltip,
@@ -23,12 +20,11 @@ import './leaflet.css';
 import './leaflet.draw.css';
 import {
   tooltipMessage,
-  pointsTooltip,
   tooltipClass,
 } from './tooltipHelpers';
 import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
-import { clickFeature, clickPoint } from './clickShape';
+import { clickFeature } from './clickShape';
 import onTileSet from './onTileSet';
 import {
   makeCenterLeaflet,
