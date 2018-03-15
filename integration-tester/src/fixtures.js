@@ -1,3 +1,17 @@
+import map from 'lodash/map';
+
+const many_points = () => {
+  const points = new Array(1000);
+  return map(points, () => { return {
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: 'Point',
+      coordinates: [-85 + Math.random(), 38 + Math.random()]
+    },
+  }});
+};
+
 const point_1 = {
   type: "Feature",
   properties: {},
