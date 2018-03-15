@@ -49,6 +49,10 @@ const testerProps = [
     name: 'many-points',
     props: { points: fixtures.manyPoints, cluster: true }
   },
+  {
+    name: 'many-points-no-cluster',
+    props: { points: fixtures.manyPoints }
+  },
 ];
 
 export default testerProps;
