@@ -44,7 +44,11 @@ const testerProps = [
   {
     name: 'single-point',
     props: { points: fixtures.singlePoint },
-  }
+  },
+  {
+    name: 'many-points',
+    props: { points: fixtures.many_points }
+  },
 ];
 
 export default testerProps;

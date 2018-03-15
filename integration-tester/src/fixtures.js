@@ -126,4 +126,4 @@ const pwc = {
   center,
 }
 
-export default { singlePoint, points, features, citygon: citygonFeatures, pwc };
+export default { many_points, singlePoint, points, features, citygon: citygonFeatures, pwc };
