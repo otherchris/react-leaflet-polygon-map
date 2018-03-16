@@ -27,7 +27,6 @@ class App extends Component {
       //isEqual(remove, this.state.lastMapState.remove)
       isEqual(a, this.state.lastMapState)
     )) {
-  console.log(JSON.stringify(a, null, '  '))
       this.setState({ mapProps: a, lastMapState: a});
     }
     cb(null, a);
