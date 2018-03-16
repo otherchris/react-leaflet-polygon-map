@@ -4,15 +4,14 @@ import uuid from 'uuid';
 import Geosuggest from 'react-geosuggest';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
-import reverse from 'lodash/reverse';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import noop from 'lodash/noop';
 import 'react-leaflet-fullscreen/dist/styles.css';
+import 'react-leaflet-markercluster/dist/styles.min.css';
 import FullscreenControl from 'react-leaflet-fullscreen';
 import {
   Map,
-  Marker,
   TileLayer,
   GeoJSON,
   Tooltip,
@@ -21,12 +20,11 @@ import './leaflet.css';
 import './leaflet.draw.css';
 import {
   tooltipMessage,
-  pointsTooltip,
   tooltipClass,
 } from './tooltipHelpers';
 import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
-import { clickFeature, clickPoint } from './clickShape';
+import { clickFeature } from './clickShape';
 import onTileSet from './onTileSet';
 import {
   makeCenterLeaflet,
@@ -39,6 +37,7 @@ import {
 import defaultIcon from './defaultIcon';
 import cleanProps from './cleanProps';
 import makeCircle from './makeCircle';
+import points from './points';
 import './main.css';
 
 const defaultCenter = {
@@ -122,29 +121,6 @@ const MapComponent = (props) => {
           </span>
         </Tooltip>
       </GeoJSON>
-    );
-  });
-  const points = map(props.points, (result) => {
-    const p = result.properties;
-    const position = cloneDeep(result.geometry.coordinates);
-    reverse(position);
-    return (
-      <Marker
-        key={uuid.v4()}
-        uuid={p.key || uuid.v4()}
-        position={position}
-        icon={props.markerIcon}
-        onClick={clickPoint.bind(this, props)}
-      >
-        <Tooltip className={tooltipClass(tooltipOptions)}>
-          <span>
-            {props.edit && props.remove ?
-              'CLICK TO DELETE' :
-              `${pointsTooltip(result, props.tooltipOptions)}`
-            }
-          </span>
-        </Tooltip>
-      </Marker>
     );
   });
   const geosuggest = props.geolocate ?
@@ -238,7 +214,7 @@ const MapComponent = (props) => {
         <FullscreenControl position="topright" />
         <EditTools {...props} removeHandler={rH}/>
         {features}
-        {points}
+        {points(props)}
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}

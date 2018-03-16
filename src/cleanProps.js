@@ -35,6 +35,7 @@ export const cleanPropsFunc = (props) => {
   ess.points = pnts;
   return pick(ess, [
     'center',
+    'cluster',
     'edit',
     'features',
     'force',
