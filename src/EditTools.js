@@ -7,7 +7,8 @@ import updateShapes from './updateShapes';
 import cleanProps from './cleanProps';
 
 const EditTools = (p) => {
-  if (p.edit) {
+  console.log("edit props", p);
+  if (p.edit && p.bindPoint.leafletMap.leafletElement) {
     return (
       <FeatureGroup>
         <EditControl

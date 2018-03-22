@@ -6,6 +6,7 @@ import cleanProps from './cleanProps';
 //
 // e.layer represents the newly created vector layer
 const updateShapes = (props, map, e) => {
+  console.log("MAAAAP", map)
   const p = cloneDeep(props);
   const geoJSON = e.layer.toGeoJSON();
   switch (geoJSON.geometry.type) {

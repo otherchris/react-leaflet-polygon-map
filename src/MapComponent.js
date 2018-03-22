@@ -38,6 +38,7 @@ import defaultIcon from './defaultIcon';
 import cleanProps from './cleanProps';
 import makeCircle from './makeCircle';
 import points from './points';
+import heatmap from './heatmap';
 import './main.css';
 
 const defaultCenter = {
@@ -193,15 +194,18 @@ const MapComponent = (props) => {
     zoomToShapes(props, props.bindPoint.leafletMap);
   }
   cleanProps(props, props.onShapeChange, noop);
+  const center = props.center.lat ?
+    makeCenterLeaflet(props.center) :
+    makeCenterLeaflet(defaultCenter);
   return (
     <div>
       {openFeatureMessage}
       <Map
-        ref={m => { props.bindPoint.leafletMap = m; setTimeout(props.zoomToShapes, 100); }}
+        ref={m => { props.bindPoint.leafletMap = m; }}
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}
-        center = {makeCenterLeaflet(props.center)}
+        center = {center}
         zoom = {props.zoom || 9}
       >
         {geosuggest}
@@ -212,9 +216,10 @@ const MapComponent = (props) => {
           subdomains= {tileLayerProps.subdomains}
         />
         <FullscreenControl position="topright" />
-        <EditTools {...props} removeHandler={rH}/>
+        <EditTools {...props} removeHandler={rH} />
         {features}
-        {points(props)}
+        {props.heatmap ? heatmap(props) : points(props)}
+        {heatmap(props)}
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}

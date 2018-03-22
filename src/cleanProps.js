@@ -33,12 +33,14 @@ export const cleanPropsFunc = (props) => {
   });
   ess.features = feats;
   ess.points = pnts;
+  ess.bindPoint = (p.bindPoint && p.bindPoint.leafletMap) ? p.bindPoint : {};
   return pick(ess, [
     'center',
     'cluster',
     'edit',
     'features',
     'force',
+    'heatmap',
     'makeCircleOn',
     'points',
     'remove',
