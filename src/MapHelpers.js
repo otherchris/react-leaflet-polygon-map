@@ -24,7 +24,7 @@ const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoin
 
 // input a geoJSON point geometry
 export const makeCenterLeaflet = (c) => {
-  if (c.lat && c.lng) return c;
+  if (c.lat && c.lng) return L.latLng(c);
   if (validGeoJSONPointFeature(c)) {
     const coords = c.geometry.coordinates;
     return L.latLng(coords[1], coords[0]);
@@ -176,6 +176,7 @@ export const radiusChange = (props, e) => {
 };
 
 export const zoomToShapes = (props, _map) => {
+  console.log(props, _map)
   const { features, points } = props;
   if (features.length > 0 || points.length > 0) {
     const bounds = getBounds(features, points);
