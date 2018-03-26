@@ -5,7 +5,7 @@ import omit from 'lodash/omit';
 import simpleNumberLocalizer from 'react-widgets-simple-number';
 import logo from './logo.svg';
 import './App.css';
-import MapComponent from './MapComponent';
+import MapContainer from './MapContainer';
 import testerProps from './testerProps';
 
 simpleNumberLocalizer();
@@ -51,9 +51,9 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
           {map(testerProps, this.makeTest.bind(this))}
-        <MapComponent {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
+        <MapContainer {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
         <div className="lms">
-          {JSON.stringify(this.state.lastMapState, null, '  ')}
+          {JSON.stringify(omit(this.state.lastMapState, 'bindPoint'), null, '  ')}
         </div>
       </div>
     );

@@ -53,6 +53,10 @@ const testerProps = [
     name: 'many-points-no-cluster',
     props: { points: fixtures.manyPoints }
   },
+  {
+    name: 'many-points-heatmap',
+    props: { points: fixtures.manyPoints, heatmap: true }
+  },
 ];
 
 export default testerProps;

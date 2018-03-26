@@ -1,8 +1,9 @@
 import map from 'lodash/map';
 
 const manyPointsFunc = () => {
-  const points = new Array(1000);
-  return map(points, () => { return {
+  const t0 = performance.now();
+  const points = new Array(7000);
+  const geo = map(points, () => { return {
     type: "Feature",
     properties: {},
     geometry: {
@@ -10,6 +11,9 @@ const manyPointsFunc = () => {
       coordinates: [-85 + Math.random(), 38 + Math.random()]
     },
   }});
+  const t1 = performance.now();
+  console.log("point generation: ", (t1 - t0))
+  return geo;
 };
 
 const manyPoints = manyPointsFunc();
