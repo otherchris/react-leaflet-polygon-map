@@ -8,19 +8,10 @@ import cleanProps from './cleanProps';
 
 const EditTools = (p) => {
   console.log("edit props", p);
-  if (p.edit && p.bindPoint.leafletMap.leafletElement) {
+  if (p.edit && p.bindPoint !== 'm') {
     return (
       <FeatureGroup>
         <EditControl
-          onMounted={() => {
-            const el = document.querySelector('a.leaflet-draw-edit-remove');
-            el.onclick = () => {
-              const _p = cloneDeep(p);
-              _p.remove = !p.remove;
-              cleanProps(_p, p.onShapeChange, noop);
-            };
-            el.classname = 'leaflet-draw-edit-remove';
-          }}
           position='topright'
           draw={{
             polyline: false,
@@ -33,7 +24,7 @@ const EditTools = (p) => {
           edit={{
             edit: false,
           }}
-          onCreated={updateShapes.bind(this, p, p.bindPoint.leafletMap.leafletElement)}
+          onCreated={updateShapes.bind(this, p, p.bindPoint.leafletElement)}
         />
       </FeatureGroup>
     );
