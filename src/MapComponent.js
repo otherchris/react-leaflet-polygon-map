@@ -91,7 +91,7 @@ const MapComponent = (props) => {
 
   // Create Leaflet GeoJSON components from features in container state
   const features = map(polygonArrayToProp(props.features), (result) => {
-    const p = cloneDeep(result.properties);
+    const p = result.properties;
     const thisStyle = cloneDeep(style);
     const thisTooltipOptions = cloneDeep(tooltipOptions);
     if (p.errors && p.errors.length && p.errors.length > 0) {
@@ -124,25 +124,6 @@ const MapComponent = (props) => {
       </GeoJSON>
     );
   });
-  const geosuggest = props.geolocate ?
-    <Geosuggest
-      className="geosuggest"
-      onSuggestSelect={props.onLocationSelect}
-      onClick={(e) => { e.stopPropagation(); }}
-      style={{
-        input: {
-          width: '20rem',
-        },
-        suggests: {
-          listStyle: 'none',
-          width: '20rem',
-          overflow: 'hidden',
-          backgroundColor: 'rgba(247, 247, 247, .8)',
-        },
-      }}
-    />
-    : '';
-  const legend = props.legendComponent ? Legend(props.legendComponent, props.legendProps) : '';
   const removePolyBanner = props.edit && props.remove
     ? RemovePolyBanner
     : '';
@@ -154,7 +135,7 @@ const MapComponent = (props) => {
   ) : '';
   const zoomButton = props.features.length > 0 || props.points.length > 0 ? (
     <button type="button" className="zoom-button btn btn-secondary btn-sm"
-      onClick={zoomToShapes.bind(this, props, props.bindPoint.leafletMap)}
+      onClick={zoomToShapes.bind(this, props, props.bindPoint)}
     >
       Zoom to shapes
     </button>
@@ -189,9 +170,8 @@ const MapComponent = (props) => {
   ) : '';
   const rH = () => { removeHandler(props); };
   if (props.bindPoint &&
-    props.bindPoint.leafletMap &&
     isEqual(props.center, defaultCenter)) {
-    zoomToShapes(props, props.bindPoint.leafletMap);
+    zoomToShapes(props, props.bindPoint);
   }
   cleanProps(props, props.onShapeChange, noop);
   const center = props.center.lat ?
@@ -201,14 +181,13 @@ const MapComponent = (props) => {
     <div>
       {openFeatureMessage}
       <Map
-        ref={m => { props.bindPoint.leafletMap = m; }}
+        ref={m => { props.setBindPoint(m, props); }}
         style={{ height }}
         minZoom = {3}
         maxZoom = {18}
         center = {center}
         zoom = {props.zoom || 9}
       >
-        {geosuggest}
         {removePolyBanner}
         <TileLayer
           url={tileLayerProps.url}
@@ -233,7 +212,6 @@ const MapComponent = (props) => {
         </div>
       </Map>
       <div className="map-below-map">
-        {legend}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
       </div>
