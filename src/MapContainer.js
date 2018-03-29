@@ -1,22 +1,23 @@
 import React from 'react';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
-import noop from 'lodash/noop';
 import cloneDeep from 'lodash/cloneDeep';
 import MapComponent from './MapComponent';
 
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bindPoint: 'm' };
+    this.state = { bindPoint: 'm', mapState: {edit: true} };
   }
 
   updateMap(data, cb) {
     if (
-      !isEqual(data.points, this.props.points) ||
-      !isEqual(data.features, this.props.features) ||
-      !isEqual(data.remove, this.props.remove)) {
-      this.props.onShapeChange(data, cb);
+      !isEqual(data.points, this.state.mapState.points) ||
+      !isEqual(data.features, this.state.mapState.features) ||
+      !isEqual(data.remove, this.state.mapState.remove)) {
+      this.setState({ mapState: data }, () => {
+        this.props.onShapeChange(this.state.mapState, cb);
+      });
     }
   }
 
@@ -41,7 +42,7 @@ class MapContainer extends React.Component {
   render() {
     return (
       <MapComponent
-        {...omit(this.props, 'onShapeChange')}
+        {...omit(this.state.mapState, 'onShapeChange')}
         onShapeChange={this.updateMap.bind(this)}
         bindPoint={this.state.bindPoint}
         setBindPoint={this.setBindPoint.bind(this)}

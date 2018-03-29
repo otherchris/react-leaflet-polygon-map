@@ -18,11 +18,6 @@ class App extends Component {
     };
   }
 
-  simpleOnChange(a, cb) {
-    this.setState({ mapProps: a, lastMapState: a });
-    cb(null, a);
-  }
-
   makeTest(test) {
     return (
       <button
@@ -33,6 +28,11 @@ class App extends Component {
         {test.name}
       </button>
     );
+  }
+
+  simpleOnChange(a, cb) {
+    this.setState({ mapProps: a, lastMapState: a });
+    cb(null, a);
   }
 
   render() {
