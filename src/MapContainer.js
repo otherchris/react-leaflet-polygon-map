@@ -7,7 +7,7 @@ import MapComponent from './MapComponent';
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bindPoint: 'm', mapState: {edit: true} };
+    this.state = { bindPoint: 'm', mapState: { ...props } };
   }
 
   updateMap(data, cb) {
@@ -29,7 +29,8 @@ class MapContainer extends React.Component {
 
   componentDidMount() {
     if (this.props.edit) {
-      const el = document.querySelector('a.leaflet-draw-edit-remove');
+      let el = document.querySelector('a.leaflet-draw-edit-remove');
+      if (!el) el = { onclick: '' };
       el.onclick = () => {
         const _p = cloneDeep(this.props);
         _p.remove = !this.props.remove;
