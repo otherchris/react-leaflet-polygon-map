@@ -1,5 +1,6 @@
 import React from 'react';
 import omit from 'lodash/omit';
+import merge from 'lodash/merge';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import MapComponent from './MapComponent';
@@ -15,7 +16,7 @@ class MapContainer extends React.Component {
       !isEqual(data.points, this.state.mapState.points) ||
       !isEqual(data.features, this.state.mapState.features) ||
       !isEqual(data.remove, this.state.mapState.remove)) {
-      this.setState({ mapState: data }, () => {
+      this.setState({ mapState: merge(this.state.mapState, data) }, () => {
         this.props.onShapeChange(this.state.mapState, cb);
       });
     }
@@ -36,7 +37,7 @@ class MapContainer extends React.Component {
         _p.remove = !this.props.remove;
         el.classname = 'leaflet-draw-edit-remove';
       };
-      //this.updateMap(this.props, noop);
+      this.updateMap(this.props, noop);
     }
   }
 
