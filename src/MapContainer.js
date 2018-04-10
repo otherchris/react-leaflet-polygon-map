@@ -1,6 +1,7 @@
 import React from 'react';
 import omit from 'lodash/omit';
 import merge from 'lodash/merge';
+import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
 import MapComponent from './MapComponent';
