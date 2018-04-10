@@ -212,7 +212,7 @@ const MapComponent = (props) => {
         </div>
       </Map>
       <div className="map-below-map">
-        {(props.legendComponent)}
+        {Legend(props.legendComponent, props)}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
       </div>
