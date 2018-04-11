@@ -76,12 +76,6 @@ const RemovePolyBanner = (
   </div>
 );
 
-const Legend = (LegendComponent, props) => (
-  <div className="map-legend">
-    <LegendComponent {...props} />
-  </div>
-);
-
 const MapComponent = (props) => {
   const {
     tileLayerProps, height, tooltipOptions = {},
@@ -212,7 +206,7 @@ const MapComponent = (props) => {
         </div>
       </Map>
       <div className="map-below-map">
-        {Legend(props.legendComponent, props)}
+        {props.legendComponent(props)}
         {props.maxArea < props.totalArea ? 'Area too large, cannot save' : ''}
         {makeCircleApprox}
       </div>
