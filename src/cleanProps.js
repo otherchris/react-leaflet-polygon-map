@@ -35,6 +35,7 @@ export const cleanPropsFunc = (props) => {
   ess.points = pnts;
   ess.bindPoint = (p.bindPoint && p.bindPoint.leafletMap) ? p.bindPoint : {};
   return pick(ess, [
+    'matches',
     'center',
     'cluster',
     'edit',

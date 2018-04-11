@@ -1,5 +1,6 @@
 import React from 'react';
 import omit from 'lodash/omit';
+import each from 'lodash/each';
 import merge from 'lodash/merge';
 import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
@@ -14,6 +15,7 @@ class MapContainer extends React.Component {
 
   updateMap(data, cb) {
     if (
+      !isEqual(data.matches, this.state.mapState.matches) ||
       !isEqual(data.points, this.state.mapState.points) ||
       !isEqual(data.features, this.state.mapState.features) ||
       !isEqual(data.remove, this.state.mapState.remove)) {
@@ -43,9 +45,12 @@ class MapContainer extends React.Component {
   }
 
   render() {
+    const extraProps = {};
+    each(this.props.extraProps, (p) => { extraProps[p] = this.props[p]; });
     return (
       <MapComponent
         {...omit(this.state.mapState, 'onShapeChange')}
+        {...extraProps}
         onShapeChange={this.updateMap.bind(this)}
         bindPoint={this.state.bindPoint}
         setBindPoint={this.setBindPoint.bind(this)}
