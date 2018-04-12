@@ -1,7 +1,7 @@
 import React from 'react';
 import omit from 'lodash/omit';
 import each from 'lodash/each';
-import merge from 'lodash/merge';
+import assign from 'lodash/assign';
 import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
@@ -14,12 +14,15 @@ class MapContainer extends React.Component {
   }
 
   updateMap(data, cb) {
+    const lastState = cloneDeep(this.state.mapState);
     if (
       !isEqual(data.matches, this.state.mapState.matches) ||
       !isEqual(data.points, this.state.mapState.points) ||
       !isEqual(data.features, this.state.mapState.features) ||
-      !isEqual(data.remove, this.state.mapState.remove)) {
-      this.setState({ mapState: merge(this.state.mapState, data) }, () => {
+      !isEqual(data.remove, this.state.mapState.remove) ||
+      !isEqual(data.tileLayerProps, this.state.mapState.tileLayerProps)) {
+      this.setState({ mapState: assign(lastState, data) }, () => {
+        console.log('INSIDE FEATS', this.state.mapState.features);
         this.props.onShapeChange(this.state.mapState, cb);
       });
     }

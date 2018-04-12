@@ -153,10 +153,12 @@ export const incForce = (obj) => {
 };
 
 export const removeAllFeatures = (props) => {
+  console.log("remove all called with ", props)
   const p = cloneDeep(props);
   p.features = [];
   p.points = [];
-  cleanProps(p, props.onShapeChange, noop);
+  console.log("attempting to remove with this ", p);
+  props.onShapeChange(p, noop);
 };
 
 export const onLocationSelect = (props, _map, loc) => {

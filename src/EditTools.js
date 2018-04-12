@@ -7,7 +7,6 @@ import updateShapes from './updateShapes';
 import cleanProps from './cleanProps';
 
 const EditTools = (p) => {
-  console.log("edit props", p);
   if (p.edit && p.bindPoint !== 'm') {
     return (
       <FeatureGroup>
