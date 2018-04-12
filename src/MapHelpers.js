@@ -22,6 +22,27 @@ const validLatlngObject = (c) => typeof c.lat === 'number' && typeof c.lng === '
 const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordinates);
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
+export const onLocationSelect = (props, loc) => {
+  console.log(props);
+  const p = cloneDeep(props);
+  p.center = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      coordinates: [loc.location.lng, loc.location.lat],
+      type: 'Point',
+    },
+  };
+  p.points.push(p.center);
+
+  const { b, f } = loc.gmaps.geometry.viewport;
+  const b1 = L.latLng(f.b, b.b);
+  const b2 = L.latLng(f.f, b.f);
+  props.bindPoint.leafletElement.fitBounds(L.latLngBounds(b1, b2));
+
+  cleanProps(p, props.onShapeChange, noop);
+};
+
 // input a geoJSON point geometry
 export const makeCenterLeaflet = (c) => {
   if (c.lat && c.lng) return L.latLng(c);
@@ -159,16 +180,6 @@ export const removeAllFeatures = (props) => {
   p.points = [];
   console.log("attempting to remove with this ", p);
   props.onShapeChange(p, noop);
-};
-
-export const onLocationSelect = (props, _map, loc) => {
-  const { b, f } = loc.gmaps.geometry.viewport;
-  const p = cloneDeep(props);
-  p.center = { type: 'Point', coordinates: [loc.location.lng, loc.location.lat] };
-  cleanProps(p, props.onShapeChange, noop);
-  const b1 = L.latLng(f.b, b.b);
-  const b2 = L.latLng(f.f, b.f);
-  _map.leafletElement.fitBounds(L.latLngBounds(b1, b2));
 };
 
 export const radiusChange = (props, e) => {

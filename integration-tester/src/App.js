@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
 import simpleNumberLocalizer from 'react-widgets-simple-number';
+import { ReactScriptLoader, ReactScriptLoaderMixin } from 'react-script-loader';
 import logo from './logo.svg';
 import './App.css';
 import MapContainer from './MapContainer';
@@ -12,12 +13,31 @@ simpleNumberLocalizer();
 class App extends Component {
   constructor(props) {
     super(props);
+    console.log(process.env.REACT_APP_GOOGLE_KEY)
     this.state = {
       mapProps: {},
       lastMapState: {},
     };
   }
-
+  /*
+  getScriptLoaderID() {
+    return ReactScriptLoaderMixin.__getScriptLoaderID();
+  }
+  getScriptUrl() {
+    const keyparam = process.env.REACT_APP_GOOGLE_KEY;
+    return `https://maps.googleapis.com/maps/api/js?key=${keyparam}&libraries=places`;
+  }
+  onScriptLoaded() {
+    console.log('success')
+    this.setState({ googleAPILoaded: true });
+  }
+  onScriptError() {
+    this.setState({ googleAPIError: true });
+  }
+  componentDidMount() {
+    ReactScriptLoader.componentDidMount(this.getScriptLoaderID(), this, this.getScriptUrl());
+  }
+  */
   makeTest(test) {
     return (
       <button

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid';
-import Geosuggest from 'react-geosuggest';
 import merge from 'lodash/merge';
 import map from 'lodash/map';
 import cloneDeep from 'lodash/cloneDeep';
@@ -22,6 +21,7 @@ import {
   tooltipMessage,
   tooltipClass,
 } from './tooltipHelpers';
+import FindPoint from './geosuggest';
 import EditTools from './EditTools';
 import CircleApprox from './CircleApprox';
 import { clickFeature } from './clickShape';
@@ -183,6 +183,7 @@ const MapComponent = (props) => {
         zoom = {props.zoom || 9}
       >
         {removePolyBanner}
+        <FindPoint {...props} />
         <TileLayer
           url={tileLayerProps.url}
           attribution={tileLayerProps.attribution}
