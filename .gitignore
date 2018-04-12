@@ -27,6 +27,7 @@ dist
 *.un~
 *.swp
 *.swo
+*.swn
 
 /integration-tester/src/MapContainer.js
 /integration-tester/src/MapComponent.js
