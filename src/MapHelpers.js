@@ -23,11 +23,16 @@ const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordi
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
 export const onLocationSelect = (props, loc) => {
-  console.log(props);
+  const { b, f } = loc.gmaps.geometry.viewport;
+  const b1 = L.latLng(f.b, b.b);
+  const b2 = L.latLng(f.f, b.f);
+
   const p = cloneDeep(props);
   p.center = {
     type: 'Feature',
-    properties: {},
+    properties: {
+      bounds: L.latLngBounds(b1, b2),
+    },
     geometry: {
       coordinates: [loc.location.lng, loc.location.lat],
       type: 'Point',
@@ -35,12 +40,9 @@ export const onLocationSelect = (props, loc) => {
   };
   p.points.push(p.center);
 
-  const { b, f } = loc.gmaps.geometry.viewport;
-  const b1 = L.latLng(f.b, b.b);
-  const b2 = L.latLng(f.f, b.f);
-  props.bindPoint.leafletElement.fitBounds(L.latLngBounds(b1, b2));
-
   cleanProps(p, props.onShapeChange, noop);
+
+  props.bindPoint.leafletElement.fitBounds(L.latLngBounds(b1, b2));
 };
 
 // input a geoJSON point geometry
