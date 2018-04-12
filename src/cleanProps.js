@@ -46,6 +46,7 @@ export const cleanPropsFunc = (props) => {
     'points',
     'remove',
     'tileLayerProps',
+    'totalArea',
     'zoom',
     'newCircleCenter',
     'newCircleRadius',
