@@ -261,6 +261,7 @@ MapComponent.defaultProps = {
   features: [],
   featureValidator: () => [],
   height: 400,
+  legendComponent: noop,
   makeCircleOn: false,
   markerIcon: generateIcon(defaultIcon),
   onShapeChange: (a, cb) => { cb(null, a); },

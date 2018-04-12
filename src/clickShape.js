@@ -11,10 +11,13 @@ import { indexByKey, areaAccumulator, incForce } from './MapHelpers';
 export const clickFeature = (props, e) => {
   if (!props.edit) return;
   if (props.remove) {
+    console.log('in remove')
     const s = cloneDeep(props);
     const key = e.layer.options.uuid;
+    console.log(key);
     const features = filter(s.features, (feat) => key !== feat.properties.key);
-    s.features = features;
+    console.log(features)
+    s.features = cloneDeep(features);
     cleanProps(s, props.onShapeChange, noop);
   } else {
     const key = e.layer.options.uuid;

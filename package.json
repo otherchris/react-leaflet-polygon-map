@@ -18,7 +18,7 @@
     "react-geosuggest": "2.5.0",
     "react-leaflet": "^1.7.8",
     "react-leaflet-draw": "^0.18.0",
-    "react-leaflet-fullscreen": "^0.0.6",
+    "react-leaflet-fullscreen": "0.0.6",
     "react-leaflet-heatmap-layer": "^1.0.3",
     "react-leaflet-markercluster": "^1.1.8",
     "uuid": "3.1.0",
@@ -30,7 +30,7 @@
     "react-widgets-simple-number": "^4.0.2",
     "react": "^15.6.2",
     "react-dev-utils": "3.1.0",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -61,7 +61,7 @@
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.6.0",
     "react-dev-utils": "3.1.0",
-    "react-dom": "^16.2.0",
+    "react-dom": "^15.2.0",
     "react-test-renderer": "^15.6.1",
     "react-widgets": "^4.1.1",
     "react-widgets-simple-number": "^4.1.0",
