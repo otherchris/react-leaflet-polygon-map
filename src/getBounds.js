@@ -20,7 +20,13 @@ const getBounds = (polygons, points) => {
     coords = coords.concat(getCoords(poly.geometry.coordinates));
   });
   map(points, (point) => {
-    coords.push(point.geometry.coordinates);
+    if (point.properties && point.properties.bounds) {
+      const b = point.properties.bounds;
+      const p1 = [b._southWest.lng, b._southWest.lat];
+      const p2 = [b._northEast.lng, b._northEast.lat];
+      coords.push(p1);
+      coords.push(p2);
+    } else coords.push(point.geometry.coordinates);
   });
   const lats = [];
   const longs = [];
