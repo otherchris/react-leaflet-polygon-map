@@ -62,7 +62,8 @@ class MapContainer extends React.Component {
 }
 
 MapContainer.defaultProps = {
-  onShapeCHange: noop,
+  onShapeChange: noop,
+  validateFunc: noop,
 };
 
 export default MapContainer;
