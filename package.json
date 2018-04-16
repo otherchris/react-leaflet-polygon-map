@@ -1,6 +1,6 @@
 {
   "name": "react-leaflet-polygon-map",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "main": "dist/MapContainer.js",
   "dependencies": {
     "complex.js": "2.0.4",
