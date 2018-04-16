@@ -22,7 +22,6 @@ class MapContainer extends React.Component {
       !isEqual(data.remove, this.state.mapState.remove) ||
       !isEqual(data.tileLayerProps, this.state.mapState.tileLayerProps)) {
       this.setState({ mapState: assign(lastState, data) }, () => {
-        console.log('INSIDE FEATS', this.state.mapState.features);
         this.props.onShapeChange(this.state.mapState, cb);
       });
     }
@@ -61,5 +60,9 @@ class MapContainer extends React.Component {
     );
   }
 }
+
+MapContainer.defaultProps = {
+  onShapeCHange: noop,
+};
 
 export default MapContainer;

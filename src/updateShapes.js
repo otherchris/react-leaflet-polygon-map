@@ -6,7 +6,6 @@ import cleanProps from './cleanProps';
 //
 // e.layer represents the newly created vector layer
 const updateShapes = (props, map, e) => {
-  console.log("MAAAAP", map)
   const p = cloneDeep(props);
   const geoJSON = e.layer.toGeoJSON();
   switch (geoJSON.geometry.type) {
@@ -17,9 +16,9 @@ const updateShapes = (props, map, e) => {
   case 'Point':
     p.points.push(geoJSON);
     map.removeLayer(e.layer);
-    p.newCircleCenter = geoJSON;
-    p.newCircleRadius = 0.1;
-    p.makeCircleOn = true;
+    // p.newCircleCenter = geoJSON;
+    // p.newCircleRadius = 0.1;
+    // p.makeCircleOn = true;
     break;
   default:
     break;

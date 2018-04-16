@@ -165,6 +165,7 @@ export const removeHandler = (props) => {
 
 export const makePoints = (arr) => map(arr, makePoint);
 
+// TODO: Get rid of this nasty hack
 export const incForce = (obj) => {
   const o = cloneDeep(obj);
   if (obj.force) {
@@ -176,11 +177,9 @@ export const incForce = (obj) => {
 };
 
 export const removeAllFeatures = (props) => {
-  console.log("remove all called with ", props)
   const p = cloneDeep(props);
   p.features = [];
   p.points = [];
-  console.log("attempting to remove with this ", p);
   props.onShapeChange(p, noop);
 };
 
@@ -191,10 +190,11 @@ export const radiusChange = (props, e) => {
 };
 
 export const zoomToShapes = (props, _map) => {
-  console.log(props, _map)
-  const { features, points } = props;
-  if (features.length > 0 || points.length > 0) {
-    const bounds = getBounds(features, points);
-    _map.leafletElement.fitBounds(bounds);
+  if (_map && _map.leafletElement) {
+    const { features, points } = props;
+    if (features.length > 0 || points.length > 0) {
+      const bounds = getBounds(features, points);
+      _map.leafletElement.fitBounds(bounds);
+    }
   }
 };
