@@ -6,6 +6,7 @@ import validateShape from './validateShape';
 export const cleanPoly = (poly, maxAreaEach, validateFunc) => {
   let p = cloneDeep(poly);
 
+  if (!p.properties) p.properties = {};
   // Add area
   if (!p.properties.area) p = addArea(p);
 

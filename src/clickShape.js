@@ -4,6 +4,7 @@ import noop from 'lodash/noop';
 import reduce from 'lodash/reduce';
 import omit from 'lodash/omit';
 import cleanProps from './cleanProps';
+import { cleanPoly } from './clean';
 import { indexByKey, areaAccumulator, incForce } from './MapHelpers';
 
 // Sometimes clicking a polygon opens/closes for editing, sometimes it
@@ -11,12 +12,9 @@ import { indexByKey, areaAccumulator, incForce } from './MapHelpers';
 export const clickFeature = (props, e) => {
   if (!props.edit) return;
   if (props.remove) {
-    console.log('in remove')
     const s = cloneDeep(props);
     const key = e.layer.options.uuid;
-    console.log(key);
     const features = filter(s.features, (feat) => key !== feat.properties.key);
-    console.log(features)
     s.features = cloneDeep(features);
     cleanProps(s, props.onShapeChange, noop);
   } else {
@@ -25,7 +23,7 @@ export const clickFeature = (props, e) => {
     const { features } = p;
     const index = indexByKey(features, key);
     const editable = features[index].properties.editable || false;
-    if (editable) features[index] = e.layer.toGeoJSON();
+    if (editable) features[index] = cleanPoly(e.layer.toGeoJSON(), props.maxAreaEach, props.validateFunc);
     features[index].properties.editable = !editable;
     p.openFeature = !editable;
     p.features = features;

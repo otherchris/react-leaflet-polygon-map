@@ -168,7 +168,7 @@ const MapComponent = (props) => {
     zoomToShapes(props, props.bindPoint);
   }
   cleanProps(props, props.onShapeChange, noop);
-  const center = props.center.lat ?
+  const center = (props.center && props.center.lat) ?
     makeCenterLeaflet(props.center) :
     makeCenterLeaflet(defaultCenter);
   return (
