@@ -1,7 +1,6 @@
 import React from 'react';
 import omit from 'lodash/omit';
 import each from 'lodash/each';
-import assign from 'lodash/assign';
 import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
@@ -13,21 +12,22 @@ class MapContainer extends React.Component {
     this.state = { bindPoint: 'm', mapState: { ...props } };
   }
 
-  updateMap(data, cb) {
-    const lastState = cloneDeep(this.state.mapState);
+  shouldComponentUpdate(nextProps, nextState) {
     if (
-      !isEqual(data.matches, this.state.mapState.matches) ||
-      !isEqual(data.points, this.state.mapState.points) ||
-      !isEqual(data.features, this.state.mapState.features) ||
-      !isEqual(data.remove, this.state.mapState.remove) ||
-      !isEqual(data.tileLayerProps, this.state.mapState.tileLayerProps)) {
-      this.setState({ mapState: assign(lastState, data) }, () => {
-        this.props.onShapeChange(this.state.mapState, cb);
-      });
+      !isEqual(nextProps.matches, this.props.matches) ||
+      !isEqual(nextProps.points, this.props.points) ||
+      !isEqual(nextProps.features, this.props.features) ||
+      !isEqual(nextProps.remove, this.props.remove) ||
+      !isEqual(nextProps.edit, this.props.edit) ||
+      !isEqual(nextProps.extraProps, this.props.extraProps) ||
+      !isEqual(nextProps.tileLayerProps, this.props.tileLayerProps)) {
+      return true;
     }
+    if (!isEqual(this.state.bindPoint, nextState.bindPoint)) return true;
+    return false;
   }
 
-  setBindPoint(m, p) {
+  setBindPoint(m) {
     if (this.state.bindPoint === 'm') {
       this.setState({ bindPoint: m });
     }
@@ -42,7 +42,6 @@ class MapContainer extends React.Component {
         _p.remove = !this.props.remove;
         el.classname = 'leaflet-draw-edit-remove';
       };
-      this.updateMap(this.props, noop);
     }
   }
 
@@ -51,9 +50,8 @@ class MapContainer extends React.Component {
     each(this.props.extraProps, (p) => { extraProps[p] = this.props[p]; });
     return (
       <MapComponent
-        {...omit(this.state.mapState, 'onShapeChange')}
+        {...cloneDeep(omit(this.props, 'extraProps'))}
         {...extraProps}
-        onShapeChange={this.updateMap.bind(this)}
         bindPoint={this.state.bindPoint}
         setBindPoint={this.setBindPoint.bind(this)}
       />
