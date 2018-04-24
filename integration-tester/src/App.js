@@ -62,7 +62,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         {map(testerProps, this.makeTest.bind(this))}
-        <MapContainer edit={true} {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
+        <MapContainer {...this.state.mapProps} onShapeChange={this.simpleOnChange.bind(this)}/>
         <div className="lms">
           {JSON.stringify(omit(this.state.lastMapState, 'bindPoint'), null, '  ')}
         </div>
