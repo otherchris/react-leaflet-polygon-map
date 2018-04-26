@@ -57,6 +57,10 @@ const testerProps = [
     name: 'many-points-heatmap',
     props: { points: fixtures.manyPoints, heatmap: true }
   },
+  {
+    name: 'styled',
+    props: fixtures.styled,
+  },
 ];
 
 export default testerProps;

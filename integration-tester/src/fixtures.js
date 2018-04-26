@@ -1,4 +1,5 @@
 import map from 'lodash/map';
+import cloneDeep from 'lodash/cloneDeep';
 
 const manyPointsFunc = () => {
   const t0 = performance.now();
@@ -45,6 +46,9 @@ const point_3 = {
   },
 }
 
+const transparent_point = cloneDeep(point_3)
+transparent_point.properties.style = { fillOpacity: 0.5 }
+
 const center = {
   type: "Feature",
   properties: {},
@@ -88,6 +92,9 @@ const citygon = {
   }
 };
 
+const bluegon = cloneDeep(citygon)
+bluegon.properties.style = { fillColor: 'blue' }
+
 const large = {
   "type": "Feature",
   "properties": {},
@@ -122,7 +129,7 @@ const large = {
   }
 };
 
-
+const styled = { features: [bluegon], points: [transparent_point] }
 const points = [point_1, point_2];
 const singlePoint = [point_3];
 const features = [large];
@@ -132,4 +139,4 @@ const pwc = {
   center,
 }
 
-export default { manyPoints, singlePoint, points, features, citygon: citygonFeatures, pwc };
+export default { manyPoints, singlePoint, points, features, citygon: citygonFeatures, pwc, styled };
