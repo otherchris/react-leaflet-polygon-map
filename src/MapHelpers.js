@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import noop from 'lodash/noop';
+import remove from 'lodash/remove';
 import map from 'lodash/map';
 import range from 'lodash/range';
 import reverse from 'lodash/reverse';
@@ -8,6 +9,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import math from 'mathjs';
 import cleanProps from './cleanProps';
 import getBounds from './getBounds';
+import updateShapes from './updateShapes';
 
 const validCoordsArray = (arr) =>
   arr &&
@@ -177,10 +179,13 @@ export const incForce = (obj) => {
 };
 
 export const removeAllFeatures = (props) => {
+  console.log('removing!', props.onShapeChange)
   const p = cloneDeep(props);
-  p.features = [];
-  p.points = [];
-  props.onShapeChange(p, noop);
+  remove(p.features, () => true);
+  remove(p.points, () => true);
+  console.log(p.features)
+  cleanProps(p, props.onShapeChange, noop);
+
 };
 
 export const radiusChange = (props, e) => {
