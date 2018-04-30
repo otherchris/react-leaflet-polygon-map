@@ -7,7 +7,7 @@ import pick from 'lodash/pick';
 import reduce from 'lodash/reduce';
 import noop from 'lodash/noop';
 
-import { makeCenterLeaflet, makePoint, areaAccumulator } from './MapHelpers';
+import { incForce, makeCenterLeaflet, makePoint, areaAccumulator } from './MapHelpers';
 import { cleanPoly, cleanPoint } from './clean';
 
 // Pass in all props every time
@@ -34,7 +34,7 @@ export const cleanPropsFunc = (props) => {
   ess.features = feats;
   ess.points = pnts;
   ess.bindPoint = (p.bindPoint && p.bindPoint.leafletMap) ? p.bindPoint : {};
-  return pick(ess, [
+  const a = pick(ess, [
     'matches',
     'center',
     'cluster',
@@ -51,11 +51,13 @@ export const cleanPropsFunc = (props) => {
     'newCircleCenter',
     'newCircleRadius',
   ]);
+  console.log(a)
+  return a
   // this.maybeZoomToShapes();
 };
 
 const cleanProps = (props, update, cb) => {
-  update(cleanPropsFunc(props), cb);
+  update(cloneDeep(cleanPropsFunc(props)), cb);
 };
 
 export default cleanProps;
