@@ -179,11 +179,9 @@ export const incForce = (obj) => {
 };
 
 export const removeAllFeatures = (props) => {
-  console.log('removing!', props.onShapeChange)
   const p = cloneDeep(props);
   remove(p.features, () => true);
   remove(p.points, () => true);
-  console.log(p.features)
   cleanProps(p, props.onShapeChange, noop);
 
 };
