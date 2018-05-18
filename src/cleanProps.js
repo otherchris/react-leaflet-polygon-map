@@ -51,8 +51,7 @@ export const cleanPropsFunc = (props) => {
     'newCircleCenter',
     'newCircleRadius',
   ]);
-  console.log(a)
-  return a
+  return a;
   // this.maybeZoomToShapes();
 };
 
