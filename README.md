@@ -12,10 +12,6 @@ for polygons.
 This package exports the `MapContainer` component that accepts the following
 props:
 
-### `apikey (string)`
-
-Google location API for location search.
-
 ### `center (array/object)`
 
 Initial center of the map. Can be provided as
