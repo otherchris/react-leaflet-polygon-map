@@ -38,5 +38,5 @@ dist
 /integration-tester/src/clean.js
 /integration-tester/src/cleanProps.js
 /integration-tester/src/validateShape.js
-
+/integration-tester/src
 
