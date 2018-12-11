@@ -25,7 +25,7 @@ const validGeoJSONPoint = (c) => c.type === 'Point' && validCoordsArray(c.coordi
 const validGeoJSONPointFeature = (c) => c.type === 'Feature' && validGeoJSONPoint(c.geometry);
 
 export const onLocationSelect = (props, loc) => {
-  const { j, l, b, f } = loc.gmaps.geometry.viewport;
+  const { j, l, b, f, ea, la } = loc.gmaps.geometry.viewport;
   let b1;
   let b2;
   if (b && f) {
@@ -34,6 +34,9 @@ export const onLocationSelect = (props, loc) => {
   } else if (j && l) {
     b1 = L.latLng(l.j, j.j);
     b2 = L.latLng(l.l, j.l);
+  } else if (ea && la) {
+    b1 = L.latLng(la.j, ea.j);
+    b2 = L.latLng(la.l, ea.l);
   } else {
     b1 = false;
     b2 = false;
