@@ -145,14 +145,14 @@ const MapComponent = (props) => {
   ) : '';
   const satButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="sat" onClick={onTileSet.bind(this, props)}
+      id="sat" onClick={() => props.tileSwitcher('sat')}
     >
      Satellite View
     </button>
   );
   const streetButton = (
     <button type="button" className="btn btn-secondary btn-sm maps-tiles"
-      id="street" onClick={onTileSet.bind(this, props)}
+      id="street" onClick={() => props.tileSwitcher('street')}
     >
      Street View
     </button>
@@ -185,9 +185,9 @@ const MapComponent = (props) => {
         {removePolyBanner}
         <FindPoint {...props} />
         <TileLayer
-          url={tileLayerProps.url}
-          attribution={tileLayerProps.attribution}
-          subdomains= {tileLayerProps.subdomains}
+          url={props.tileLayer.url}
+          attribution={props.tileLayer.attribution}
+          subdomains= {props.tileLayer.subdomains}
         />
         <FullscreenControl position="topright" />
         <EditTools {...props} removeHandler={rH} />
@@ -197,7 +197,8 @@ const MapComponent = (props) => {
         <div className="map-btn-group btn-group">
           {zoomButton}
           {removeAllButton}
-          {props.tileLayerProps.url === 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}' ?
+          {console.log(props.tileLayer)}
+          {props.tileLayer.name === 'street' ?
             satButton :
             streetButton
           }

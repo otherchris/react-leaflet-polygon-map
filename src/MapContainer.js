@@ -9,7 +9,12 @@ import MapComponent from './MapComponent';
 class MapContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bindPoint: 'm', mapState: { ...props } };
+    this.state = {
+    bindPoint: 'm',
+    mapState: { ...props },
+    tileLayer: 'street'
+  };
+    this.tileSwitcher = this.tileSwitcher.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -20,7 +25,8 @@ class MapContainer extends React.Component {
       !isEqual(nextProps.remove, this.props.remove) ||
       !isEqual(nextProps.edit, this.props.edit) ||
       !isEqual(nextProps.extraProps, this.props.extraProps) ||
-      !isEqual(nextProps.tileLayerProps, this.props.tileLayerProps)) {
+      !isEqual(nextProps.tileLayer, this.props.tileLayer) ||
+      (this.state.tileLayer !== nextState.tileLayer)) {
       return true;
     }
     if (!isEqual(this.state.bindPoint, nextState.bindPoint)) return true;
@@ -31,6 +37,10 @@ class MapContainer extends React.Component {
     if (this.state.bindPoint === 'm') {
       this.setState({ bindPoint: m });
     }
+  }
+  tileSwitcher(value) {
+    if (value === this.state.tileLayer) return;
+    if (value !== this.state.tileLayer) this.setState({ tileLayer: value });
   }
 
   componentDidMount() {
@@ -47,6 +57,21 @@ class MapContainer extends React.Component {
 
   render() {
     const extraProps = {};
+    let tileLayer;
+    if (this.state.tileLayer === 'street') {
+      tileLayer = {
+        name: this.state.tileLayer,
+        url: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      };
+    }
+    if (this.state.tileLayer === 'sat') {
+      tileLayer = {
+        name: this.state.tileLayer,
+        url: 'https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      };
+    }
     each(this.props.extraProps, (p) => { extraProps[p] = this.props[p]; });
     return (
       <MapComponent
@@ -54,6 +79,8 @@ class MapContainer extends React.Component {
         {...extraProps}
         bindPoint={this.state.bindPoint}
         setBindPoint={this.setBindPoint.bind(this)}
+        tileLayer={tileLayer}
+        tileSwitcher={this.tileSwitcher}
       />
     );
   }
